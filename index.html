@@ -34,31 +34,49 @@ body {
 /* ── INTRO ── */
 #intro-veil {
   position: fixed; inset: 0;
-  background: black; opacity: 0; z-index: 50;
+  background: black;
+  opacity: 0; z-index: 50;
   pointer-events: none;
   transition: opacity 1.0s ease;
 }
 #intro-veil.darken { opacity: .22; }
 
 #intro-line {
-  position: fixed; left: 50%; bottom: 0;
+  position: fixed;
+  left: 50%; bottom: 0;
   width: 1px; height: 0;
-  background: white; z-index: 51;
+  background: white;
+  z-index: 51;
   pointer-events: none;
   transition: height .7s cubic-bezier(.77, 0, .18, 1);
 }
-#intro-line.rise   { height: 100vh; }
-#intro-line.settle { background: rgba(255,255,255,.15); transition: background .8s ease; }
+#intro-line.rise { height: 100vh; }
+#intro-line.settle {
+  background: rgba(255,255,255,.15);
+  transition: background .8s ease;
+}
 .build-active #intro-line { background: rgba(0,0,0,.1); }
 
 /* ── LAYERS ── */
-.layer { position: fixed; inset: 0; transition: clip-path 1.2s cubic-bezier(.77,0,.18,1); }
-.build-layer  { background: white; z-index: 2; clip-path: circle(0px at 0% 100%); }
-.create-layer { background: url("images/graffitymain.jpg") center/cover no-repeat; z-index: 1; clip-path: circle(0px at 100% 100%); }
+.layer {
+  position: fixed; inset: 0;
+  transition: clip-path 1.2s cubic-bezier(.77, 0, .18, 1);
+}
+.build-layer {
+  background: white;
+  z-index: 2;
+  clip-path: circle(0px at 0% 100%);
+}
+.create-layer {
+  background: url("images/graffitymain.jpg") center/cover no-repeat;
+  z-index: 1;
+  clip-path: circle(0px at 100% 100%);
+}
 
 /* ── GRID ── */
 .grid {
-  position: fixed; inset: 0; pointer-events: none; opacity: 0; z-index: 3;
+  position: fixed; inset: 0;
+  pointer-events: none; opacity: 0; z-index: 3;
   transition: opacity .7s ease;
   background-image:
     linear-gradient(rgba(0,0,0,.07) 1px, transparent 1px),
@@ -69,26 +87,30 @@ body {
 
 /* ── SIGNATURE ── */
 .author {
-  position: fixed; top: 34px; left: 50%; transform: translateX(-50%);
-  font-size: 10px; font-weight: 700; letter-spacing: .28em; text-transform: uppercase;
-  opacity: .3; z-index: 20; white-space: nowrap; pointer-events: none;
+  position: fixed; top: 34px; left: 50%;
+  transform: translateX(-50%);
+  font-size: 10px; font-weight: 700;
+  letter-spacing: .28em; text-transform: uppercase;
+  opacity: .3; z-index: 20;
+  white-space: nowrap; pointer-events: none;
   transition: color .4s;
 }
 .build-active .author { color: black; }
 
-/* ── UI INTRO REVEAL ── */
+/* ── UI REVEAL ── */
 .ui-group { opacity: 0; transition: opacity .8s ease; }
 .ui-group.visible { opacity: 1; }
 
 /* ── ZONES ── */
 .zone {
-  position: absolute; bottom: 120px; z-index: 10;
+  position: absolute; bottom: 120px;
+  z-index: 10;
   transition: opacity .4s ease, transform .4s ease, color .4s ease;
 }
 #build  { left: 80px; }
 #create { right: 80px; text-align: right; }
 
-/* Title — plain div, navigates on click via JS */
+/* Main title — BUILD is a link, CREATE is not */
 .main-title {
   font-size: 72px; font-weight: 700;
   letter-spacing: .14em; text-transform: uppercase;
@@ -96,37 +118,64 @@ body {
   transition: color .4s ease;
   user-select: none;
 }
+.main-title a {
+  color: inherit; text-decoration: none;
+}
 
-/* Sub — always dim-visible as hint, brightens on zone hover */
+/* ── SUB ITEMS ── */
 .sub {
   margin-top: 16px;
   font-size: 11px; font-weight: 400;
   letter-spacing: .24em; text-transform: uppercase;
+  line-height: 1;
   opacity: .28;
   transition: opacity .35s ease;
   pointer-events: none;
 }
-.zone.active .sub { opacity: .85; pointer-events: auto; }
+.zone.active .sub {
+  opacity: .85;
+  pointer-events: auto;
+}
 
-.sub a {
+/* TO BUILD subs — all go to same page, underline together */
+.sub-build a {
   display: block; color: inherit; text-decoration: none;
   padding: 7px 0;
   border-bottom: 1px solid transparent;
   transition: border-color .18s;
 }
-.sub a:nth-child(1) { transition-delay: .03s; }
-.sub a:nth-child(2) { transition-delay: .07s; }
-.sub a:nth-child(3) { transition-delay: .11s; }
-.sub a:hover { border-bottom-color: currentColor; }
+/* all three underline when hovering ANY of them */
+.sub-build:hover a {
+  border-bottom-color: currentColor;
+}
 
+/* TO CREATE subs — each independent */
+.sub-create a {
+  display: block; color: inherit; text-decoration: none;
+  padding: 7px 0;
+  border-bottom: 1px solid transparent;
+  transition: border-color .18s;
+}
+.sub-create a:hover {
+  border-bottom-color: currentColor;
+}
+
+/* text inversion on white layer */
 .build-active .zone { color: black; }
-.fade-out { opacity: 0 !important; transform: translateY(6px); pointer-events: none; }
+
+.fade-out {
+  opacity: 0 !important;
+  transform: translateY(6px);
+  pointer-events: none;
+}
 
 /* ── BOTTOM BAR ── */
 .bottom-bar {
-  position: absolute; bottom: 36px; width: 100%; padding: 0 80px;
+  position: absolute; bottom: 36px; width: 100%;
+  padding: 0 80px;
   display: flex; justify-content: space-between; align-items: center;
-  font-size: 11px; font-weight: 700; letter-spacing: .2em; text-transform: uppercase;
+  font-size: 11px; font-weight: 700;
+  letter-spacing: .2em; text-transform: uppercase;
   z-index: 20; transition: color .4s ease;
 }
 .bottom-bar a { color: inherit; text-decoration: none; opacity: .45; transition: opacity .25s; }
@@ -166,23 +215,25 @@ body {
 
 <div class="author ui-group">A. Vasileuskaya</div>
 
-<!-- TO BUILD -->
+<!-- TO BUILD — title + all subs → architecture.html -->
 <div class="zone ui-group" id="build">
-  <div class="main-title" id="buildTitle">To Build</div>
-  <div class="sub">
+  <div class="main-title">
+    <a href="architecture.html">To Build</a>
+  </div>
+  <div class="sub sub-build">
     <a href="architecture.html">Architecture</a>
-    <a href="urban.html">Urban · Research</a>
-    <a href="ai.html">AI Experiments</a>
+    <a href="architecture.html">Urban · Research</a>
+    <a href="architecture.html">AI Experiments</a>
   </div>
 </div>
 
-<!-- TO CREATE -->
+<!-- TO CREATE — title is not a link, subs go to separate pages -->
 <div class="zone ui-group" id="create">
-  <div class="main-title" id="createTitle">To Create</div>
-  <div class="sub">
-    <a href="visual.html">Visual</a>
+  <div class="main-title">To Create</div>
+  <div class="sub sub-create">
+    <a href="design.html">Visual</a>
     <a href="video.html">Video</a>
-    <a href="radio.html">Local Radio</a>
+    <a href="localradio.html">Local Radio</a>
   </div>
 </div>
 
@@ -213,7 +264,7 @@ body {
     });
   }
 
-  // ── INTRO ──
+  // ── INTRO SEQUENCE ──
   const veil  = document.getElementById('intro-veil');
   const line  = document.getElementById('intro-line');
   const uiEls = document.querySelectorAll('.ui-group');
@@ -221,19 +272,19 @@ body {
   setTimeout(() => veil.classList.add('darken'), 1800);
   setTimeout(() => line.classList.add('rise'), 2200);
   setTimeout(() => {
-    veil.style.opacity = '0';
+    veil.style.opacity    = '0';
     veil.style.transition = 'opacity .5s ease';
     line.classList.add('settle');
     uiEls.forEach(el => el.classList.add('visible'));
   }, 2900);
 
-  // ── BUILD / CREATE ──
+  // ── BUILD / CREATE LOGIC ──
   const buildZone  = document.getElementById('build');
   const createZone = document.getElementById('create');
   const buildLayer = document.querySelector('.build-layer');
   const createLayer= document.querySelector('.create-layer');
   const grid       = document.querySelector('.grid');
-  const isTouch    = () => window.matchMedia('(hover: none)').matches;
+  const isTouch    = () => !window.matchMedia('(hover: hover)').matches;
 
   function activateBuild() {
     buildLayer.style.clipPath = 'circle(150% at 0% 100%)';
@@ -263,49 +314,33 @@ body {
   }
   function deactivateAll() { deactivateBuild(); deactivateCreate(); }
 
-  // ── DESKTOP: hover ──
+  // desktop hover
   buildZone.addEventListener('mouseenter',  activateBuild);
   buildZone.addEventListener('mouseleave',  deactivateBuild);
   createZone.addEventListener('mouseenter', activateCreate);
   createZone.addEventListener('mouseleave', deactivateCreate);
 
-  // ── DESKTOP: title click → navigate ──
-  document.getElementById('buildTitle').addEventListener('click', () => {
-    if (!isTouch()) window.location.href = 'architecture.html';
-  });
-  document.getElementById('createTitle').addEventListener('click', () => {
-    if (!isTouch()) window.location.href = 'visual.html';
-  });
-
-  // ── MOBILE: tap title = toggle sub, tap sub link = navigate ──
+  // mobile tap
   let buildOpen = false, createOpen = false;
 
-  document.getElementById('buildTitle').addEventListener('click', e => {
+  buildZone.addEventListener('click', e => {
     if (!isTouch()) return;
+    // let sub-links navigate freely when open
+    if (e.target.tagName === 'A' && buildOpen) return;
+    e.preventDefault();
     e.stopPropagation();
-    if (buildOpen) {
-      // second tap on title → navigate
-      window.location.href = 'architecture.html';
-    } else {
-      deactivateAll();
-      activateBuild();
-      buildOpen = true; createOpen = false;
-    }
+    if (buildOpen) { deactivateAll(); buildOpen = false; }
+    else { deactivateAll(); activateBuild(); buildOpen = true; createOpen = false; }
   });
 
-  document.getElementById('createTitle').addEventListener('click', e => {
+  createZone.addEventListener('click', e => {
     if (!isTouch()) return;
+    if (e.target.tagName === 'A' && createOpen) return;
     e.stopPropagation();
-    if (createOpen) {
-      window.location.href = 'visual.html';
-    } else {
-      deactivateAll();
-      activateCreate();
-      createOpen = true; buildOpen = false;
-    }
+    if (createOpen) { deactivateAll(); createOpen = false; }
+    else { deactivateAll(); activateCreate(); createOpen = true; buildOpen = false; }
   });
 
-  // tap outside = close
   document.addEventListener('click', () => {
     if (!isTouch()) return;
     deactivateAll();
