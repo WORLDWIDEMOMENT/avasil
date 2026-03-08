@@ -1,411 +1,850 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Авасиль :: Architecture</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Architecture — AV</title>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
-        body {
-            font-family: Helvetica, Arial, sans-serif;
-            background: white;
-            color: black;
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
+    :root {
+      --black: #111111;
+      --white: #ffffff;
+      --gray: #888888;
+      --line:  #e0e0e0;
+      --blue:  #0000ff;
+      --off:   #f2f2f2;
+    }
 
-        /* ---------- ССЫЛКА НАЗАД (как в about) ---------- */
-        .back {
-            position: fixed;
-            top: 40px;
-            left: 80px;
-            font-size: 14px;
-            letter-spacing: 4px;
-            text-transform: uppercase;
-            text-decoration: none;
-            color: black;
-            opacity: 0.6;
-            z-index: 100;
-            transition: opacity 0.3s ease;
-        }
+    body {
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      background: var(--white);
+      color: var(--black);
+      min-height: 100vh;
+      overflow-x: hidden;
+      cursor: none;
+    }
 
-        .back:hover {
-            opacity: 1;
-        }
+    /* ── CURSOR ── */
+    #cur {
+      position: fixed;
+      width: 10px; height: 10px;
+      background: var(--blue);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%,-50%);
+      transition: width .16s, height .16s, background .16s;
+      mix-blend-mode: multiply;
+    }
+    #cur.big {
+      width: 50px; height: 50px;
+      background: transparent;
+      border: 1.5px solid var(--black);
+    }
 
-        /* ---------- ЗАГОЛОВОК СТРАНИЦЫ ---------- */
-        .page-title {
-            font-size: 72px;
-            font-weight: 600;
-            letter-spacing: 12px;
-            text-transform: uppercase;
-            text-align: center;
-            padding-top: 120px;
-            margin-bottom: 60px;
-            color: black;
-        }
+    /* ── GRID BG ── */
+    .grid-bg {
+      position: fixed; inset: 0;
+      background-image:
+        linear-gradient(rgba(0,0,0,.045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,0,0,.045) 1px, transparent 1px);
+      background-size: 48px 48px;
+      pointer-events: none;
+      z-index: 0;
+      transition: filter .4s;
+    }
+    .grid-bg.blur { filter: blur(4px); }
 
-        /* ---------- СЕТКА КАРТОЧЕК ---------- */
-        .projects-grid {
-            max-width: 1200px;
-            margin: 0 auto 100px;
-            padding: 0 40px;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 40px;
-        }
+    /* ── VERTICAL LABEL ── */
+    .vert {
+      position: fixed;
+      left: 18px; top: 50%;
+      transform: translateY(-50%) rotate(-90deg);
+      font-size: 88px;
+      font-weight: 700;
+      letter-spacing: -.03em;
+      color: rgba(0,0,0,.05);
+      pointer-events: none;
+      z-index: 0;
+      white-space: nowrap;
+      user-select: none;
+    }
 
-        .project-card {
-            background: #f5f5f5;
-            border: 1px solid #ddd;
-            padding: 30px 20px;
-            text-align: center;
-            cursor: pointer;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            border-radius: 4px;
-        }
+    /* ── BACK LINK ── */
+    .back {
+      position: fixed;
+      top: 36px; left: 36px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      text-decoration: none;
+      color: var(--black);
+      border: 1px solid var(--line);
+      padding: 7px 16px;
+      z-index: 100;
+      transition: background .15s, color .15s, border-color .15s;
+    }
+    .back:hover { background: var(--black); color: var(--white); border-color: var(--black); }
 
-        .project-card:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 20px 30px -10px rgba(0,0,0,0.15);
-        }
+    /* ── FILTER ROW ── */
+    .filter-row {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 90;
+      display: flex;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255,255,255,.96);
+      backdrop-filter: blur(6px);
+      overflow-x: auto;
+      padding-left: 140px; /* space for back btn */
+    }
+    .filter-btn {
+      padding: 18px 22px;
+      font-family: inherit;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      background: none;
+      border: none;
+      border-right: 1px solid var(--line);
+      color: var(--gray);
+      cursor: none;
+      white-space: nowrap;
+      transition: background .15s, color .15s;
+      flex-shrink: 0;
+    }
+    .filter-btn:hover, .filter-btn.active {
+      background: var(--black);
+      color: var(--white);
+    }
 
-        .project-card h3 {
-            font-size: 24px;
-            font-weight: 500;
-            letter-spacing: 2px;
-            margin-bottom: 12px;
-            text-transform: uppercase;
-        }
+    /* ── PAGE TITLE ── */
+    .page-title {
+      position: relative; z-index: 1;
+      font-size: clamp(58px, 10vw, 124px);
+      font-weight: 700;
+      letter-spacing: -.03em;
+      line-height: .88;
+      text-align: center;
+      padding-top: 96px;
+      margin-bottom: 40px;
+      transition: filter .4s;
+    }
+    .page-title.blur { filter: blur(5px); pointer-events: none; }
 
-        .project-card .year {
-            font-size: 14px;
-            opacity: 0.6;
-            letter-spacing: 1px;
-        }
+    /* ── GRID ── */
+    .projects-grid {
+      position: relative; z-index: 1;
+      max-width: 1280px;
+      margin: 0 auto 120px;
+      padding: 0 40px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0;
+      border-top: 1px solid var(--line);
+      border-left: 1px solid var(--line);
+      transition: filter .4s;
+    }
+    .projects-grid.blur { filter: blur(5px); pointer-events: none; }
 
-        /* ---------- БЛЮР ФОНА ---------- */
-        .blur-bg {
-            filter: blur(5px);
-            pointer-events: none;
-            transition: filter 0.4s ease;
-        }
+    /* ── CARD ── */
+    .project-card {
+      border-right: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      cursor: none;
+      overflow: hidden;
+      position: relative;
+    }
+    .project-card[hidden] { display: none; }
 
-        /* ---------- МОДАЛЬНОЕ ОКНО ---------- */
-        .modal {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            visibility: hidden;
-            opacity: 0;
-            transition: opacity 0.3s ease, visibility 0.3s ease;
-            z-index: 200;
-        }
+    /* image frame */
+    .card-img {
+      width: 100%;
+      aspect-ratio: 4/3;
+      overflow: hidden;
+      position: relative;
+      background: var(--off);
+    }
+    .card-img img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      display: block;
+      filter: grayscale(100%);
+      transition: filter .4s, transform .5s;
+    }
+    .project-card:hover .card-img img {
+      filter: grayscale(0%);
+      transform: scale(1.05);
+    }
+    /* placeholder when no image yet */
+    .card-img.ph {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #e8e8e8, #d4d4d4);
+    }
+    .card-img.ph::after {
+      content: attr(data-ph);
+      font-size: 9px;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: #bbb;
+      text-align: center;
+      padding: 12px;
+    }
+    /* hover overlay */
+    .card-overlay {
+      position: absolute; inset: 0;
+      background: rgba(0,0,0,0);
+      display: flex; align-items: center; justify-content: center;
+      transition: background .25s;
+    }
+    .project-card:hover .card-overlay { background: rgba(0,0,255,.1); }
+    .overlay-txt {
+      font-size: 9px; font-weight: 700;
+      letter-spacing: .22em; text-transform: uppercase;
+      color: white; opacity: 0;
+      transition: opacity .25s;
+    }
+    .project-card:hover .overlay-txt { opacity: 1; }
 
-        .modal.active {
-            visibility: visible;
-            opacity: 1;
-        }
+    /* card meta */
+    .card-meta {
+      padding: 10px 14px 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 8px;
+    }
+    .card-name {
+      font-size: 11px; font-weight: 700;
+      letter-spacing: .05em; text-transform: uppercase;
+      line-height: 1.4; flex: 1;
+    }
+    .card-year {
+      font-size: 10px; color: var(--gray);
+      letter-spacing: .06em; white-space: nowrap;
+    }
+    .card-tags {
+      display: flex; flex-direction: column;
+      align-items: flex-end; gap: 2px;
+    }
+    .tag {
+      font-size: 9px; font-weight: 700;
+      letter-spacing: .08em; text-transform: uppercase;
+      color: var(--blue);
+      background: none; border: none;
+      cursor: none; padding: 0; line-height: 1.7;
+      transition: opacity .15s;
+    }
+    .tag:hover { opacity: .55; }
 
-        .modal-overlay {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.3);
-            cursor: pointer;
-        }
+    /* ── MODAL ── */
+    .modal {
+      position: fixed; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      visibility: hidden; opacity: 0;
+      transition: opacity .3s, visibility .3s;
+      z-index: 400;
+    }
+    .modal.active { visibility: visible; opacity: 1; }
 
-        .modal-content {
-            position: relative;
-            width: 90%;
-            max-width: 1200px;
-            height: 80vh;
-            background: white;
-            box-shadow: 0 30px 50px rgba(0,0,0,0.3);
-            padding: 40px;
-            display: flex;
-            flex-direction: column;
-            z-index: 210;
-            border-radius: 8px;
-            overflow-y: auto;
-        }
+    .modal-overlay {
+      position: absolute; inset: 0;
+      background: rgba(0,0,0,.4);
+      cursor: pointer;
+    }
 
-        .close-btn {
-            position: absolute;
-            top: 20px; right: 30px;
-            font-size: 36px;
-            font-weight: 300;
-            cursor: pointer;
-            opacity: 0.5;
-            transition: opacity 0.2s;
-            line-height: 1;
-        }
-        .close-btn:hover { opacity: 1; }
+    .modal-content {
+      position: relative;
+      width: 92%;
+      max-width: 1100px;
+      max-height: 85vh;
+      background: var(--white);
+      z-index: 410;
+      display: grid;
+      grid-template-columns: 55% 45%;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      animation: mIn .28s ease;
+    }
+    @keyframes mIn {
+      from { opacity: 0; transform: translateY(12px) scale(.98); }
+      to   { opacity: 1; transform: none; }
+    }
 
-        .modal-header {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-        .modal-header h2 {
-            font-size: 48px;
-            font-weight: 500;
-            letter-spacing: 6px;
-            text-transform: uppercase;
-            border-bottom: 1px solid #ccc;
-            display: inline-block;
-            padding-bottom: 10px;
-        }
+    /* left: image gallery */
+    .modal-gallery {
+      overflow: hidden;
+      position: relative;
+      background: var(--off);
+      display: flex;
+      flex-direction: column;
+    }
+    .modal-main-img {
+      flex: 1;
+      overflow: hidden;
+      position: relative;
+    }
+    .modal-main-img img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      filter: grayscale(10%);
+      transition: filter .3s;
+    }
+    .modal-main-img img:hover { filter: grayscale(0%); }
+    .modal-main-img.ph {
+      display: flex; align-items: center; justify-content: center;
+      background: linear-gradient(135deg, #e8e8e8, #d0d0d0);
+      font-size: 10px; letter-spacing: .15em; text-transform: uppercase;
+      color: #bbb; min-height: 300px;
+    }
 
-        .modal-body {
-            display: flex;
-            gap: 40px;
-            flex: 1;
-        }
-        .modal-description {
-            flex: 1;
-            font-size: 18px;
-            line-height: 1.8;
-            opacity: 0.9;
-            max-width: 40%;
-        }
-        .modal-description p {
-            margin-bottom: 20px;
-        }
+    .modal-thumbs-row {
+      display: flex;
+      gap: 0;
+      border-top: 1px solid var(--line);
+      max-height: 90px;
+      overflow-x: auto;
+      flex-shrink: 0;
+    }
+    .thumb {
+      width: 90px; height: 90px;
+      flex-shrink: 0;
+      object-fit: cover;
+      filter: grayscale(40%);
+      border-right: 1px solid var(--line);
+      cursor: none;
+      transition: filter .2s;
+    }
+    .thumb:hover, .thumb.active { filter: grayscale(0%); outline: 2px solid var(--blue); outline-offset: -2px; }
+    .thumb.ph-thumb {
+      background: #ddd;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 8px; color: #bbb; letter-spacing: .12em;
+    }
 
-        .modal-thumbs {
-            flex: 1;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            align-content: flex-start;
-            justify-content: center;
-            max-width: 60%;
-        }
-        .thumb {
-            width: 120px;
-            height: 120px;
-            background: #eee;
-            border: 2px solid transparent;
-            cursor: pointer;
-            transition: all 0.25s ease;
-            object-fit: cover;
-            border-radius: 4px;
-        }
-        .thumb:hover {
-            border-color: #888;
-        }
-        .thumb.expanded {
-            transform: scale(1.3);
-            border-color: black;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-            z-index: 10;
-        }
+    /* right: info */
+    .modal-info {
+      padding: 36px 40px;
+      border-left: 1px solid var(--line);
+      display: flex; flex-direction: column;
+      gap: 16px;
+      overflow-y: auto;
+    }
+    .modal-title {
+      font-size: 24px; font-weight: 700;
+      letter-spacing: -.01em; line-height: 1.1;
+    }
+    .modal-year {
+      font-size: 11px; letter-spacing: .1em;
+      text-transform: uppercase; color: var(--gray);
+    }
+    .modal-desc {
+      font-size: 13px; line-height: 1.9;
+      color: #444; flex: 1;
+    }
+    .modal-specs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px 20px;
+      border-top: 1px solid var(--line);
+      padding-top: 18px;
+    }
+    .spec label {
+      display: block;
+      font-size: 9px; letter-spacing: .2em;
+      text-transform: uppercase; color: var(--gray);
+      margin-bottom: 3px;
+    }
+    .spec span { font-size: 12px; font-weight: 700; }
 
-        /* ---------- КОНТАКТЫ (как в about) ---------- */
-        .global-footer {
-            position: fixed;
-            bottom: 40px;
-            right: 80px;
-            display: flex;
-            gap: 16px;
-            align-items: center;
-            font-size: 14px;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            z-index: 50;
-            color: black;
-        }
+    .modal-close {
+      position: absolute;
+      top: 14px; right: 18px;
+      background: none; border: none;
+      font-size: 22px; line-height: 1;
+      color: var(--gray); cursor: none;
+      z-index: 420;
+      transition: color .15s, transform .2s;
+    }
+    .modal-close:hover { color: var(--black); transform: rotate(90deg); }
 
-        .global-footer a {
-            color: black;
-            text-decoration: none;
-            opacity: 0.6;
-            transition: opacity 0.3s ease;
-        }
+    /* ── FOOTER ── */
+    .global-footer {
+      position: fixed;
+      bottom: 32px; right: 48px;
+      display: flex; gap: 14px; align-items: center;
+      font-size: 11px; letter-spacing: .1em;
+      text-transform: uppercase; z-index: 50;
+      transition: filter .4s;
+    }
+    .global-footer.blur { filter: blur(5px); pointer-events: none; }
+    .global-footer a {
+      color: var(--black); text-decoration: none;
+      opacity: .55; transition: opacity .2s;
+    }
+    .global-footer a:hover { opacity: 1; }
+    .global-footer span { opacity: .25; }
 
-        .global-footer a:hover {
-            opacity: 1;
-        }
+    /* manifesto link bottom-left */
+    .footer-left {
+      position: fixed;
+      bottom: 32px; left: 36px;
+      display: flex; gap: 20px;
+      font-size: 11px; letter-spacing: .1em; text-transform: uppercase;
+      z-index: 50;
+      transition: filter .4s;
+    }
+    .footer-left.blur { filter: blur(5px); pointer-events: none; }
+    .footer-left a {
+      color: var(--black); text-decoration: none;
+      opacity: .55; transition: opacity .2s;
+    }
+    .footer-left a:hover { opacity: 1; }
 
-        .global-footer span {
-            opacity: 0.3;
-        }
-
-        /* ---------- АДАПТАЦИЯ ---------- */
-        @media (max-width: 900px) {
-            .back { left: 40px; }
-            .page-title { font-size: 40px; letter-spacing: 6px; padding-top: 100px; }
-            .projects-grid { padding: 0 20px; gap: 20px; }
-            .modal-content { padding: 20px; }
-            .modal-body { flex-direction: column; }
-            .modal-description { max-width: 100%; }
-            .modal-thumbs { max-width: 100%; justify-content: center; }
-            .global-footer { right: 40px; flex-wrap: wrap; gap: 12px; }
-        }
-    </style>
+    /* responsive */
+    @media (max-width: 900px) {
+      .vert { display: none; }
+      .projects-grid { grid-template-columns: repeat(2,1fr); padding: 0 16px; }
+      .modal-content { grid-template-columns: 1fr; max-height: 90vh; }
+      .modal-gallery { max-height: 240px; }
+      .filter-row { padding-left: 0; }
+      .back { top: 56px; }
+      .page-title { padding-top: 110px; }
+    }
+    @media (max-width: 560px) {
+      .projects-grid { grid-template-columns: 1fr; }
+    }
+  </style>
 </head>
 <body>
 
-    <!-- ССЫЛКА НА ГЛАВНУЮ (как в about) -->
-    <a href="index.html" class="back">← Back</a>
+<div id="cur"></div>
+<div class="grid-bg" id="gridBg"></div>
+<div class="vert">TO BUILD</div>
 
-    <!-- ЗАГОЛОВОК РАЗДЕЛА -->
-    <h1 class="page-title">ARCHITECTURE</h1>
+<!-- BACK -->
+<a href="index.html" class="back" id="backLink">← Back</a>
 
-    <!-- СЕТКА КАРТОЧЕК ПРОЕКТОВ -->
-    <div class="projects-grid" id="projectsGrid">
-        <!-- Пример проекта FORTIFICATION (подставь свои данные) -->
-        <div class="project-card" 
-             data-title="FORTIFICATION" 
-             data-description="Исследование оборонительных сооружений. Проект рассматривает фортификацию как пространственный нарратив, сочетающий исторические слои и современные интервенции. 2012, Арль."
-             data-images='["images/assets/build/fortification1.jpg", "images/assets/build/fortification2.jpg", "images/assets/build/fortification3.jpg"]'>
-            <h3>FORTIFICATION</h3>
-            <div class="year">2012</div>
-        </div>
+<!-- FILTER BAR -->
+<div class="filter-row" id="filterRow">
+  <button class="filter-btn active" data-filter="all">All</button>
+  <button class="filter-btn" data-filter="villa">Villa</button>
+  <button class="filter-btn" data-filter="residential">Residential</button>
+  <button class="filter-btn" data-filter="interior">Interior</button>
+  <button class="filter-btn" data-filter="masterplan">Masterplan</button>
+  <button class="filter-btn" data-filter="conceptual">Conceptual</button>
+  <button class="filter-btn" data-filter="published">Published</button>
+</div>
 
-        <!-- Сюда добавишь другие проекты (Urban / Research, AI Experiments) по аналогии -->
-        <div class="project-card" 
-             data-title="URBAN NARRATIVES" 
-             data-description="Исследование городских систем через генеративные алгоритмы. Серия диаграмм и пространственных инсталляций."
-             data-images='["images/assets/build/urban1.jpg", "images/assets/build/urban2.jpg"]'>
-            <h3>URBAN NARRATIVES</h3>
-            <div class="year">2023</div>
-        </div>
+<!-- TITLE -->
+<h1 class="page-title" id="pageTitle">ARCHITECTURE</h1>
 
-        <div class="project-card" 
-             data-title="AI EXPERIMENTS" 
-             data-description="Генеративные модели в архитектурном проектировании. Эксперименты с планировочными структурами."
-             data-images='["images/assets/build/ai1.jpg", "images/assets/build/ai2.jpg", "images/assets/build/ai3.jpg"]'>
-            <h3>AI EXPERIMENTS</h3>
-            <div class="year">2024</div>
-        </div>
+<!-- GRID -->
+<div class="projects-grid" id="projectsGrid">
+
+  <!-- ① VILLA AMELIE -->
+  <div class="project-card" data-tags="villa residential"
+    data-title="Villa Amelie"
+    data-year="2023"
+    data-location="Marbella, Spain"
+    data-type="Residential Villa"
+    data-studio="Archidom Studio"
+    data-status="Approved"
+    data-tools="AutoCAD, Revit, Lumion"
+    data-desc="Private tropical villa designed around family proximity — continuous ground-floor flow between kitchen, living, office, gym, and master bedroom. Open plan, panoramic pool, lush landscape integration. Approved by client."
+    data-images='["images/assets/build/villa-amelie-1.jpg","images/assets/build/villa-amelie-2.jpg","images/assets/build/villa-amelie-3.jpg"]'>
+    <div class="card-img ph" data-ph="Villa Amelie">
+      <!-- <img src="images/assets/build/villa-amelie-1.jpg" alt="Villa Amelie"> -->
+      <div class="card-overlay"><span class="overlay-txt">Open project</span></div>
+    </div>
+    <div class="card-meta">
+      <div>
+        <div class="card-name">Villa Amelie</div>
+        <div class="card-year">2023 · Marbella</div>
+      </div>
+      <div class="card-tags">
+        <button class="tag" data-filter="villa">#VILLA</button>
+        <button class="tag" data-filter="residential">#RESIDENTIAL</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ② BROWNIE COFFEEHOUSE -->
+  <div class="project-card" data-tags="interior residential"
+    data-title="Brownie Coffeehouse"
+    data-year="2022"
+    data-location="Molodechno, Belarus"
+    data-type="Interior / Commercial"
+    data-studio="Independent"
+    data-status="Built"
+    data-tools="AutoCAD, ArchiCAD, Lumion"
+    data-desc="Interior transformation of a ground-floor space in a residential building. Urban mood, material research, and functional zoning — from concept through author's supervision to realisation."
+    data-images='["images/assets/build/brownie-1.jpg","images/assets/build/brownie-2.jpg","images/assets/build/brownie-3.jpg"]'>
+    <div class="card-img ph" data-ph="Brownie Coffeehouse">
+      <!-- <img src="images/assets/build/brownie-1.jpg" alt="Brownie"> -->
+      <div class="card-overlay"><span class="overlay-txt">Open project</span></div>
+    </div>
+    <div class="card-meta">
+      <div>
+        <div class="card-name">Brownie Coffeehouse</div>
+        <div class="card-year">2022 · Molodechno</div>
+      </div>
+      <div class="card-tags">
+        <button class="tag" data-filter="interior">#INTERIOR</button>
+        <button class="tag" data-filter="residential">#RESIDENTIAL</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ③ FORTIFICATION -->
+  <div class="project-card" data-tags="conceptual published"
+    data-title="Fortification — Quarteira"
+    data-year="2022"
+    data-location="Quarteira, Portugal"
+    data-type="Urban / Public"
+    data-studio="ULisboa (Erasmus)"
+    data-status="Published · UPC Barcelona"
+    data-tools="AutoCAD, ArchiCAD, Photoshop"
+    data-desc="Coastal protection system — a wall that communicates with the city and people rather than separating them. Accepted and published in a magazine of the Universitat Politècnica de Catalunya, Barcelona."
+    data-images='["images/assets/build/fortification-1.jpg","images/assets/build/fortification-2.jpg","images/assets/build/fortification-3.jpg"]'>
+    <div class="card-img ph" data-ph="Fortification">
+      <!-- <img src="images/assets/build/fortification-1.jpg" alt="Fortification"> -->
+      <div class="card-overlay"><span class="overlay-txt">Open project</span></div>
+    </div>
+    <div class="card-meta">
+      <div>
+        <div class="card-name">Fortification — Quarteira</div>
+        <div class="card-year">2022 · Portugal</div>
+      </div>
+      <div class="card-tags">
+        <button class="tag" data-filter="conceptual">#CONCEPTUAL</button>
+        <button class="tag" data-filter="published">#PUBLISHED</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ④ VILLA ERIC MADROÑAL -->
+  <div class="project-card" data-tags="villa residential"
+    data-title="Villa Eric Madroñal"
+    data-year="2023"
+    data-location="Marbella, Spain"
+    data-type="Residential Villa"
+    data-studio="Archidom Studio"
+    data-status="In progress"
+    data-tools="Revit, Lumion, Photoshop"
+    data-desc="Hillside villa commanding panoramic views of mountains and sea. Double-height living room, floor-to-ceiling windows, two fire pits positioned to face the views. Architecture that embraces its topography."
+    data-images='["images/assets/build/villa-eric-1.jpg","images/assets/build/villa-eric-2.jpg","images/assets/build/villa-eric-3.jpg"]'>
+    <div class="card-img ph" data-ph="Villa Eric Madroñal">
+      <!-- <img src="images/assets/build/villa-eric-1.jpg" alt="Villa Eric"> -->
+      <div class="card-overlay"><span class="overlay-txt">Open project</span></div>
+    </div>
+    <div class="card-meta">
+      <div>
+        <div class="card-name">Villa Eric Madroñal</div>
+        <div class="card-year">2023 · Marbella</div>
+      </div>
+      <div class="card-tags">
+        <button class="tag" data-filter="villa">#VILLA</button>
+        <button class="tag" data-filter="residential">#RESIDENTIAL</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ⑤ 1295 RESIDENTIAL COMPLEX -->
+  <div class="project-card" data-tags="residential masterplan"
+    data-title="1295 — Residential Complex"
+    data-year="2024"
+    data-location="Minsk, Belarus"
+    data-type="Residential"
+    data-studio="Zrobim Architects"
+    data-status="Under construction"
+    data-tools="ArchiCAD, Enscape"
+    data-desc="Two typologies of houses — sole lead architect role. Evolved from a single repeated type to a nuanced dual-typology response to views, noise, and architectural balance. Now under construction."
+    data-images='["images/assets/build/1295-1.jpg","images/assets/build/1295-2.jpg","images/assets/build/1295-3.jpg"]'>
+    <div class="card-img ph" data-ph="1295 Complex">
+      <!-- <img src="images/assets/build/1295-1.jpg" alt="1295"> -->
+      <div class="card-overlay"><span class="overlay-txt">Open project</span></div>
+    </div>
+    <div class="card-meta">
+      <div>
+        <div class="card-name">1295 — Residential Complex</div>
+        <div class="card-year">2024 · Minsk</div>
+      </div>
+      <div class="card-tags">
+        <button class="tag" data-filter="residential">#RESIDENTIAL</button>
+        <button class="tag" data-filter="masterplan">#MASTERPLAN</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ⑥ MASTERPLAN LA PERLA -->
+  <div class="project-card" data-tags="villa masterplan"
+    data-title="Masterplan La Perla"
+    data-year="2023"
+    data-location="Cabrera, Dominican Republic"
+    data-type="Masterplan + Villas"
+    data-studio="Archidom Studio"
+    data-status="In progress · 1st villa approved"
+    data-tools="AutoCAD, SketchUp, Lumion"
+    data-desc="32,000 m² masterplan with two villa typologies — first-line sea-facing and second-line hillside. Floor-to-ceiling windows, ocean-first orientation, seamless indoor-outdoor language."
+    data-images='["images/assets/build/laperla-1.jpg","images/assets/build/laperla-2.jpg","images/assets/build/laperla-3.jpg"]'>
+    <div class="card-img ph" data-ph="Masterplan La Perla">
+      <!-- <img src="images/assets/build/laperla-1.jpg" alt="La Perla"> -->
+      <div class="card-overlay"><span class="overlay-txt">Open project</span></div>
+    </div>
+    <div class="card-meta">
+      <div>
+        <div class="card-name">Masterplan La Perla — DR</div>
+        <div class="card-year">2023 · Dominican Republic</div>
+      </div>
+      <div class="card-tags">
+        <button class="tag" data-filter="villa">#VILLA</button>
+        <button class="tag" data-filter="masterplan">#MASTERPLAN</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ⑦ MUSEUM NOVA -->
+  <div class="project-card" data-tags="conceptual"
+    data-title="Museum of Modern Art NOVA"
+    data-year="2022"
+    data-location="Minsk, Belarus"
+    data-type="Cultural / Public"
+    data-studio="Graduation project · Warsaw"
+    data-status="Graduation work"
+    data-tools="AutoCAD, ArchiCAD, Lumion"
+    data-desc="Contemporary art museum on the banks of the Swislocz River. Inspired by tectonic plate movements — static power frozen in concrete. Conceived as a cultural engine for expanding Belarus's creative landscape."
+    data-images='["images/assets/build/nova-1.jpg","images/assets/build/nova-2.jpg","images/assets/build/nova-3.jpg"]'>
+    <div class="card-img ph" data-ph="Museum NOVA">
+      <!-- <img src="images/assets/build/nova-1.jpg" alt="Museum NOVA"> -->
+      <div class="card-overlay"><span class="overlay-txt">Open project</span></div>
+    </div>
+    <div class="card-meta">
+      <div>
+        <div class="card-name">Museum of Modern Art "NOVA"</div>
+        <div class="card-year">2022 · Minsk</div>
+      </div>
+      <div class="card-tags">
+        <button class="tag" data-filter="conceptual">#CONCEPTUAL</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ⑧ ALBORADA COMPETITION -->
+  <div class="project-card" data-tags="conceptual masterplan"
+    data-title="Competition Alborada Benahavís"
+    data-year="2023"
+    data-location="Benahavís, Spain"
+    data-type="Competition / Hospitality"
+    data-studio="Archidom Studio"
+    data-status="Competition entry"
+    data-tools="AutoCAD, Rhino, Photoshop"
+    data-desc="Wellness retreat and aparthotel complex in Andalusian landscape. Terraced forms carved into the hillside — architecture as landscape continuation. Concept plans, sketches, diagrams, post-production."
+    data-images='["images/assets/build/alborada-1.jpg","images/assets/build/alborada-2.jpg","images/assets/build/alborada-3.jpg"]'>
+    <div class="card-img ph" data-ph="Alborada Competition">
+      <!-- <img src="images/assets/build/alborada-1.jpg" alt="Alborada"> -->
+      <div class="card-overlay"><span class="overlay-txt">Open project</span></div>
+    </div>
+    <div class="card-meta">
+      <div>
+        <div class="card-name">Competition Alborada</div>
+        <div class="card-year">2023 · Benahavís</div>
+      </div>
+      <div class="card-tags">
+        <button class="tag" data-filter="conceptual">#CONCEPTUAL</button>
+        <button class="tag" data-filter="masterplan">#MASTERPLAN</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ⑨ AGEISPOLIS -->
+  <div class="project-card" data-tags="conceptual residential"
+    data-title="Ageispolis"
+    data-year="2022–2023"
+    data-location="Conceptual"
+    data-type="Residential / Conceptual"
+    data-studio="Personal project"
+    data-status="Concept"
+    data-tools="ArchiCAD, Lumion, Photoshop"
+    data-desc="One-floor house with three bedrooms and a hall overlooking a private garden. Unique perforated facade — small square windows creating light and shadow play while maintaining privacy. Modern design merged with natural beauty."
+    data-images='["images/assets/build/ageispolis-1.jpg","images/assets/build/ageispolis-2.jpg","images/assets/build/ageispolis-3.jpg"]'>
+    <div class="card-img ph" data-ph="Ageispolis">
+      <!-- <img src="images/assets/build/ageispolis-1.jpg" alt="Ageispolis"> -->
+      <div class="card-overlay"><span class="overlay-txt">Open project</span></div>
+    </div>
+    <div class="card-meta">
+      <div>
+        <div class="card-name">Ageispolis</div>
+        <div class="card-year">2022–2023</div>
+      </div>
+      <div class="card-tags">
+        <button class="tag" data-filter="conceptual">#CONCEPTUAL</button>
+        <button class="tag" data-filter="residential">#RESIDENTIAL</button>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /grid -->
+
+<!-- ── MODAL ── -->
+<div class="modal" id="modal">
+  <div class="modal-overlay" id="modalOverlay"></div>
+  <div class="modal-content">
+    <button class="modal-close" id="modalClose">×</button>
+
+    <div class="modal-gallery">
+      <div class="modal-main-img ph" id="modalMain">No image yet — add to images/assets/build/</div>
+      <div class="modal-thumbs-row" id="modalThumbs"></div>
     </div>
 
-    <!-- МОДАЛЬНОЕ ОКНО (скрыто по умолчанию) -->
-    <div class="modal" id="projectModal">
-        <div class="modal-overlay" id="modalOverlay"></div>
-        <div class="modal-content">
-            <span class="close-btn" id="closeModal">&times;</span>
-            <div class="modal-header">
-                <h2 id="modalTitle">FORTIFICATION</h2>
-            </div>
-            <div class="modal-body">
-                <div class="modal-description" id="modalDesc">
-                    <p>Описание проекта будет здесь.</p>
-                </div>
-                <div class="modal-thumbs" id="modalThumbs">
-                    <!-- миниатюры добавляются скриптом -->
-                </div>
-            </div>
-        </div>
+    <div class="modal-info">
+      <div>
+        <div class="modal-year" id="modalYear"></div>
+        <div class="modal-title" id="modalTitle"></div>
+      </div>
+      <p class="modal-desc" id="modalDesc"></p>
+      <div class="modal-specs" id="modalSpecs"></div>
     </div>
+  </div>
+</div>
 
-    <!-- КОНТАКТЫ (как на about) -->
-    <div class="global-footer">
-        <a href="mailto:navilen@bk.ru">navilen@bk.ru</a>
-        <span>—</span>
-        <a href="https://www.instagram.com/molodostibolshenebudet/" target="_blank">Instagram</a>
-        <span>—</span>
-        <a href="https://www.behance.net/avasileuskaya" target="_blank">Behance</a>
-        <span>—</span>
-        <a href="https://linkedin.com/in/worldwidemoment/" target="_blank">LinkedIn</a>
-    </div>
+<!-- FOOTER -->
+<div class="footer-left" id="footerLeft">
+  <a href="index.html">Manifesto</a>
+  <a href="about.html">About</a>
+</div>
 
-    <script>
-        // ---------- РАБОТА С МОДАЛЬНЫМ ОКНОМ ----------
-        const modal = document.getElementById('projectModal');
-        const modalOverlay = document.getElementById('modalOverlay');
-        const closeBtn = document.getElementById('closeModal');
-        const modalTitle = document.getElementById('modalTitle');
-        const modalDesc = document.getElementById('modalDesc');
-        const modalThumbs = document.getElementById('modalThumbs');
-        const projectsGrid = document.getElementById('projectsGrid');
-        const pageTitle = document.querySelector('.page-title');
-        const backLink = document.querySelector('.back');
+<div class="global-footer" id="globalFooter">
+  <a href="mailto:navilen@bk.ru">navilen@bk.ru</a>
+  <span>—</span>
+  <a href="https://www.instagram.com/molodostibolshenebudet/" target="_blank">Instagram</a>
+  <span>—</span>
+  <a href="https://www.behance.net/avasileuskaya" target="_blank">Behance</a>
+  <span>—</span>
+  <a href="https://linkedin.com/in/worldwidemoment/" target="_blank">LinkedIn</a>
+</div>
 
-        function setBlur(blur) {
-            const elements = [projectsGrid, pageTitle, backLink];
-            if (blur) {
-                elements.forEach(el => el.classList.add('blur-bg'));
-            } else {
-                elements.forEach(el => el.classList.remove('blur-bg'));
-            }
-        }
+<script>
+  // ── CURSOR ──
+  const cur = document.getElementById('cur');
+  document.addEventListener('mousemove', e => {
+    cur.style.left = e.clientX + 'px';
+    cur.style.top  = e.clientY + 'px';
+  });
+  document.querySelectorAll('a, button, .project-card').forEach(el => {
+    el.addEventListener('mouseenter', () => cur.classList.add('big'));
+    el.addEventListener('mouseleave', () => cur.classList.remove('big'));
+  });
 
-        function openModal(title, description, images) {
-            modalTitle.textContent = title;
-            // Заменяем переносы строк на параграфы, если нужно
-            modalDesc.innerHTML = `<p>${description.replace(/\n/g, '</p><p>')}</p>`;
-            // Генерируем миниатюры
-            modalThumbs.innerHTML = '';
-            images.forEach(src => {
-                const img = document.createElement('img');
-                img.className = 'thumb';
-                img.src = src;
-                img.alt = 'project image';
-                // Если изображение не загружается, показываем серый квадрат
-                img.onerror = function() {
-                    this.style.background = '#ccc';
-                    this.src = ''; // убираем битую ссылку
-                };
-                img.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    // Убираем класс expanded у всех, добавляем текущему
-                    document.querySelectorAll('.thumb').forEach(th => th.classList.remove('expanded'));
-                    this.classList.add('expanded');
-                });
-                modalThumbs.appendChild(img);
-            });
-            modal.classList.add('active');
-            setBlur(true);
-        }
+  // ── BLUR HELPERS ──
+  const blurEls = ['pageTitle','projectsGrid','globalFooter','footerLeft','gridBg'];
+  function setBlur(on) {
+    blurEls.forEach(id => {
+      document.getElementById(id)?.classList.toggle('blur', on);
+    });
+  }
 
-        function closeModalFunc() {
-            modal.classList.remove('active');
-            setBlur(false);
-        }
+  // ── MODAL ──
+  const modal       = document.getElementById('modal');
+  const modalMain   = document.getElementById('modalMain');
+  const modalThumbs = document.getElementById('modalThumbs');
+  const modalTitle  = document.getElementById('modalTitle');
+  const modalYear   = document.getElementById('modalYear');
+  const modalDesc   = document.getElementById('modalDesc');
+  const modalSpecs  = document.getElementById('modalSpecs');
 
-        // Обработчики на карточки проектов
-        document.querySelectorAll('.project-card').forEach(card => {
-            card.addEventListener('click', () => {
-                const title = card.dataset.title || 'Проект';
-                const description = card.dataset.description || 'Описание отсутствует.';
-                let images = [];
-                try {
-                    images = JSON.parse(card.dataset.images || '[]');
-                } catch (e) {
-                    images = [];
-                }
-                // Если нет изображений, создадим плейсхолдеры
-                if (images.length === 0) {
-                    images = ['placeholder1', 'placeholder2', 'placeholder3'];
-                }
-                openModal(title, description, images);
-            });
+  function openModal(card) {
+    const d = card.dataset;
+    let images = [];
+    try { images = JSON.parse(d.images || '[]'); } catch(e) {}
+
+    // title / year / desc
+    modalTitle.textContent = d.title || '';
+    modalYear.textContent  = (d.year || '') + (d.location ? ' · ' + d.location : '');
+    modalDesc.textContent  = d.desc  || '';
+
+    // specs
+    const specs = [
+      { label: 'Type',     val: d.type },
+      { label: 'Studio',   val: d.studio },
+      { label: 'Status',   val: d.status },
+      { label: 'Tools',    val: d.tools },
+    ].filter(s => s.val);
+
+    modalSpecs.innerHTML = specs.map(s =>
+      `<div class="spec"><label>${s.label}</label><span>${s.val}</span></div>`
+    ).join('');
+
+    // gallery
+    modalThumbs.innerHTML = '';
+    if (images.length > 0) {
+      // main image
+      modalMain.className = 'modal-main-img';
+      modalMain.innerHTML = `<img src="${images[0]}" alt="${d.title}">`;
+      // thumbs
+      images.forEach((src, i) => {
+        const img = document.createElement('img');
+        img.className = 'thumb' + (i === 0 ? ' active' : '');
+        img.src = src;
+        img.onerror = function() { this.classList.add('ph-thumb'); this.alt='—'; };
+        img.addEventListener('click', () => {
+          document.querySelectorAll('.thumb').forEach(t => t.classList.remove('active'));
+          img.classList.add('active');
+          modalMain.innerHTML = `<img src="${src}" alt="${d.title}">`;
         });
+        modalThumbs.appendChild(img);
+      });
+    } else {
+      modalMain.className = 'modal-main-img ph';
+      modalMain.textContent = 'Add images to images/assets/build/';
+      modalThumbs.innerHTML = '';
+    }
 
-        // Закрытие по крестику, оверлею и Escape
-        closeBtn.addEventListener('click', closeModalFunc);
-        modalOverlay.addEventListener('click', closeModalFunc);
-        window.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && modal.classList.contains('active')) {
-                closeModalFunc();
-            }
-        });
-    </script>
+    modal.classList.add('active');
+    setBlur(true);
+  }
 
-    <!-- Дополнительный стиль для плейсхолдеров -->
-    <style>
-        .thumb:not([src]), .thumb[src=""] {
-            background: #ddd;
-            display: inline-block;
-        }
-    </style>
+  function closeModal() {
+    modal.classList.remove('active');
+    setBlur(false);
+  }
+
+  // card clicks
+  document.querySelectorAll('.project-card').forEach(card => {
+    card.addEventListener('click', e => {
+      if (e.target.classList.contains('tag')) return; // tag handles separately
+      openModal(card);
+    });
+  });
+
+  document.getElementById('modalClose').addEventListener('click', closeModal);
+  document.getElementById('modalOverlay').addEventListener('click', closeModal);
+  window.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+  // ── FILTER ──
+  function applyFilter(filter) {
+    closeModal();
+    document.querySelectorAll('.filter-btn').forEach(b =>
+      b.classList.toggle('active', b.dataset.filter === filter));
+    document.querySelectorAll('.project-card').forEach(card => {
+      const show = filter === 'all' || card.dataset.tags.includes(filter);
+      card.toggleAttribute('hidden', !show);
+    });
+  }
+
+  document.querySelectorAll('.filter-btn').forEach(btn =>
+    btn.addEventListener('click', () => applyFilter(btn.dataset.filter)));
+
+  document.querySelectorAll('.tag').forEach(tag =>
+    tag.addEventListener('click', e => {
+      e.stopPropagation();
+      applyFilter(tag.dataset.filter);
+    }));
+</script>
 </body>
 </html>
