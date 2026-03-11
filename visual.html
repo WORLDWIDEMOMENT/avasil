@@ -1,485 +1,387 @@
-import { useState, useEffect, useRef } from "react";
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Visual — AV</title>
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+::selection { background: #2a2a2a; color: #eeeeee; }
 
-// ─── PLACEHOLDER IMAGES (colored rectangles as stand-ins) ───
-const FOLDERS = [
-  {
-    id: "scan",
-    label: "Scan",
-    count: 6,
-    color: "#1a1a1a",
-    accent: "#c8b89a",
-    items: [
-      { id: 0, w: 2, h: 3, col: "#2a2520" },
-      { id: 1, w: 1, h: 1, col: "#1e1c18" },
-      { id: 2, w: 1, h: 1, col: "#2e2820" },
-      { id: 3, w: 3, h: 2, col: "#24201a" },
-      { id: 4, w: 1, h: 2, col: "#1a1815" },
-      { id: 5, w: 2, h: 2, col: "#201e1a" },
-    ],
-  },
-  {
-    id: "none",
-    label: "None of them is me",
-    count: 5,
-    color: "#111",
-    accent: "#8888ff",
-    items: [
-      { id: 0, w: 1, h: 1, col: "#16161e" },
-      { id: 1, w: 2, h: 3, col: "#12121a" },
-      { id: 2, w: 1, h: 2, col: "#1a1a22" },
-      { id: 3, w: 2, h: 1, col: "#141420" },
-      { id: 4, w: 1, h: 1, col: "#18181f" },
-    ],
-  },
+:root {
+  --bg:    #0a0a0a;
+  --white: #eeeeee;
+  --dim:   rgba(238,238,238,.38);
+  --line:  rgba(238,238,238,.1);
+  --blue:  #4d6aff;
+}
+
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--white);
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  min-height: 100vh;
+  cursor: none;
+  overflow-x: hidden;
+}
+
+/* ── CURSOR ── */
+#cur {
+  position: fixed; z-index: 9999;
+  width: 10px; height: 10px;
+  background: var(--white); border-radius: 50%;
+  pointer-events: none;
+  transform: translate(-50%,-50%);
+  transition: width .15s, height .15s;
+  mix-blend-mode: difference;
+}
+#cur.big { width: 50px; height: 50px; }
+@media (hover:none) { #cur { display: none; } }
+
+/* ── GRAIN ── */
+.grain {
+  position: fixed; inset: 0; pointer-events: none; z-index: 200; opacity: .04;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 160px 160px;
+}
+
+/* ── HEADER ── */
+.header {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  padding: 34px 48px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+  background: linear-gradient(to bottom, rgba(10,10,10,1) 65%, transparent);
+}
+
+.back {
+  font-size: 11px; font-weight: 700;
+  letter-spacing: .18em; text-transform: uppercase;
+  text-decoration: none; color: var(--dim);
+  transition: color .2s; flex-shrink: 0;
+}
+.back:hover { color: var(--white); }
+
+/* tabs */
+.tabs {
+  display: flex; gap: 0;
+  border: 1px solid var(--line);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.tabs::-webkit-scrollbar { display: none; }
+.tab {
+  padding: 7px 20px;
+  font-size: 9px; font-weight: 700;
+  letter-spacing: .2em; text-transform: uppercase;
+  color: var(--dim);
+  border-right: 1px solid var(--line);
+  cursor: none;
+  transition: color .2s;
+  white-space: nowrap; user-select: none;
+  position: relative;
+}
+.tab:last-child { border-right: none; }
+.tab:hover { color: var(--white); }
+.tab.active { color: var(--white); }
+.tab.active::after {
+  content:'';
+  position: absolute; left: 0; right: 0; bottom: -1px;
+  height: 2px; background: var(--blue);
+}
+.tab .count { color: var(--blue); margin-left: 5px; font-size: 8px; }
+
+/* ── BG WORD ── */
+.bg-word {
+  position: fixed;
+  bottom: -24px; right: -12px;
+  font-size: clamp(120px, 17vw, 220px);
+  font-weight: 900; letter-spacing: -.04em; text-transform: uppercase;
+  color: rgba(255,255,255,.025);
+  pointer-events: none; z-index: 0;
+  user-select: none; line-height: 1;
+  transition: opacity .4s;
+}
+
+/* ── MAIN ── */
+.main {
+  position: relative; z-index: 1;
+  padding: 108px 48px 120px;
+}
+
+/* ── MASONRY ── */
+.grid {
+  columns: 4;
+  column-gap: 5px;
+}
+
+/* ── CARD ── */
+.card {
+  break-inside: avoid;
+  margin-bottom: 5px;
+  position: relative;
+  overflow: hidden;
+  cursor: none;
+  display: block;
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity .42s ease, transform .42s ease;
+}
+.card.in  { opacity: 1; transform: none; }
+.card.out { opacity: 0; transform: translateY(-10px) scale(.97); transition: opacity .22s, transform .22s; }
+
+.card .inner { position: relative; overflow: hidden; display: block; }
+.card .inner img {
+  display: block; width: 100%; height: 100%; object-fit: cover;
+  transition: transform .5s cubic-bezier(.4,0,.2,1), filter .5s;
+  filter: grayscale(12%);
+}
+.card:hover .inner img { transform: scale(1.045); filter: grayscale(0%) brightness(1.07); }
+
+/* placeholder bg when image absent */
+.card .ph {
+  display: block; width: 100%;
+  background: #141414;
+  border: 1px solid #1c1c1c;
+}
+
+/* sizes */
+.sz-tall  .ph, .sz-tall  img { aspect-ratio: 3/4; }
+.sz-wide  .ph, .sz-wide  img { aspect-ratio: 4/3; }
+.sz-sq    .ph, .sz-sq    img { aspect-ratio: 1/1; }
+.sz-port  .ph, .sz-port  img { aspect-ratio: 2/3; }
+.sz-land  .ph, .sz-land  img { aspect-ratio: 16/9; }
+
+/* caption */
+.cap {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  padding: 32px 12px 10px;
+  background: linear-gradient(transparent, rgba(0,0,0,.8));
+  transform: translateY(100%);
+  transition: transform .3s ease;
+  display: flex; justify-content: space-between; align-items: flex-end;
+  pointer-events: none;
+}
+.card:hover .cap { transform: translateY(0); }
+.cap-title { font-size: 10px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
+.cap-cat   { font-size: 8px;  font-weight: 700; letter-spacing: .18em; text-transform: uppercase; color: var(--blue); }
+
+/* ── FOOTER ── */
+.footer {
+  position: fixed; bottom: 28px; right: 48px;
+  display: flex; gap: 14px; align-items: center;
+  font-size: 10px; font-weight: 700;
+  letter-spacing: .16em; text-transform: uppercase;
+  z-index: 100;
+}
+.footer a { color: var(--white); text-decoration: none; opacity: .4; transition: opacity .2s; }
+.footer a:hover { opacity: 1; }
+.footer .sep { opacity: .18; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 1100px) { .grid { columns: 3; } }
+@media (max-width: 780px) {
+  .grid { columns: 2; }
+  .header { padding: 22px 22px 14px; flex-wrap: wrap; gap: 12px; }
+  .main { padding: 120px 10px 100px; }
+  .footer { right: 22px; flex-wrap: wrap; gap: 8px; }
+  .footer .sep { display: none; }
+}
+@media (max-width: 440px) {
+  .grid { columns: 1; }
+  .bg-word { font-size: 80px; }
+}
+</style>
+</head>
+<body>
+
+<div id="cur"></div>
+<div class="grain"></div>
+<div class="bg-word" id="bgWord">Visual</div>
+
+<header class="header">
+  <a href="index.html" class="back">← Back</a>
+  <nav class="tabs" id="tabs">
+    <div class="tab active" data-cat="all">All<span class="count" id="cnt-all"></span></div>
+    <div class="tab" data-cat="scan">Scan<span class="count" id="cnt-scan"></span></div>
+    <div class="tab" data-cat="none">None of them is me<span class="count" id="cnt-none"></span></div>
+    <div class="tab" data-cat="custom">Custom<span class="count" id="cnt-custom"></span></div>
+    <div class="tab" data-cat="other">Other<span class="count" id="cnt-other"></span></div>
+  </nav>
+</header>
+
+<main class="main">
+  <div class="grid" id="grid"></div>
+</main>
+
+<footer class="footer">
+  <a href="mailto:navilen@bk.ru">navilen@bk.ru</a>
+  <span class="sep">—</span>
+  <a href="https://www.instagram.com/molodostibolshenebudet/" target="_blank">Instagram</a>
+  <span class="sep">—</span>
+  <a href="https://www.behance.net/avasileuskaya" target="_blank">Behance</a>
+  <span class="sep">—</span>
+  <a href="https://linkedin.com/in/worldwidemoment/" target="_blank">LinkedIn</a>
+</footer>
+
+<script>
+/* ═══════════════════════════════════════════════════
+   DATA
+   sizes: tall | wide | sq | port | land
+   img: path to real file — if missing, shows placeholder
+   ═══════════════════════════════════════════════════ */
+const ITEMS = [
+  // ── SCAN ──
+  { cat:'scan',   title:'Scan 01', size:'tall', img:'images/assets/create/scan/Scan1.jpg' },
+  { cat:'scan',   title:'Scan 02', size:'sq',   img:'images/assets/create/scan/Scan2.jpg' },
+  { cat:'scan',   title:'Scan 03', size:'port', img:'images/assets/create/scan/Scan3.jpg' },
+  { cat:'scan',   title:'Scan 04', size:'wide', img:'images/assets/create/scan/Scan4.jpg' },
+  { cat:'scan',   title:'Scan 05', size:'tall', img:'images/assets/create/scan/Scan5.jpg' },
+  { cat:'scan',   title:'Scan 06', size:'sq',   img:'images/assets/create/scan/Scan6.jpg' },
+  { cat:'scan',   title:'Scan 07', size:'land', img:'iimages/assets/create/scan/Scan7.jpg' },
+  { cat:'scan',   title:'Scan 03', size:'port', img:'images/assets/create/scan/Scan8.jpg' },
+  { cat:'scan',   title:'Scan 08', size:'port', img:'images/assets/create/scan/Scan9.jpg' },
+  // ── NONE OF THEM IS ME ──
+  { cat:'none',   title:'#01',     size:'tall', img:'images/assets/create/portrait/Portrait1.jpg' },
+  { cat:'none',   title:'#02',     size:'wide', img:'images/assets/create/portrait/Portrait2.jpg' },
+  { cat:'none',   title:'#03',     size:'sq',   img:'images/assets/create/portrait/Portrait3.jpg' },
+  { cat:'none',   title:'#04',     size:'port', img:'images/assets/create/portrait/Portrait4.jpg' },
+  { cat:'none',   title:'#05',     size:'tall', img:'images/assets/create/portrait/Portrait5.jpg' },
+  { cat:'none',   title:'#06',     size:'land', img:'images/assets/create/portrait/Portrait6.jpg' },
+  
+  // ── CUSTOM ──
+  { cat:'custom', title:'Custom 01', size:'tall', img:'images/assets/create/custom-01.jpg' },
+  { cat:'custom', title:'Custom 02', size:'sq',   img:'images/assets/create/custom-02.jpg' },
+  { cat:'custom', title:'Custom 03', size:'wide', img:'images/assets/create/custom-03.jpg' },
+  { cat:'custom', title:'Custom 04', size:'port', img:'images/assets/create/custom-04.jpg' },
+  { cat:'custom', title:'Custom 05', size:'tall', img:'images/assets/create/custom-05.jpg' },
+  { cat:'custom', title:'Custom 06', size:'land', img:'images/assets/create/custom-06.jpg' },
+  // ── OTHER ──
+  { cat:'other',  title:'Visual 01', size:'sq',   img:'images/assets/create/other-01.jpg' },
+  { cat:'other',  title:'Visual 02', size:'tall', img:'images/assets/create/other-02.jpg' },
+  { cat:'other',  title:'Visual 03', size:'wide', img:'images/assets/create/other-03.jpg' },
+  { cat:'other',  title:'Visual 04', size:'port', img:'images/assets/create/other-04.jpg' },
 ];
 
-// ─── CONCEPT A — "FOLDER TABS" horizontal split with masonry grid ───
-function ConceptA() {
-  const [active, setActive] = useState(0);
-  const [entered, setEntered] = useState(false);
-  const folder = FOLDERS[active];
+const CAT_LABEL = { scan:'Scan', none:'None of them is me', custom:'Custom', other:'Other' };
+const VALID_CATS = ['all','scan','none','custom','other'];
+let activeCat = 'all';
 
-  useEffect(() => {
-    setEntered(false);
-    const t = setTimeout(() => setEntered(true), 60);
-    return () => clearTimeout(t);
-  }, [active]);
-
-  useEffect(() => {
-    window.location.hash = String(active);
-  }, [active]);
-
-  return (
-    <div style={{
-      background: "#0b0b0b", minHeight: "100vh",
-      fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif",
-      color: "#eee", display: "flex", flexDirection: "column",
-      userSelect: "none",
-    }}>
-      {/* ── TOP BAR ── */}
-      <div style={{
-        display: "flex", justifyContent: "space-between", alignItems: "center",
-        padding: "32px 48px 0", flexShrink: 0,
-      }}>
-        <a href="index.html" style={{
-          fontSize: 11, fontWeight: 700, letterSpacing: "0.18em",
-          textTransform: "uppercase", textDecoration: "none",
-          color: "rgba(238,238,238,.4)", transition: "color .2s",
-        }}>← Back</a>
-        <span style={{
-          fontSize: 10, fontWeight: 700, letterSpacing: "0.24em",
-          textTransform: "uppercase", color: "rgba(238,238,238,.2)",
-        }}>Visual</span>
-      </div>
-
-      {/* ── FOLDER TABS ── */}
-      <div style={{
-        display: "flex", gap: 0,
-        padding: "40px 48px 0",
-        borderBottom: "1px solid rgba(255,255,255,.08)",
-        marginBottom: 40, flexShrink: 0,
-      }}>
-        {FOLDERS.map((f, i) => (
-          <button key={f.id} onClick={() => setActive(i)} style={{
-            background: "none", border: "none", cursor: "pointer",
-            padding: "0 0 16px",
-            marginRight: 40,
-            fontSize: 12, fontWeight: 700,
-            letterSpacing: "0.22em", textTransform: "uppercase",
-            color: active === i ? "#eee" : "rgba(238,238,238,.28)",
-            borderBottom: active === i
-              ? `2px solid ${folder.accent}`
-              : "2px solid transparent",
-            transition: "color .2s, border-color .2s",
-          }}>
-            {f.label}
-            <span style={{
-              marginLeft: 8, fontSize: 9,
-              color: active === i ? folder.accent : "rgba(238,238,238,.2)",
-            }}>({f.count})</span>
-          </button>
-        ))}
-        {/* placeholder tabs */}
-        {["Custom", "Design", "+ more soon"].map((l, i) => (
-          <button key={l} style={{
-            background: "none", border: "none", cursor: "default",
-            padding: "0 0 16px", marginRight: 40,
-            fontSize: 12, fontWeight: 700, letterSpacing: "0.22em",
-            textTransform: "uppercase",
-            color: "rgba(238,238,238,.14)",
-            borderBottom: "2px solid transparent",
-          }}>{l}</button>
-        ))}
-      </div>
-
-      {/* ── MASONRY-ISH GRID ── */}
-      <div style={{
-        flex: 1,
-        padding: "0 48px",
-        display: "grid",
-        gridTemplateColumns: "repeat(6, 1fr)",
-        gridAutoRows: "80px",
-        gap: 6,
-        opacity: entered ? 1 : 0,
-        transform: entered ? "none" : "translateY(10px)",
-        transition: "opacity .5s ease, transform .5s ease",
-      }}>
-        {folder.items.map((item) => (
-          <div key={item.id} style={{
-            background: item.col,
-            gridColumn: `span ${item.w}`,
-            gridRow: `span ${item.h}`,
-            border: "1px solid rgba(255,255,255,.06)",
-            cursor: "crosshair",
-            position: "relative",
-            overflow: "hidden",
-          }}>
-            <div style={{
-              position: "absolute", inset: 0,
-              background: folder.accent,
-              opacity: 0,
-              transition: "opacity .25s",
-            }} className="hover-tint" />
-          </div>
-        ))}
-      </div>
-
-      {/* ── FOOTER ── */}
-      <div style={{
-        display: "flex", justifyContent: "flex-end", alignItems: "center",
-        padding: "20px 48px 30px",
-        borderTop: "1px solid rgba(255,255,255,.07)",
-        marginTop: 24,
-        gap: 14,
-        fontSize: 10, fontWeight: 700,
-        letterSpacing: "0.16em", textTransform: "uppercase",
-      }}>
-        {["navilen@bk.ru","Instagram","Behance","LinkedIn"].map((l, i, arr) => (
-          <>
-            <a key={l} href="#" style={{ color: "#eee", textDecoration: "none", opacity: .38, transition: "opacity .2s" }}>{l}</a>
-            {i < arr.length - 1 && <span key={`sep${i}`} style={{ opacity: .18 }}>—</span>}
-          </>
-        ))}
-      </div>
-    </div>
-  );
+/* ── COUNTS ── */
+function updateCounts() {
+  document.getElementById('cnt-all').textContent = ' ' + ITEMS.length;
+  ['scan','none','custom','other'].forEach(c => {
+    const el = document.getElementById('cnt-' + c);
+    if (el) el.textContent = ' ' + ITEMS.filter(i => i.cat === c).length;
+  });
 }
 
-// ─── CONCEPT B — "VERTICAL ACCORDION" folders stack, expand on click ───
-function ConceptB() {
-  const [open, setOpen] = useState(null);
-  const [hovered, setHovered] = useState(null);
+/* ── BUILD CARD ── */
+function makeCard(item) {
+  const card = document.createElement('div');
+  card.className = `card sz-${item.size}`;
+  card.dataset.cat = item.cat;
 
-  useEffect(() => {
-    if (open !== null) window.location.hash = String(open);
-  }, [open]);
+  const inner = document.createElement('div');
+  inner.className = 'inner';
 
-  return (
-    <div style={{
-      background: "#080808", minHeight: "100vh",
-      fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif",
-      color: "#eee", display: "flex", flexDirection: "column",
-    }}>
-      {/* TOP */}
-      <div style={{ display: "flex", justifyContent: "space-between", padding: "32px 48px 0" }}>
-        <a href="index.html" style={{
-          fontSize: 11, fontWeight: 700, letterSpacing: ".18em",
-          textTransform: "uppercase", textDecoration: "none", color: "rgba(238,238,238,.4)",
-        }}>← Back</a>
-      </div>
-
-      {/* HEADING */}
-      <div style={{ padding: "48px 48px 0" }}>
-        <div style={{
-          fontSize: 10, fontWeight: 700, letterSpacing: ".28em",
-          textTransform: "uppercase", color: "rgba(238,238,238,.25)",
-          marginBottom: 12,
-        }}>To Create / Visual</div>
-        <div style={{
-          fontSize: "clamp(28px, 4vw, 52px)", fontWeight: 700,
-          letterSpacing: "-.02em", textTransform: "uppercase",
-          lineHeight: 1,
-        }}>Select<br/>a folder.</div>
-      </div>
-
-      {/* ACCORDION FOLDERS */}
-      <div style={{ flex: 1, padding: "40px 48px 0", display: "flex", flexDirection: "column", gap: 2 }}>
-        {[...FOLDERS, { id: "custom", label: "Custom", count: "–", accent: "#ff6b6b", items: [] },
-          { id: "design", label: "Design", count: "–", accent: "#6bffb8", items: [] }].map((f, i) => {
-          const isOpen = open === i;
-          const isHov = hovered === i;
-          return (
-            <div key={f.id}
-              onMouseEnter={() => setHovered(i)}
-              onMouseLeave={() => setHovered(null)}
-              style={{ overflow: "hidden", borderTop: "1px solid rgba(255,255,255,.08)" }}
-            >
-              {/* row header */}
-              <div onClick={() => setOpen(isOpen ? null : i)} style={{
-                display: "flex", justifyContent: "space-between", alignItems: "center",
-                padding: "18px 0", cursor: "pointer",
-              }}>
-                <div style={{ display: "flex", alignItems: "baseline", gap: 20 }}>
-                  <span style={{
-                    fontSize: 10, fontWeight: 700, letterSpacing: ".22em",
-                    textTransform: "uppercase",
-                    color: isOpen ? f.accent : "rgba(238,238,238,.28)",
-                  }}>0{i + 1}</span>
-                  <span style={{
-                    fontSize: "clamp(18px, 2.5vw, 28px)", fontWeight: 700,
-                    letterSpacing: "-.01em", textTransform: "uppercase",
-                    color: isOpen || isHov ? "#eee" : "rgba(238,238,238,.6)",
-                    transition: "color .2s",
-                  }}>{f.label}</span>
-                </div>
-                <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
-                  <span style={{
-                    fontSize: 9, fontWeight: 700, letterSpacing: ".22em",
-                    textTransform: "uppercase", color: "rgba(238,238,238,.2)",
-                  }}>{f.count} works</span>
-                  <span style={{
-                    fontSize: 18, color: isOpen ? f.accent : "rgba(238,238,238,.3)",
-                    transform: isOpen ? "rotate(45deg)" : "none",
-                    transition: "transform .3s, color .2s", display: "inline-block",
-                  }}>+</span>
-                </div>
-              </div>
-
-              {/* expanded grid */}
-              <div style={{
-                maxHeight: isOpen ? 280 : 0,
-                overflow: "hidden",
-                transition: "max-height .5s cubic-bezier(.4,0,.2,1)",
-              }}>
-                <div style={{
-                  display: "flex", gap: 4, padding: "0 0 24px",
-                  overflowX: "auto",
-                }}>
-                  {f.items.length > 0
-                    ? f.items.map(item => (
-                        <div key={item.id} style={{
-                          flexShrink: 0,
-                          width: item.w === 1 ? 140 : item.w === 2 ? 200 : 280,
-                          height: 220,
-                          background: item.col,
-                          border: "1px solid rgba(255,255,255,.06)",
-                          cursor: "crosshair",
-                        }} />
-                      ))
-                    : <div style={{
-                        height: 220, width: "100%",
-                        display: "flex", alignItems: "center",
-                        fontSize: 11, fontWeight: 700, letterSpacing: ".22em",
-                        textTransform: "uppercase", color: "rgba(238,238,238,.2)",
-                      }}>Coming soon</div>
-                  }
-                </div>
-              </div>
-            </div>
-          );
-        })}
-      </div>
-
-      {/* FOOTER */}
-      <div style={{
-        display: "flex", justifyContent: "flex-end",
-        padding: "18px 48px 28px",
-        borderTop: "1px solid rgba(255,255,255,.07)",
-        marginTop: 16,
-        gap: 14, fontSize: 10, fontWeight: 700,
-        letterSpacing: ".16em", textTransform: "uppercase",
-      }}>
-        {["navilen@bk.ru","Instagram","Behance","LinkedIn"].map((l, i, arr) => (
-          <>
-            <a key={l} href="#" style={{ color: "#eee", textDecoration: "none", opacity: .38 }}>{l}</a>
-            {i < arr.length - 1 && <span key={`s${i}`} style={{ opacity: .18 }}>—</span>}
-          </>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-// ─── CONCEPT C — "SLIDESHOW / FULL BLEED" per folder, strip navigation left ───
-function ConceptC() {
-  const [active, setActive] = useState(0);
-  const [imgIdx, setImgIdx] = useState(0);
-  const [transition, setTransition] = useState(true);
-  const folder = FOLDERS[active];
-
-  const go = (dir) => {
-    setTransition(false);
-    setTimeout(() => {
-      setImgIdx(i => (i + dir + folder.items.length) % folder.items.length);
-      setTransition(true);
-    }, 120);
+  const img = document.createElement('img');
+  img.src = item.img;
+  img.alt = item.title;
+  img.loading = 'lazy';
+  img.onerror = function() {
+    const ph = document.createElement('div');
+    ph.className = 'ph';
+    inner.replaceChild(ph, this);
   };
+  inner.appendChild(img);
 
-  useEffect(() => {
-    window.location.hash = String(active);
-    setImgIdx(0);
-  }, [active]);
-
-  const item = folder.items[imgIdx];
-
-  return (
-    <div style={{
-      background: "#080808", height: "100vh",
-      fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif",
-      color: "#eee", display: "flex", overflow: "hidden",
-    }}>
-      {/* ── LEFT NAV STRIP ── */}
-      <div style={{
-        width: 240, flexShrink: 0,
-        borderRight: "1px solid rgba(255,255,255,.08)",
-        display: "flex", flexDirection: "column",
-        padding: "32px 0",
-      }}>
-        <a href="index.html" style={{
-          fontSize: 11, fontWeight: 700, letterSpacing: ".18em",
-          textTransform: "uppercase", textDecoration: "none",
-          color: "rgba(238,238,238,.35)", padding: "0 32px",
-          marginBottom: 48, display: "block",
-        }}>← Back</a>
-
-        <div style={{ padding: "0 32px", marginBottom: 32 }}>
-          <div style={{
-            fontSize: 9, fontWeight: 700, letterSpacing: ".28em",
-            textTransform: "uppercase", color: "rgba(238,238,238,.22)",
-            marginBottom: 6,
-          }}>Visual</div>
-          <div style={{
-            fontSize: 28, fontWeight: 700, textTransform: "uppercase",
-            letterSpacing: "-.01em", lineHeight: 1,
-          }}>To<br/>Create</div>
-        </div>
-
-        <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center", gap: 2 }}>
-          {[...FOLDERS, { id: "custom", label: "Custom", accent: "#999" },
-            { id: "design", label: "Design", accent: "#999" }].map((f, i) => {
-            const isActive = active === i && i < FOLDERS.length;
-            return (
-              <button key={f.id}
-                onClick={() => i < FOLDERS.length && setActive(i)}
-                style={{
-                  background: "none", border: "none",
-                  cursor: i < FOLDERS.length ? "pointer" : "default",
-                  padding: "12px 32px",
-                  display: "flex", justifyContent: "space-between", alignItems: "center",
-                  borderLeft: isActive ? `2px solid ${f.accent || "#4d6aff"}` : "2px solid transparent",
-                  transition: "border-color .2s",
-                }}
-              >
-                <span style={{
-                  fontSize: 11, fontWeight: 700, letterSpacing: ".18em",
-                  textTransform: "uppercase",
-                  color: isActive ? "#eee"
-                    : i >= FOLDERS.length ? "rgba(238,238,238,.16)"
-                    : "rgba(238,238,238,.4)",
-                  transition: "color .2s",
-                }}>{f.label}</span>
-                {i >= FOLDERS.length && (
-                  <span style={{ fontSize: 9, color: "rgba(238,238,238,.14)", letterSpacing: ".16em" }}>soon</span>
-                )}
-              </button>
-            );
-          })}
-        </div>
-
-        {/* contacts bottom */}
-        <div style={{
-          padding: "24px 32px 0",
-          borderTop: "1px solid rgba(255,255,255,.07)",
-          display: "flex", flexDirection: "column", gap: 10,
-        }}>
-          {["navilen@bk.ru","Instagram","Behance","LinkedIn"].map(l => (
-            <a key={l} href="#" style={{
-              fontSize: 10, fontWeight: 700, letterSpacing: ".14em",
-              textTransform: "uppercase", textDecoration: "none",
-              color: "#eee", opacity: .35,
-            }}>{l}</a>
-          ))}
-        </div>
-      </div>
-
-      {/* ── MAIN DISPLAY ── */}
-      <div style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden" }}>
-        {/* folder label top */}
-        <div style={{
-          display: "flex", justifyContent: "space-between", alignItems: "center",
-          padding: "32px 48px 0", flexShrink: 0,
-        }}>
-          <span style={{
-            fontSize: 10, fontWeight: 700, letterSpacing: ".28em",
-            textTransform: "uppercase", color: folder.accent,
-          }}>{folder.label}</span>
-          <span style={{
-            fontSize: 10, fontWeight: 700, letterSpacing: ".22em",
-            color: "rgba(238,238,238,.25)",
-          }}>{String(imgIdx + 1).padStart(2,"0")} / {String(folder.items.length).padStart(2,"0")}</span>
-        </div>
-
-        {/* big image */}
-        <div style={{
-          flex: 1, margin: "24px 48px",
-          background: item.col,
-          border: "1px solid rgba(255,255,255,.06)",
-          opacity: transition ? 1 : 0,
-          transform: transition ? "none" : "scale(.98)",
-          transition: "opacity .2s, transform .2s",
-          cursor: "crosshair",
-          display: "flex", alignItems: "center", justifyContent: "center",
-        }}>
-          <span style={{
-            fontSize: 10, fontWeight: 700, letterSpacing: ".22em",
-            textTransform: "uppercase", color: "rgba(255,255,255,.12)",
-          }}>image {imgIdx + 1}</span>
-        </div>
-
-        {/* nav arrows */}
-        <div style={{
-          display: "flex", justifyContent: "flex-end", gap: 2,
-          padding: "0 48px 28px", flexShrink: 0,
-        }}>
-          {["←","→"].map((arrow, i) => (
-            <button key={arrow} onClick={() => go(i === 0 ? -1 : 1)} style={{
-              background: "none", border: "1px solid rgba(255,255,255,.12)",
-              color: "rgba(238,238,238,.5)", cursor: "pointer",
-              width: 40, height: 40, fontSize: 16,
-              transition: "color .2s, border-color .2s",
-            }}>{arrow}</button>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
+  const cap = document.createElement('div');
+  cap.className = 'cap';
+  cap.innerHTML = `<span class="cap-title">${item.title}</span><span class="cap-cat">${CAT_LABEL[item.cat] || item.cat}</span>`;
+  inner.appendChild(cap);
+  card.appendChild(inner);
+  return card;
 }
 
-// ─── SWITCHER ───
-export default function App() {
-  const [concept, setConcept] = useState("A");
-  return (
-    <div>
-      {/* concept switcher — floating */}
-      <div style={{
-        position: "fixed", top: 16, right: 16, zIndex: 9999,
-        display: "flex", gap: 4,
-        background: "rgba(0,0,0,.8)", padding: "6px 10px",
-        border: "1px solid rgba(255,255,255,.12)",
-      }}>
-        {["A","B","C"].map(c => (
-          <button key={c} onClick={() => setConcept(c)} style={{
-            background: concept === c ? "#eee" : "none",
-            border: "none", cursor: "pointer",
-            color: concept === c ? "#000" : "rgba(255,255,255,.4)",
-            fontSize: 11, fontWeight: 700, letterSpacing: ".16em",
-            padding: "4px 10px",
-          }}>{c}</button>
-        ))}
-      </div>
-      {concept === "A" && <ConceptA />}
-      {concept === "B" && <ConceptB />}
-      {concept === "C" && <ConceptC />}
-    </div>
-  );
+/* ── RENDER ── */
+const grid = document.getElementById('grid');
+const bgWord = document.getElementById('bgWord');
+
+function render(cat, animate) {
+  const list = cat === 'all' ? ITEMS : ITEMS.filter(i => i.cat === cat);
+  // update bg word
+  bgWord.textContent = cat === 'all' ? 'Visual' : (CAT_LABEL[cat] || cat);
+
+  if (animate) {
+    [...grid.children].forEach(c => c.classList.add('out'));
+    setTimeout(() => { grid.innerHTML = ''; inject(list); }, 240);
+  } else {
+    grid.innerHTML = ''; inject(list);
+  }
 }
+
+function inject(list) {
+  list.forEach((item, i) => {
+    const card = makeCard(item);
+    grid.appendChild(card);
+    requestAnimationFrame(() =>
+      setTimeout(() => card.classList.add('in'), 20 + i * 38)
+    );
+  });
+}
+
+/* ── TABS ── */
+document.getElementById('tabs').addEventListener('click', e => {
+  const tab = e.target.closest('.tab');
+  if (!tab) return;
+  const cat = tab.dataset.cat;
+  if (cat === activeCat) return;
+  activeCat = cat;
+  document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.cat === cat));
+  history.replaceState(null, '', '#' + cat);
+  render(cat, true);
+});
+
+/* ── CURSOR ── */
+const cur = document.getElementById('cur');
+if (window.matchMedia('(hover:hover)').matches) {
+  document.addEventListener('mousemove', e => {
+    cur.style.left = e.clientX + 'px';
+    cur.style.top  = e.clientY + 'px';
+  });
+  document.addEventListener('mouseover', e => {
+    cur.classList.toggle('big', !!e.target.closest('a,.tab,.card'));
+  });
+}
+
+/* ── DEEP LINK ── */
+function readHash() {
+  const h = location.hash.replace('#','');
+  return VALID_CATS.includes(h) ? h : 'all';
+}
+
+/* ── INIT ── */
+updateCounts();
+activeCat = readHash();
+document.querySelectorAll('.tab').forEach(t =>
+  t.classList.toggle('active', t.dataset.cat === activeCat)
+);
+render(activeCat, false);
+
+window.addEventListener('hashchange', () => {
+  const cat = readHash();
+  if (cat !== activeCat) {
+    activeCat = cat;
+    document.querySelectorAll('.tab').forEach(t =>
+      t.classList.toggle('active', t.dataset.cat === activeCat)
+    );
+    render(cat, true);
+  }
+});
+</script>
+</body>
+</html>
