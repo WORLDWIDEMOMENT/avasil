@@ -33,9 +33,9 @@ body {
   width: 10px; height: 10px;
   background: var(--white); border-radius: 50%;
   pointer-events: none;
+  left: -20px; top: -20px;
   transform: translate(-50%,-50%);
   transition: width .15s, height .15s;
-  mix-blend-mode: difference;
 }
 #cur.big { width: 50px; height: 50px; }
 @media (hover:none) { #cur { display: none; } }
@@ -144,9 +144,16 @@ body {
 
 /* placeholder bg when image absent */
 .card .ph {
-  display: block; width: 100%;
-  background: #141414;
-  border: 1px solid #1c1c1c;
+  display: flex; align-items: center; justify-content: center;
+  width: 100%;
+  background: #111;
+  border: 1px solid #222;
+}
+.card .ph::after {
+  content: attr(data-label);
+  font-size: 9px; font-weight: 700;
+  letter-spacing: .2em; text-transform: uppercase;
+  color: rgba(255,255,255,.15);
 }
 
 /* sizes */
@@ -297,6 +304,7 @@ function makeCard(item) {
   img.onerror = function() {
     const ph = document.createElement('div');
     ph.className = 'ph';
+    ph.dataset.label = item.title;
     inner.replaceChild(ph, this);
   };
   inner.appendChild(img);
@@ -350,15 +358,13 @@ document.getElementById('tabs').addEventListener('click', e => {
 
 /* ── CURSOR ── */
 const cur = document.getElementById('cur');
-if (window.matchMedia('(hover:hover)').matches) {
-  document.addEventListener('mousemove', e => {
-    cur.style.left = e.clientX + 'px';
-    cur.style.top  = e.clientY + 'px';
-  });
-  document.addEventListener('mouseover', e => {
-    cur.classList.toggle('big', !!e.target.closest('a,.tab,.card'));
-  });
-}
+document.addEventListener('mousemove', e => {
+  cur.style.left = e.clientX + 'px';
+  cur.style.top  = e.clientY + 'px';
+});
+document.addEventListener('mouseover', e => {
+  cur.classList.toggle('big', !!e.target.closest('a,.tab,.card'));
+});
 
 /* ── DEEP LINK ── */
 function readHash() {
