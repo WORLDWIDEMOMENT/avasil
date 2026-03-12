@@ -1,450 +1,740 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Visual — AV</title>
-<style>
-*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-::selection { background: #2a2a2a; color: #eeeeee; }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Visual — AV</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
-:root {
-  --bg:   #0a0a0a;
-  --fg:   #eeeeee;
-  --dim:  rgba(238,238,238,.38);
-  --line: rgba(238,238,238,.10);
-  --blue: #4d6aff;
-}
+    :root {
+      --bg:    #080808;
+      --white: #e8e8e8;
+      --dim:   #444;
+      --line:  #1c1c1c;
+      --blue:  #4d6aff;
+      --mono:  'IBM Plex Mono', monospace;
+      --disp:  'Bebas Neue', sans-serif;
+      --sans:  'Helvetica Neue', Helvetica, Arial, sans-serif;
+    }
 
-body {
-  background: var(--bg);
-  color: var(--fg);
-  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  min-height: 100vh;
-  overflow-x: hidden;
-  cursor: none;
-}
+    html, body {
+      width: 100%; height: 100%;
+    }
 
-/* CURSOR */
-#cur {
-  position: fixed;
-  z-index: 9999;
-  pointer-events: none;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: #eeeeee;
-  transform: translate(-50%, -50%);
-  transition: width .15s ease, height .15s ease;
-  top: -40px;
-  left: -40px;
-}
-#cur.big { width: 48px; height: 48px; }
-@media (hover: none) { #cur { display: none; } body { cursor: auto; } }
+    body {
+      background: var(--bg);
+      color: var(--white);
+      font-family: var(--sans);
+      overflow: hidden;
+      cursor: none;
+    }
 
-/* GRAIN */
-.grain {
-  position: fixed; inset: 0;
-  z-index: 200; pointer-events: none; opacity: .038;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  background-size: 160px 160px;
-}
+    /* ── GRAIN ── */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-size: 200px 200px;
+      opacity: .04;
+      pointer-events: none;
+      z-index: 8000;
+    }
 
-/* HEADER */
-.header {
-  position: fixed;
-  top: 0; left: 0; right: 0;
-  z-index: 100;
-  padding: 32px 48px 18px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 24px;
-  background: linear-gradient(to bottom, #0a0a0a 55%, transparent);
-}
+    /* ── CURSOR ── */
+    #cur {
+      position: fixed;
+      width: 10px; height: 10px;
+      background: var(--white);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: width .15s, height .15s;
+      mix-blend-mode: difference;
+    }
+    #cur.big { width: 50px; height: 50px; }
+    @media (hover: none) { #cur { display: none; } }
 
-.back {
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: .18em;
-  text-transform: uppercase;
-  text-decoration: none;
-  color: var(--dim);
-  flex-shrink: 0;
-  transition: color .2s;
-}
-.back:hover { color: var(--fg); }
+    /* ── HEADER ── */
+    .header-bar {
+      position: fixed; top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 40px; height: 54px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(8,8,8,.85);
+      backdrop-filter: blur(8px);
+    }
+    .back {
+      font-size: 11px; font-weight: 700;
+      letter-spacing: .16em; text-transform: uppercase;
+      text-decoration: none; color: var(--dim);
+      transition: color .2s;
+    }
+    .back:hover { color: var(--white); }
 
-/* TABS */
-.tabs {
-  display: flex;
-  border: 1px solid var(--line);
-  overflow-x: auto;
-  scrollbar-width: none;
-  flex-shrink: 1;
-}
-.tabs::-webkit-scrollbar { display: none; }
+    /* filter pills */
+    .filter-bar {
+      display: flex; gap: 2px;
+    }
+    .f-btn {
+      font-family: var(--mono);
+      font-size: 8px; font-weight: 700;
+      letter-spacing: .18em; text-transform: uppercase;
+      background: none; border: 1px solid var(--line);
+      color: var(--dim); cursor: none;
+      padding: 5px 12px;
+      transition: color .15s, border-color .15s;
+    }
+    .f-btn:hover { color: var(--white); border-color: #333; }
+    .f-btn.active {
+      color: var(--white);
+      border-color: var(--blue);
+      box-shadow: 0 0 12px rgba(77,106,255,.2);
+    }
 
-.tab {
-  padding: 7px 18px;
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: .2em;
-  text-transform: uppercase;
-  color: var(--dim);
-  border-right: 1px solid var(--line);
-  white-space: nowrap;
-  user-select: none;
-  transition: color .2s;
-  position: relative;
-}
-.tab:last-child { border-right: none; }
-.tab:hover { color: var(--fg); }
-.tab.active { color: var(--fg); }
-.tab.active::after {
-  content: '';
-  position: absolute;
-  left: 0; right: 0; bottom: -1px;
-  height: 2px;
-  background: var(--blue);
-}
-.tab .n { color: var(--blue); margin-left: 4px; font-size: 8px; }
+    .header-title {
+      font-family: var(--disp);
+      font-size: 22px; letter-spacing: .06em;
+      color: rgba(232,232,232,.15);
+      user-select: none;
+    }
 
-/* BG WORD */
-.bg-word {
-  position: fixed;
-  bottom: -20px; right: -10px;
-  font-size: clamp(100px, 16vw, 200px);
-  font-weight: 900;
-  letter-spacing: -.04em;
-  text-transform: uppercase;
-  color: rgba(255,255,255,.022);
-  pointer-events: none;
-  z-index: 0;
-  user-select: none;
-  line-height: 1;
-}
+    /* ── SCENE ── */
+    #scene {
+      position: fixed;
+      inset: 54px 0 0 0;
+      overflow: hidden;
+    }
 
-/* MAIN */
-.main {
-  position: relative;
-  z-index: 1;
-  padding: 104px 48px 90px;
-}
+    /* ── CUBE WRAPPER ── each cube floats independently ── */
+    .cube-wrap {
+      position: absolute;
+      cursor: none;
+      /* perspective for each cube */
+    }
 
-/* MASONRY */
-.grid {
-  columns: 4;
-  column-gap: 5px;
-}
+    /* floating animation — unique per cube via JS inline style */
+    @keyframes floatA {
+      0%,100% { transform: translateY(0px)   translateX(0px); }
+      33%      { transform: translateY(-14px) translateX(6px);  }
+      66%      { transform: translateY(8px)   translateX(-5px); }
+    }
+    @keyframes floatB {
+      0%,100% { transform: translateY(0px)   translateX(0px);  }
+      40%      { transform: translateY(12px)  translateX(-8px); }
+      70%      { transform: translateY(-10px) translateX(4px);  }
+    }
+    @keyframes floatC {
+      0%,100% { transform: translateY(0px)  translateX(0px);  }
+      25%      { transform: translateY(-8px) translateX(-6px); }
+      75%      { transform: translateY(10px) translateX(7px);  }
+    }
+    @keyframes floatD {
+      0%,100% { transform: translateY(0px)   translateX(0px); }
+      50%      { transform: translateY(-16px) translateX(3px); }
+    }
 
-/* CARD */
-.card {
-  break-inside: avoid;
-  margin-bottom: 5px;
-  position: relative;
-  overflow: hidden;
-  display: block;
-  opacity: 0;
-  transform: translateY(20px);
-  transition: opacity .4s ease, transform .4s ease;
-}
-.card.in  { opacity: 1; transform: none; }
-.card.out { opacity: 0; transform: translateY(-10px) scale(.97); transition: opacity .2s, transform .2s; }
+    /* ── CSS 3D CUBE ── */
+    .cube {
+      position: relative;
+      transform-style: preserve-3d;
+      /* isometric-ish angle */
+      transform: rotateX(30deg) rotateY(-45deg);
+      transition: transform .6s cubic-bezier(.23,1,.32,1);
+    }
+    .cube-wrap:hover .cube {
+      transform: rotateX(28deg) rotateY(-42deg) scale(1.06);
+    }
 
-.card .inner {
-  position: relative;
-  overflow: hidden;
-  display: block;
-}
+    .face {
+      position: absolute;
+      overflow: hidden;
+      backface-visibility: hidden;
+    }
 
-.card img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform .5s cubic-bezier(.4,0,.2,1), filter .5s;
-  filter: grayscale(12%);
-}
-.card:hover img { transform: scale(1.045); filter: grayscale(0%) brightness(1.07); }
+    /* images on faces — grayscale by default, colour on hover */
+    .face img {
+      width: 100%; height: 100%;
+      object-fit: cover; display: block;
+      filter: grayscale(80%) brightness(.75) contrast(1.1);
+      transition: filter .5s ease;
+      pointer-events: none;
+    }
+    .cube-wrap:hover .face img {
+      filter: grayscale(0%) brightness(.95) contrast(1);
+    }
 
-/* PLACEHOLDER — visible dark tile with label */
-.ph {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  background: #0f0f0f;
-  border: 1px solid #1a1a1a;
-}
-.ph::after {
-  content: attr(data-title);
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: .2em;
-  text-transform: uppercase;
-  color: rgba(238,238,238,.12);
-  text-align: center;
-  padding: 8px;
-}
+    /* placeholder face */
+    .face.ph {
+      background: #141414;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .face.ph::after {
+      content: attr(data-label);
+      font-family: var(--mono);
+      font-size: 7px; letter-spacing: .15em;
+      text-transform: uppercase; color: #2a2a2a;
+      text-align: center; padding: 8px;
+    }
 
-/* aspect ratios */
-.sz-tall  .ph, .sz-tall  img { aspect-ratio: 3 / 4; }
-.sz-wide  .ph, .sz-wide  img { aspect-ratio: 4 / 3; }
-.sz-sq    .ph, .sz-sq    img { aspect-ratio: 1 / 1; }
-.sz-port  .ph, .sz-port  img { aspect-ratio: 2 / 3; }
-.sz-land  .ph, .sz-land  img { aspect-ratio: 16 / 9; }
+    /* subtle edge highlight */
+    .face::after {
+      content: '';
+      position: absolute; inset: 0;
+      pointer-events: none;
+    }
+    .face-front::after  { box-shadow: inset -1px -1px 0 rgba(255,255,255,.04), inset 1px 1px 0 rgba(255,255,255,.06); }
+    .face-top::after    { box-shadow: inset 0 -1px 0 rgba(0,0,0,.3); }
+    .face-right::after  { box-shadow: inset -1px 0 0 rgba(0,0,0,.2), inset 1px 0 0 rgba(255,255,255,.03); }
 
-/* CAPTION */
-.cap {
-  position: absolute;
-  bottom: 0; left: 0; right: 0;
-  padding: 32px 12px 10px;
-  background: linear-gradient(transparent, rgba(0,0,0,.8));
-  transform: translateY(100%);
-  transition: transform .3s ease;
-  pointer-events: none;
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-}
-.card:hover .cap { transform: none; }
+    /* label on hover */
+    .cube-label {
+      position: absolute;
+      bottom: -28px; left: 0; right: 0;
+      text-align: center;
+      font-family: var(--mono);
+      font-size: 8px; letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--dim);
+      opacity: 0;
+      transition: opacity .2s;
+      white-space: nowrap;
+      pointer-events: none;
+    }
+    .cube-wrap:hover .cube-label { opacity: 1; }
 
-.cap-title {
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: .14em;
-  text-transform: uppercase;
-}
-.cap-cat {
-  font-size: 8px;
-  font-weight: 700;
-  letter-spacing: .18em;
-  text-transform: uppercase;
-  color: var(--blue);
-}
+    /* category dot */
+    .cube-cat {
+      position: absolute;
+      top: -20px; right: 0;
+      font-family: var(--mono);
+      font-size: 7px; font-weight: 700;
+      letter-spacing: .16em; text-transform: uppercase;
+      color: var(--blue);
+      opacity: 0; transition: opacity .2s;
+      pointer-events: none;
+    }
+    .cube-wrap:hover .cube-cat { opacity: 1; }
 
-/* FOOTER */
-.footer {
-  position: fixed;
-  bottom: 28px; right: 48px;
-  z-index: 100;
-  display: flex;
-  gap: 14px;
-  align-items: center;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: .16em;
-  text-transform: uppercase;
-}
-.footer a { color: var(--fg); text-decoration: none; opacity: .38; transition: opacity .2s; }
-.footer a:hover { opacity: 1; }
-.footer .sep { opacity: .16; }
+    /* ── ENTRY ANIMATION ── */
+    .cube-wrap {
+      opacity: 0;
+      animation: cubeIn .6s ease forwards;
+    }
+    @keyframes cubeIn {
+      from { opacity: 0; transform: scale(.8); }
+      to   { opacity: 1; transform: scale(1); }
+    }
 
-/* RESPONSIVE */
-@media (max-width: 1100px) { .grid { columns: 3; } }
-@media (max-width: 780px) {
-  .grid { columns: 2; column-gap: 4px; }
-  .main { padding: 115px 10px 85px; }
-  .header { padding: 22px 20px 14px; flex-wrap: wrap; gap: 10px; }
-  .footer { right: 20px; flex-wrap: wrap; gap: 8px; }
-  .footer .sep { display: none; }
-}
-@media (max-width: 440px) {
-  .grid { columns: 1; }
-  .bg-word { font-size: 80px; }
-}
-</style>
+    /* ── DARKROOM MODAL ── */
+    .modal {
+      position: fixed; inset: 0;
+      background: rgba(4,4,4,.97);
+      z-index: 500;
+      display: flex; align-items: center; justify-content: center;
+      visibility: hidden; opacity: 0;
+      transition: opacity .35s ease, visibility .35s;
+    }
+    .modal.active { visibility: visible; opacity: 1; }
+
+    .modal-inner {
+      display: flex; flex-direction: column;
+      align-items: center; gap: 24px;
+      max-width: 90vw;
+    }
+
+    .modal-img-wrap {
+      position: relative;
+      max-width: 80vw; max-height: 68vh;
+    }
+    .modal-img-wrap::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at center, transparent 52%, rgba(0,0,0,.6) 100%);
+      pointer-events: none;
+    }
+    #modalImg {
+      display: block;
+      max-width: 80vw; max-height: 68vh;
+      object-fit: contain;
+      filter: grayscale(8%);
+      animation: imgIn .4s ease;
+      transition: filter .3s;
+    }
+    #modalImg:hover { filter: grayscale(0%); }
+    @keyframes imgIn {
+      from { opacity: 0; transform: scale(.96); }
+      to   { opacity: 1; transform: none; }
+    }
+
+    .modal-ph {
+      width: 52vw; height: 40vh;
+      background: #111;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .modal-ph span {
+      font-family: var(--mono); font-size: 9px;
+      letter-spacing: .2em; text-transform: uppercase; color: #222;
+    }
+
+    .modal-caption { text-align: center; }
+    .modal-title {
+      font-family: var(--disp);
+      font-size: clamp(28px, 4vw, 56px);
+      letter-spacing: .05em; color: var(--white); line-height: 1;
+    }
+    .modal-meta {
+      font-family: var(--mono); font-size: 10px;
+      letter-spacing: .12em; color: var(--dim);
+      margin-top: 6px; font-style: italic;
+    }
+    .modal-desc {
+      font-family: var(--mono); font-size: 11px;
+      line-height: 1.85; color: rgba(232,232,232,.4);
+      max-width: 480px; margin: 10px auto 0; letter-spacing: .02em;
+    }
+
+    .modal-nav {
+      position: fixed; top: 50%; transform: translateY(-50%);
+      background: none; border: none;
+      color: rgba(232,232,232,.15); font-size: 38px;
+      cursor: none; padding: 20px; z-index: 510;
+      transition: color .2s; line-height: 1;
+    }
+    .modal-nav:hover { color: var(--white); }
+    .modal-prev { left: 12px; }
+    .modal-next { right: 12px; }
+
+    .modal-close {
+      position: fixed; top: 20px; right: 30px;
+      background: none; border: none;
+      font-family: var(--mono); font-size: 10px;
+      letter-spacing: .22em; text-transform: uppercase;
+      color: var(--dim); cursor: none; z-index: 510;
+      transition: color .2s;
+    }
+    .modal-close:hover { color: var(--white); }
+
+    .modal-counter {
+      position: fixed; top: 22px; left: 40px;
+      font-family: var(--mono); font-size: 10px;
+      letter-spacing: .2em; color: var(--dim); z-index: 510;
+    }
+
+    /* ── FOOTER ── */
+    .footer-right {
+      position: fixed; bottom: 28px; right: 40px;
+      display: flex; gap: 12px; align-items: center;
+      font-size: 10px; font-weight: 700;
+      letter-spacing: .16em; text-transform: uppercase; z-index: 50;
+    }
+    .footer-right a { color: var(--white); text-decoration: none; opacity: .25; transition: opacity .2s; }
+    .footer-right a:hover { opacity: 1; }
+    .footer-right span { opacity: .1; }
+    .footer-left {
+      position: fixed; bottom: 28px; left: 40px;
+      font-size: 10px; font-weight: 700;
+      letter-spacing: .16em; text-transform: uppercase; z-index: 50;
+    }
+    .footer-left a { color: var(--white); text-decoration: none; opacity: .25; transition: opacity .2s; }
+    .footer-left a:hover { opacity: 1; }
+
+    /* mobile */
+    @media (max-width: 700px) {
+      .header-title { display: none; }
+      .filter-bar { gap: 1px; }
+      .f-btn { font-size: 7px; padding: 4px 8px; }
+      .footer-right .soc { display: none; }
+    }
+  </style>
 </head>
 <body>
 
 <div id="cur"></div>
-<div class="grain"></div>
-<div class="bg-word" id="bgWord">Visual</div>
 
-<header class="header">
+<!-- HEADER -->
+<div class="header-bar">
   <a href="index.html" class="back">← Back</a>
-  <nav class="tabs" id="tabs">
-    <div class="tab active" data-cat="all">All<span class="n" id="n-all"></span></div>
-    <div class="tab" data-cat="scan">Scan<span class="n" id="n-scan"></span></div>
-    <div class="tab" data-cat="none">None of them is me<span class="n" id="n-none"></span></div>
-    <div class="tab" data-cat="custom">Custom<span class="n" id="n-custom"></span></div>
-    <div class="tab" data-cat="other">Other<span class="n" id="n-other"></span></div>
-  </nav>
-</header>
+  <span class="header-title">VISUAL</span>
+  <div class="filter-bar">
+    <button class="f-btn active" data-filter="all">All</button>
+    <button class="f-btn" data-filter="custom">Custom</button>
+    <button class="f-btn" data-filter="art">Art</button>
+    <button class="f-btn" data-filter="texture">Texture</button>
+  </div>
+</div>
 
-<main class="main">
-  <div class="grid" id="grid"></div>
-</main>
+<!-- SCENE — cubes injected by JS -->
+<div id="scene"></div>
 
-<footer class="footer">
+<!-- MODAL -->
+<div class="modal" id="modal">
+  <button class="modal-close" id="modalClose">ESC ✕</button>
+  <div class="modal-counter" id="modalCounter"></div>
+  <button class="modal-nav modal-prev" id="modalPrev">‹</button>
+  <button class="modal-nav modal-next" id="modalNext">›</button>
+  <div class="modal-inner">
+    <div class="modal-img-wrap" id="modalImgWrap">
+      <div class="modal-ph" id="modalPH"><span>images/assets/create/</span></div>
+    </div>
+    <div class="modal-caption">
+      <div class="modal-title" id="modalTitle"></div>
+      <div class="modal-meta"  id="modalMeta"></div>
+      <div class="modal-desc"  id="modalDesc"></div>
+    </div>
+  </div>
+</div>
+
+<div class="footer-left"><a href="about.html">About</a></div>
+<div class="footer-right">
   <a href="mailto:navilen@bk.ru">navilen@bk.ru</a>
-  <span class="sep">—</span>
-  <a href="https://www.instagram.com/molodostibolshenebudet/" target="_blank">Instagram</a>
-  <span class="sep">—</span>
-  <a href="https://www.behance.net/avasileuskaya" target="_blank">Behance</a>
-  <span class="sep">—</span>
-  <a href="https://linkedin.com/in/worldwidemoment/" target="_blank">LinkedIn</a>
-</footer>
+  <span class="soc">—</span>
+  <a href="https://www.instagram.com/molodostibolshenebudet/" target="_blank" class="soc">Instagram</a>
+  <span class="soc">—</span>
+  <a href="https://www.behance.net/avasileuskaya" target="_blank" class="soc">Behance</a>
+</div>
 
 <script>
-/* ══════════════════════════════════════════
-   DATA — fill in real image paths here
-   sizes: tall | wide | sq | port | land
-══════════════════════════════════════════ */
-var ITEMS = [
-  // SCAN
-  { cat:'scan',   title:'Scan 01', size:'tall', img:'images/assets/create/scan/Scan1.jpg' },
-  { cat:'scan',   title:'Scan 02', size:'sq',   img:'images/assets/create/scan/Scan2.jpg' },
-  { cat:'scan',   title:'Scan 03', size:'port', img:'images/assets/create/scan/Scan3.jpg' },
-  { cat:'scan',   title:'Scan 04', size:'wide', img:'images/assets/create/scan/Scan4.jpg' },
-  { cat:'scan',   title:'Scan 05', size:'tall', img:'images/assets/create/scan/Scan5.jpg' },
-  { cat:'scan',   title:'Scan 06', size:'sq',   img:'images/assets/create/scan/Scan6.jpg' },
-  { cat:'scan',   title:'Scan 07', size:'land', img:'images/assets/create/scan/Scan7.jpg' },
-  { cat:'scan',   title:'Scan 08', size:'port', img:'images/assets/create/scan/Scan8.jpg' },
-  { cat:'scan',   title:'Scan 09', size:'wide', img:'images/assets/create/scan/Scan9.jpg' },
-  { cat:'scan',   title:'Scan 10', size:'tall', img:'images/assets/create/scan/Scan10.jpg' },
-  // NONE OF THEM IS ME
-  { cat:'none',   title:'#01',     size:'tall', img:'images/assets/create/none-01.jpg' },
-  { cat:'none',   title:'#02',     size:'wide', img:'images/assets/create/none-02.jpg' },
-  { cat:'none',   title:'#03',     size:'sq',   img:'images/assets/create/none-03.jpg' },
-  { cat:'none',   title:'#04',     size:'port', img:'images/assets/create/none-04.jpg' },
-  { cat:'none',   title:'#05',     size:'tall', img:'images/assets/create/none-05.jpg' },
-  { cat:'none',   title:'#06',     size:'land', img:'images/assets/create/none-06.jpg' },
-  { cat:'none',   title:'#07',     size:'sq',   img:'images/assets/create/none-07.jpg' },
-  { cat:'none',   title:'#08',     size:'port', img:'images/assets/create/none-08.jpg' },
-  { cat:'none',   title:'#09',     size:'wide', img:'images/assets/create/none-09.jpg' },
-  // CUSTOM
-  { cat:'custom', title:'Custom 01', size:'tall', img:'images/assets/create/custom-01.jpg' },
-  { cat:'custom', title:'Custom 02', size:'sq',   img:'images/assets/create/custom-02.jpg' },
-  { cat:'custom', title:'Custom 03', size:'wide', img:'images/assets/create/custom-03.jpg' },
-  { cat:'custom', title:'Custom 04', size:'port', img:'images/assets/create/custom-04.jpg' },
-  { cat:'custom', title:'Custom 05', size:'tall', img:'images/assets/create/custom-05.jpg' },
-  { cat:'custom', title:'Custom 06', size:'land', img:'images/assets/create/custom-06.jpg' },
-  // OTHER
-  { cat:'other',  title:'Visual 01', size:'sq',   img:'images/assets/create/other-01.jpg' },
-  { cat:'other',  title:'Visual 02', size:'tall', img:'images/assets/create/other-02.jpg' },
-  { cat:'other',  title:'Visual 03', size:'wide', img:'images/assets/create/other-03.jpg' },
-  { cat:'other',  title:'Visual 04', size:'port', img:'images/assets/create/other-04.jpg' },
+// ─────────────────────────────────────────
+// DATA — all works mixed
+// ─────────────────────────────────────────
+const works = [
+  {
+    cat: 'custom',
+    title: 'Untitled Jacket №1',
+    meta: 'acrylic on denim · one of a kind',
+    desc: 'Hand-painted. No sketch, no transfer. The painting grew from the fabric up.',
+    img: 'images/assets/create/custom-01.jpg',
+    faces: ['images/assets/create/custom-01.jpg', 'images/assets/create/custom-01b.jpg', 'images/assets/create/custom-01c.jpg'],
+    size: 160
+  },
+  {
+    cat: 'art',
+    title: 'None of them is me — I',
+    meta: 'self-portrait series · graphite',
+    desc: 'A series about the gap between how you see yourself and how you appear. None of the versions is definitive.',
+    img: 'images/assets/create/art-none-01.jpg',
+    faces: ['images/assets/create/art-none-01.jpg', 'images/assets/create/art-none-02.jpg', 'images/assets/create/art-none-03.jpg'],
+    size: 120
+  },
+  {
+    cat: 'texture',
+    title: 'Concrete, Minsk',
+    meta: 'flatbed scanner · 1200 dpi',
+    desc: 'Concrete fragment from a demolished building on Komsomolskaya. The city changes, the surface stays.',
+    img: 'images/assets/create/texture-concrete.jpg',
+    faces: ['images/assets/create/texture-concrete.jpg', 'images/assets/create/texture-rust.jpg', 'images/assets/create/texture-fabric.jpg'],
+    size: 100
+  },
+  {
+    cat: 'custom',
+    title: 'Field Study',
+    meta: 'acrylic on canvas jacket · sold',
+    desc: 'Botanical study series. Plants as architecture — structure, system, repetition.',
+    img: 'images/assets/create/custom-02.jpg',
+    faces: ['images/assets/create/custom-02.jpg', 'images/assets/create/custom-02b.jpg', 'images/assets/create/custom-01.jpg'],
+    size: 180
+  },
+  {
+    cat: 'art',
+    title: 'None of them is me — III',
+    meta: 'self-portrait series · ink',
+    desc: 'Ink on paper. Third version. Each iteration further from the original.',
+    img: 'images/assets/create/art-none-03.jpg',
+    faces: ['images/assets/create/art-none-03.jpg', 'images/assets/create/art-none-07.jpg', 'images/assets/create/art-study-b.jpg'],
+    size: 140
+  },
+  {
+    cat: 'texture',
+    title: 'Fabric Memory',
+    meta: 'flatbed scanner · textile fragment',
+    desc: 'A piece of jacket lining from 1996. Scanning is a form of preservation.',
+    img: 'images/assets/create/texture-fabric.jpg',
+    faces: ['images/assets/create/texture-fabric.jpg', 'images/assets/create/texture-concrete.jpg', 'images/assets/create/texture-stone.jpg'],
+    size: 110
+  },
+  {
+    cat: 'custom',
+    title: 'Dark Moth',
+    meta: 'acrylic on black denim · sold, London',
+    desc: 'The first piece that sold internationally. The buyer never told me where it ended up.',
+    img: 'images/assets/create/custom-04.jpg',
+    faces: ['images/assets/create/custom-04.jpg', 'images/assets/create/custom-03.jpg', 'images/assets/create/custom-04b.jpg'],
+    size: 150
+  },
+  {
+    cat: 'art',
+    title: 'Study in B',
+    meta: 'ballpoint on paper · A3',
+    desc: 'Obsessive line work. Started as a doodle, lasted six hours.',
+    img: 'images/assets/create/art-study-b.jpg',
+    faces: ['images/assets/create/art-study-b.jpg', 'images/assets/create/art-none-01.jpg', 'images/assets/create/art-none-07.jpg'],
+    size: 130
+  },
+  {
+    cat: 'texture',
+    title: 'Rust Study',
+    meta: 'flatbed scanner · oxidised metal',
+    desc: 'Found on a fence near the construction site on Nezavisimosti. Brought home in a bag.',
+    img: 'images/assets/create/texture-rust.jpg',
+    faces: ['images/assets/create/texture-rust.jpg', 'images/assets/create/texture-stone.jpg', 'images/assets/create/texture-fabric.jpg'],
+    size: 95
+  },
+  {
+    cat: 'custom',
+    title: 'Flora Series No.4',
+    meta: 'acrylic on cotton · one of a kind',
+    desc: 'Part of the ongoing Flora series. Oversized botanical forms, bleeding edges.',
+    img: 'images/assets/create/custom-03.jpg',
+    faces: ['images/assets/create/custom-03.jpg', 'images/assets/create/custom-02.jpg', 'images/assets/create/custom-01.jpg'],
+    size: 165
+  },
+  {
+    cat: 'art',
+    title: 'None of them is me — VII',
+    meta: 'self-portrait series · charcoal',
+    desc: 'Seventh version. The series continues until there are no more versions to make.',
+    img: 'images/assets/create/art-none-07.jpg',
+    faces: ['images/assets/create/art-none-07.jpg', 'images/assets/create/art-none-03.jpg', 'images/assets/create/art-none-01.jpg'],
+    size: 125
+  },
+  {
+    cat: 'texture',
+    title: 'Stone Yard, Marbella',
+    meta: 'flatbed scanner · limestone chip',
+    desc: 'From the construction site of Villa Amelie. The same stone, a different scale.',
+    img: 'images/assets/create/texture-stone.jpg',
+    faces: ['images/assets/create/texture-stone.jpg', 'images/assets/create/texture-rust.jpg', 'images/assets/create/texture-concrete.jpg'],
+    size: 115
+  }
 ];
 
-var CAT_LABEL = { scan:'Scan', none:'None of them is me', custom:'Custom', other:'Other' };
-var VALID     = ['all','scan','none','custom','other'];
-var activeCat = 'all';
-var grid      = document.getElementById('grid');
-var bgWord    = document.getElementById('bgWord');
+// ─────────────────────────────────────────
+// BUILD CUBES
+// ─────────────────────────────────────────
+const scene     = document.getElementById('scene');
+const floats    = ['floatA', 'floatB', 'floatC', 'floatD'];
+const cubeEls   = [];
 
-/* counts */
-function updateCounts() {
-  document.getElementById('n-all').textContent = ' ' + ITEMS.length;
-  ['scan','none','custom','other'].forEach(function(c) {
-    var el = document.getElementById('n-' + c);
-    if (el) el.textContent = ' ' + ITEMS.filter(function(i){ return i.cat === c; }).length;
-  });
-}
-
-/* build one card */
-function makeCard(item) {
-  var card  = document.createElement('div');
-  card.className = 'card sz-' + item.size;
-
-  var inner = document.createElement('div');
-  inner.className = 'inner';
-
-  var img = document.createElement('img');
-  img.alt     = item.title;
-  img.loading = 'lazy';
-  img.onerror = function() {
-    var ph = document.createElement('div');
-    ph.className = 'ph';
-    ph.setAttribute('data-title', item.title);
-    inner.replaceChild(ph, this);
-  };
-  img.src = item.img; /* set src AFTER onerror */
-  inner.appendChild(img);
-
-  var cap = document.createElement('div');
-  cap.className = 'cap';
-  cap.innerHTML =
-    '<span class="cap-title">' + item.title + '</span>' +
-    '<span class="cap-cat">'   + (CAT_LABEL[item.cat] || item.cat) + '</span>';
-  inner.appendChild(cap);
-
-  card.appendChild(inner);
-  return card;
-}
-
-/* render */
-function render(cat, animate) {
-  var list = cat === 'all' ? ITEMS : ITEMS.filter(function(i){ return i.cat === cat; });
-  bgWord.textContent = cat === 'all' ? 'Visual' : (CAT_LABEL[cat] || cat);
-
-  if (animate) {
-    var cards = grid.querySelectorAll('.card');
-    cards.forEach(function(c){ c.classList.add('out'); });
-    setTimeout(function(){ grid.innerHTML = ''; inject(list); }, 230);
+function buildFace(src, label, className) {
+  const face = document.createElement('div');
+  face.className = `face ${className}`;
+  if (src) {
+    const img = document.createElement('img');
+    img.src = src; img.alt = label;
+    // graceful fallback — show label if image missing
+    img.onerror = () => {
+      face.classList.add('ph');
+      face.setAttribute('data-label', label.substring(0, 18));
+      img.remove();
+    };
+    face.appendChild(img);
   } else {
-    grid.innerHTML = '';
-    inject(list);
+    face.classList.add('ph');
+    face.setAttribute('data-label', label.substring(0, 18));
   }
+  return face;
 }
 
-function inject(list) {
-  list.forEach(function(item, i) {
-    var card = makeCard(item);
-    grid.appendChild(card);
-    setTimeout(function(){ card.classList.add('in'); }, 20 + i * 36);
+function buildCube(work, idx) {
+  const s = work.size;
+  const half = s / 2;
+
+  const wrap = document.createElement('div');
+  wrap.className = 'cube-wrap';
+  wrap.dataset.cat = work.cat;
+  wrap.dataset.idx = idx;
+
+  // position — scatter across scene with some clustering
+  // avoid exact edges
+  const vw = window.innerWidth;
+  const vh = window.innerHeight - 54;
+  // pre-set positions so they look like manifold (clustered centre with spread)
+  const positions = [
+    [12, 8],  [32, 5],  [55, 3],  [74, 10], [90, 7],
+    [8,  42], [28, 38], [50, 35], [70, 40], [88, 38],
+    [18, 68], [40, 65], [62, 70], [82, 65], [95, 72]
+  ];
+  const pos = positions[idx % positions.length];
+  const jitterX = (Math.random() - .5) * 6;
+  const jitterY = (Math.random() - .5) * 6;
+
+  wrap.style.cssText = `
+    left: ${pos[0] + jitterX}%;
+    top:  ${pos[1] + jitterY}%;
+    animation: cubeIn .6s ease ${idx * 0.07}s forwards,
+               ${floats[idx % 4]} ${5 + idx * 0.4}s ease-in-out ${idx * 0.3}s infinite;
+  `;
+
+  // cube
+  const cube = document.createElement('div');
+  cube.className = 'cube';
+  cube.style.width  = `${s}px`;
+  cube.style.height = `${s}px`;
+
+  // FRONT face
+  const front = buildFace(work.faces[0], work.title, 'face-front');
+  front.style.cssText = `
+    width: ${s}px; height: ${s}px;
+    transform: translateZ(${half}px);
+  `;
+
+  // RIGHT face
+  const right = buildFace(work.faces[1], work.title, 'face-right');
+  right.style.cssText = `
+    width: ${s}px; height: ${s}px;
+    transform: rotateY(90deg) translateZ(${half}px);
+  `;
+
+  // TOP face — slightly darker images, more atmospheric
+  const top = buildFace(work.faces[2], work.title, 'face-top');
+  top.style.cssText = `
+    width: ${s}px; height: ${s}px;
+    transform: rotateX(90deg) translateZ(${half}px);
+  `;
+  if (top.querySelector('img')) {
+    top.querySelector('img').style.filter = 'grayscale(90%) brightness(.55) contrast(1.15)';
+  }
+
+  // BACK faces — invisible but complete the cube
+  const back   = document.createElement('div');
+  back.className = 'face';
+  back.style.cssText = `width:${s}px;height:${s}px;transform:translateZ(-${half}px) rotateY(180deg);background:#0a0a0a;`;
+
+  const left2  = document.createElement('div');
+  left2.className = 'face';
+  left2.style.cssText = `width:${s}px;height:${s}px;transform:rotateY(-90deg) translateZ(${half}px);background:#0a0a0a;`;
+
+  const bottom = document.createElement('div');
+  bottom.className = 'face';
+  bottom.style.cssText = `width:${s}px;height:${s}px;transform:rotateX(-90deg) translateZ(${half}px);background:#0a0a0a;`;
+
+  cube.append(front, right, top, back, left2, bottom);
+
+  // hover label + cat tag
+  const label = document.createElement('div');
+  label.className = 'cube-label';
+  label.textContent = work.title;
+
+  const cat = document.createElement('div');
+  cat.className = 'cube-cat';
+  cat.textContent = work.cat;
+
+  wrap.append(cube, label, cat);
+  cubeEls.push(wrap);
+
+  wrap.addEventListener('click', () => openModal(idx));
+
+  return wrap;
+}
+
+// initial render
+let activeFilter = 'all';
+let visibleWorks = [...works];
+
+function render(filter) {
+  scene.innerHTML = '';
+  cubeEls.length = 0;
+  activeFilter = filter;
+  visibleWorks = filter === 'all' ? works : works.filter(w => w.cat === filter);
+  visibleWorks.forEach((w, i) => {
+    scene.appendChild(buildCube(w, i));
   });
 }
 
-/* tabs */
-document.getElementById('tabs').addEventListener('click', function(e) {
-  var tab = e.target.closest('.tab');
-  if (!tab) return;
-  var cat = tab.dataset.cat;
-  if (cat === activeCat) return;
-  activeCat = cat;
-  document.querySelectorAll('.tab').forEach(function(t) {
-    t.classList.toggle('active', t.dataset.cat === cat);
+render('all');
+
+// ─────────────────────────────────────────
+// FILTER
+// ─────────────────────────────────────────
+document.querySelectorAll('.f-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.f-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    render(btn.dataset.filter);
   });
-  history.replaceState(null, '', '#' + cat);
-  render(cat, true);
 });
 
-/* hash */
-function readHash() {
-  var h = location.hash.replace('#','');
-  return VALID.indexOf(h) !== -1 ? h : 'all';
+// ─────────────────────────────────────────
+// MODAL
+// ─────────────────────────────────────────
+const modal    = document.getElementById('modal');
+const imgWrap  = document.getElementById('modalImgWrap');
+const ph       = document.getElementById('modalPH');
+const mTitle   = document.getElementById('modalTitle');
+const mMeta    = document.getElementById('modalMeta');
+const mDesc    = document.getElementById('modalDesc');
+const mCounter = document.getElementById('modalCounter');
+
+let currentIdx = 0;
+
+function openModal(idx) {
+  currentIdx = idx;
+  renderModal();
+  modal.classList.add('active');
 }
-window.addEventListener('hashchange', function() {
-  var cat = readHash();
-  if (cat === activeCat) return;
-  activeCat = cat;
-  document.querySelectorAll('.tab').forEach(function(t) {
-    t.classList.toggle('active', t.dataset.cat === cat);
+
+function renderModal() {
+  const w = visibleWorks[currentIdx];
+  mTitle.textContent   = w.title;
+  mMeta.textContent    = w.meta;
+  mDesc.textContent    = w.desc;
+  mCounter.textContent = `${String(currentIdx+1).padStart(2,'0')} / ${String(visibleWorks.length).padStart(2,'0')}`;
+
+  const old = imgWrap.querySelector('img');
+  if (old) old.remove();
+  ph.style.display = 'none';
+
+  const img = document.createElement('img');
+  img.id = 'modalImg'; img.src = w.img; img.alt = w.title;
+  img.onerror = () => { img.remove(); ph.style.display = 'flex'; };
+  imgWrap.insertBefore(img, ph);
+}
+
+function closeModal() { modal.classList.remove('active'); }
+
+function nav(dir) {
+  currentIdx = (currentIdx + dir + visibleWorks.length) % visibleWorks.length;
+  renderModal();
+}
+
+document.getElementById('modalClose').addEventListener('click', closeModal);
+document.getElementById('modalPrev').addEventListener('click', e => { e.stopPropagation(); nav(-1); });
+document.getElementById('modalNext').addEventListener('click', e => { e.stopPropagation(); nav(+1); });
+modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
+window.addEventListener('keydown', e => {
+  if (!modal.classList.contains('active')) return;
+  if (e.key === 'Escape')     closeModal();
+  if (e.key === 'ArrowLeft')  nav(-1);
+  if (e.key === 'ArrowRight') nav(+1);
+});
+
+// ─────────────────────────────────────────
+// CURSOR
+// ─────────────────────────────────────────
+const cur = document.getElementById('cur');
+if (window.matchMedia('(hover: hover)').matches) {
+  document.addEventListener('mousemove', e => {
+    cur.style.left = e.clientX + 'px';
+    cur.style.top  = e.clientY + 'px';
   });
-  render(cat, true);
-});
+  document.addEventListener('mouseover', e => {
+    const t = e.target.closest('a, button, .cube-wrap');
+    if (t) cur.classList.add('big'); else cur.classList.remove('big');
+  });
+}
 
-/* cursor — no conditions, always active on desktop */
-var cur = document.getElementById('cur');
-document.addEventListener('mousemove', function(e) {
-  cur.style.left = e.clientX + 'px';
-  cur.style.top  = e.clientY + 'px';
+// ─────────────────────────────────────────
+// RESIZE — reposition cubes
+// ─────────────────────────────────────────
+let resizeTimer;
+window.addEventListener('resize', () => {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(() => render(activeFilter), 200);
 });
-document.addEventListener('mouseover', function(e) {
-  var over = e.target.closest('a, .tab, .card');
-  if (over) { cur.classList.add('big'); }
-  else       { cur.classList.remove('big'); }
-});
-
-/* init */
-updateCounts();
-activeCat = readHash();
-document.querySelectorAll('.tab').forEach(function(t) {
-  t.classList.toggle('active', t.dataset.cat === activeCat);
-});
-render(activeCat, false);
 </script>
 </body>
 </html>
