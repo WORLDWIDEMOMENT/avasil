@@ -435,6 +435,51 @@
     @media (max-width: 560px) {
       .projects-grid { grid-template-columns: 1fr; }
       .filter-btn { font-size: 8px; letter-spacing: .1em; }
+/* === Стилизация скроллбара === */
+/* Для всей страницы */
+body {
+  scrollbar-width: thin;                 /* Firefox — тонкий скроллбар */
+  scrollbar-color: #444444 #1a1a1a;      /* Firefox: ползунок / трек */
+}
+
+body::-webkit-scrollbar {
+  width: 8px;                            /* ширина вертикального */
+  height: 8px;                           /* высота горизонтального */
+}
+
+body::-webkit-scrollbar-track {
+  background: #1a1a1a;                    /* трек — тёмный */
+}
+
+body::-webkit-scrollbar-thumb {
+  background-color: #444444;              /* ползунок — серый */
+  border-radius: 4px;
+  border: 1px solid #2a2a2a;              /* небольшая окантовка */
+}
+
+body::-webkit-scrollbar-thumb:hover {
+  background-color: #666666;               /* чуть светлее при наведении */
+}
+
+/* Для описания внутри модального окна (если текст не помещается) */
+.modal-desc::-webkit-scrollbar {
+  width: 6px;
+}
+
+.modal-desc::-webkit-scrollbar-track {
+  background: #1a1a1a;
+}
+
+.modal-desc::-webkit-scrollbar-thumb {
+  background-color: #444444;
+  border-radius: 3px;
+}
+
+.modal-desc {
+  scrollbar-width: thin;
+  scrollbar-color: #444444 #1a1a1a;
+}
+      
     }
   </style>
 </head>
