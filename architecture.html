@@ -237,7 +237,7 @@
       transition: background .3s;
       z-index: 2;
     }
-    .project-card:hover .card-overlay { background: rgba(77,106,255,.12); }
+    
     .overlay-txt {
       font-size: 9px; font-weight: 700;
       letter-spacing: .2em; text-transform: uppercase;
@@ -364,7 +364,8 @@
       padding: 32px 36px;
       border-left: 1px solid var(--line);
       display: flex; flex-direction: column;
-      gap: 16px; overflow-y: auto;
+      gap: 16px; overflow-y: visible;
+      min-height: 0;  
     }
     .modal-title {
       font-size: 20px; font-weight: 700;
@@ -378,6 +379,8 @@
     .modal-desc {
       font-size: 13px; line-height: 1.85;
       color: rgba(239,239,239,.65); flex: 1;
+      flex: 1;
+      overflow-y: auto;
     }
     .modal-specs {
       display: grid; grid-template-columns: 1fr 1fr;
