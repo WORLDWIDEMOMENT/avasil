@@ -79,20 +79,17 @@
     .tag { font-size: 9px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--blue); background: none; border: none; cursor: none; padding: 2px 0; line-height: 1.6; transition: opacity .15s; }
     .tag:hover { opacity: .6; }
     @media (hover: none), (pointer: coarse) { .tag { cursor: auto; } }
-    /* ── MODAL: fullscreen, image aligned to top (как синие линии на скрине) ── */
-    .modal { position: fixed; inset: 0; display: flex; align-items: flex-start; justify-content: center; padding: 0; visibility: hidden; opacity: 0; transition: opacity .3s, visibility .3s; z-index: 400; overflow: hidden; }
+    /* ── MODAL: большое окно, но оставляет заблюренный фон по краям ── */
+    .modal { position: fixed; inset: 0; display: flex; align-items: flex-start; justify-content: center; padding: 4vh 3vw; visibility: hidden; opacity: 0; transition: opacity .3s, visibility .3s; z-index: 400; overflow: hidden; }
     .modal.active { visibility: visible; opacity: 1; }
     .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.85); z-index: -1; }
-    /* полный экран, фиксированная ширина инфо-панели */
-    .modal-content { position: relative; width: 100%; height: 100vh; background: #111; border: none; z-index: 410; display: grid; grid-template-columns: 1fr 400px; overflow: hidden; animation: mIn .25s ease; }
+    /* 94vw ширина, 92vh высота — фон виден по краям */
+    .modal-content { position: relative; width: 100%; max-width: 1600px; height: 92vh; background: #111; border: 1px solid var(--line); z-index: 410; display: grid; grid-template-columns: 1fr 400px; overflow: hidden; animation: mIn .25s ease; }
     @keyframes mIn { from { opacity: 0; transform: scale(.98); } to { opacity: 1; transform: none; } }
-    /* левая колонка: галерея на весь экран */
-    .modal-gallery { display: flex; flex-direction: column; overflow: hidden; background: #080808; height: 100vh; }
-    /* изображение занимает всё свободное место, выровнено по ВЕРХНЕМУ краю */
+    .modal-gallery { display: flex; flex-direction: column; overflow: hidden; background: #080808; height: 92vh; }
     .modal-main-img { flex: 1; display: flex; align-items: flex-start; justify-content: center; overflow: hidden; background: #080808; min-height: 0; }
     .modal-main-img img { width: 100%; height: 100%; object-fit: contain; object-position: top center; display: block; }
     .modal-main-img.ph { display: flex; align-items: center; justify-content: center; font-size: 10px; letter-spacing: .15em; text-transform: uppercase; color: #3a3a3a; }
-    /* миниатюры — горизонтальная полоска внизу */
     .modal-thumbs-row { display: flex; flex-direction: row; height: 72px; flex-shrink: 0; overflow-x: auto; overflow-y: hidden; border-top: 1px solid var(--line); scrollbar-width: thin; scrollbar-color: #444 #1a1a1a; }
     .modal-thumbs-row::-webkit-scrollbar { height: 4px; }
     .modal-thumbs-row::-webkit-scrollbar-track { background: #1a1a1a; }
@@ -102,8 +99,7 @@
     .thumb:hover { opacity: .85; }
     .thumb.active { opacity: 1; box-shadow: inset 0 -3px 0 var(--blue); }
     @media (hover: none), (pointer: coarse) { .thumb { cursor: auto; } }
-    /* правая колонка: инфо, прокручивается */
-    .modal-info { height: 100vh; overflow-y: auto; padding: 32px 36px; border-left: 1px solid var(--line); display: flex; flex-direction: column; gap: 16px; scrollbar-width: thin; scrollbar-color: #444 #1a1a1a; }
+    .modal-info { height: 92vh; overflow-y: auto; padding: 32px 36px; border-left: 1px solid var(--line); display: flex; flex-direction: column; gap: 16px; scrollbar-width: thin; scrollbar-color: #444 #1a1a1a; }
     .modal-info::-webkit-scrollbar { width: 5px; }
     .modal-info::-webkit-scrollbar-track { background: #1a1a1a; }
     .modal-info::-webkit-scrollbar-thumb { background: #444; border-radius: 3px; }
@@ -135,13 +131,13 @@
     .grid-bg.blur { filter: blur(6px); }
     @media (max-width: 900px) {
       .projects-grid { grid-template-columns: repeat(2, 1fr); }
-      /* мобайл: вертикальная раскладка, изображение занимает 70vh */
-      .modal-content { grid-template-columns: 1fr; grid-template-rows: auto 1fr; height: auto; min-height: 100vh; overflow: visible; }
-      .modal { overflow-y: auto; }
+      /* мобайл: отступ убираем, окно на весь экран, контент скроллируется */
+      .modal { padding: 0; overflow-y: auto; }
+      .modal-content { grid-template-columns: 1fr; height: auto; min-height: 100vh; overflow: visible; border: none; }
       .modal-gallery { height: auto; flex-shrink: 0; }
-      /* изображение на мобайле — большое, почти на весь экран */
-      .modal-main-img { height: 70vh; flex: none; align-items: flex-start; }
-      .modal-info { height: auto; overflow-y: visible; padding: 24px 20px 40px; border-left: none; border-top: 1px solid var(--line); }
+      /* изображение на мобайле — большое, 65vh */
+      .modal-main-img { height: 65vh; flex: none; }
+      .modal-info { height: auto; overflow-y: visible; padding: 24px 20px 80px; border-left: none; border-top: 1px solid var(--line); }
       .page-title { font-size: clamp(52px, 14vw, 100px); padding: 28px 24px 12px; }
       .page-subtitle { padding: 0 24px 24px; }
       .header-bar { padding: 0 20px; }
@@ -197,9 +193,9 @@
 
   <div class="project-card" data-tags="masterplan residential" data-title="1295 — Residential Complex" data-year="2024" data-location="Minsk, Belarus" data-type="Residential" data-studio="Zrobim Architects" data-tools="ArchiCAD, Enscape" data-desc="In this project, I served as the sole and primary executor — essentially the lead architect. Two types of houses designed for different buyers. Initially the clients wanted a single house type replicated across four areas, but nuances like window views, noise, and architectural balance led us to develop the design further for optimal usability.
 
-The result combines our vision of modern style for the area, the client's desires, a versatile layout with all necessary amenities, and perfect landscaping." data-images='["images/assets/build/1295/12951.jpg","images/assets/build/1295/1295p1.jpg","images/assets/build/1295/1295p2.jpg","images/assets/build/1295/1295p3.jpg","images/assets/build/1295/1295p4.jpg","images/assets/build/1295/12952.png","images/assets/build/1295/12953.png","images/assets/build/1295/12954.png","images/assets/build/1295/12955.png","images/assets/build/1295/12956.png","images/assets/build/1295/12957.png","images/assets/build/1295/12958.png","images/assets/build/1295/12959.png","images/assets/build/1295/129510.png","images/assets/build/1295/129511.jpg","images/assets/build/1295/129512.jpg","images/assets/build/1295/129513.jpg","images/assets/build/1295/129514.jpg","images/assets/build/1295/129515.jpg","images/assets/build/1295/129516.jpg","images/assets/build/1295/129517.jpg"]'>
+The result combines our vision of modern style for the area, the client's desires, a versatile layout with all necessary amenities, and perfect landscaping." data-images='["images/assets/build/1295/12951.png","images/assets/build/1295/1295p1.jpg","images/assets/build/1295/1295p2.jpg","images/assets/build/1295/1295p3.jpg","images/assets/build/1295/1295p4.jpg","images/assets/build/1295/12952.png","images/assets/build/1295/12953.png","images/assets/build/1295/12954.png","images/assets/build/1295/12955.png","images/assets/build/1295/12956.png","images/assets/build/1295/12957.png","images/assets/build/1295/12958.png","images/assets/build/1295/12959.png","images/assets/build/1295/129510.png","images/assets/build/1295/129511.jpg","images/assets/build/1295/129512.jpg","images/assets/build/1295/129513.jpg","images/assets/build/1295/129514.jpg","images/assets/build/1295/129515.jpg","images/assets/build/1295/129516.jpg","images/assets/build/1295/129517.jpg"]'>
     <span class="card-number">02</span>
-    <div class="card-img" data-ph="1295 Complex"><img src="images/assets/build/1295/12951.jpg" alt="1295" fetchpriority="high"><div class="card-overlay"><span class="overlay-txt">Open project</span></div></div>
+    <div class="card-img" data-ph="1295 Complex"><img src="images/assets/build/1295/12951.png" alt="1295" fetchpriority="high"><div class="card-overlay"><span class="overlay-txt">Open project</span></div></div>
     <div class="card-meta"><div class="card-info"><div class="card-name">1295 — Residential Complex</div><div class="card-year">2024 · Minsk / Moscow</div></div><div class="card-tags"><button class="tag" data-filter="masterplan">#MASTERPLAN</button><button class="tag" data-filter="residential">#RESIDENTIAL</button></div></div>
   </div>
 
@@ -277,9 +273,9 @@ This project is an ode to nature's raw power — the movement of titanic plates 
     <div class="card-meta"><div class="card-info"><div class="card-name">Museum of Modern Art "NOVA"</div><div class="card-year">2022 · Warsaw / Minsk</div></div><div class="card-tags"><button class="tag" data-filter="conceptual">#CONCEPTUAL</button></div></div>
   </div>
 
-  <div class="project-card" data-tags="conceptual masterplan" data-title="Competition Alborada Benahavís" data-year="2023" data-location="Benahavís, Spain" data-type="Competition / Hospitality" data-studio="Archidom Studio" data-tools="AutoCAD, Rhino, Photoshop" data-desc="Wellness retreat and aparthotel complex in Andalusian landscape. Terraced forms carved into the hillside — architecture as landscape continuation. Concept plans, sketches, diagrams, post-production." data-images='["images/assets/build/xab/xab.jpg"]'>
+  <div class="project-card" data-tags="conceptual masterplan" data-title="Competition Alborada Benahavís" data-year="2023" data-location="Benahavís, Spain" data-type="Competition / Hospitality" data-studio="Archidom Studio" data-tools="AutoCAD, Rhino, Photoshop" data-desc="Wellness retreat and aparthotel complex in Andalusian landscape. Terraced forms carved into the hillside — architecture as landscape continuation. Concept plans, sketches, diagrams, post-production." data-images='["images/assets/build/alborada-1.jpg","images/assets/build/alborada-2.jpg","images/assets/build/alborada-3.jpg"]'>
     <span class="card-number">13</span>
-    <div class="card-img" data-ph="Alborada"><img src="images/assets/build/xab/xab.jpg" alt="Alborada"><div class="card-overlay"><span class="overlay-txt">Open project</span></div></div>
+    <div class="card-img" data-ph="Alborada"><img src="images/assets/build/alborada-1.jpg" alt="Alborada"><div class="card-overlay"><span class="overlay-txt">Open project</span></div></div>
     <div class="card-meta"><div class="card-info"><div class="card-name">Competition Alborada</div><div class="card-year">2023 · Benahavís</div></div><div class="card-tags"><button class="tag" data-filter="conceptual">#CONCEPTUAL</button><button class="tag" data-filter="masterplan">#MASTERPLAN</button></div></div>
   </div>
 
@@ -315,6 +311,7 @@ This project is an ode to nature's raw power — the movement of titanic plates 
 
 <div class="footer-left" id="footerLeft"><a href="about.html">About</a></div>
 <div class="global-footer" id="globalFooter">
+  <a href="https://www.artlebedev.ru/people/JFkWZ1/" target="_blank">Artlebedev</a><span>—</span>
   <a href="mailto:navilen@bk.ru">navilen@bk.ru</a><span>—</span>
   <a href="https://www.instagram.com/molodostibolshenebudet/" target="_blank">Instagram</a><span>—</span>
   <a href="https://www.behance.net/avasileuskaya" target="_blank">Behance</a><span>—</span>
@@ -358,7 +355,7 @@ This project is an ode to nature's raw power — the movement of titanic plates 
       images.forEach((src, i) => {
         const img = document.createElement('img');
         img.className = 'thumb' + (i === 0 ? ' active' : '');
-        img.src = src; img.loading = 'lazy';
+        img.src = src; img.loading = 'eager'; // eager: грузим сразу, не ждём scroll-видимости
         img.addEventListener('click', () => {
           document.querySelectorAll('.thumb').forEach(t => t.classList.remove('active'));
           img.classList.add('active'); showImage(src, d.title);
