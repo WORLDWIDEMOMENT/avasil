@@ -3,151 +3,102 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Visual — AV</title>
+<title>Visual Archive — AV</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;700;800;900&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-:root{
-  --bg:#f5f3f0;--fg:#0d0d0d;--dim:#999;
-  --accent:#4d6aff;--glow:#ff6b9d;
-  --sans:'Barlow','Helvetica Neue',Helvetica,Arial,sans-serif;
-}
-html,body{
-  width:100%;height:100%;overflow:hidden;
-  background:var(--bg);font-family:var(--sans);cursor:auto;
-}
-body{
-  background:linear-gradient(135deg,#f5f3f0 0%,#faf8f6 100%);
-  overflow-y:auto;
-}
+:root{--bg:#0f0f0f;--fg:#f5f5f5;--dim:#888;--accent:#4d6aff;--sans:'Barlow',sans-serif;}
+html,body{width:100%;height:100%;background:var(--bg);font-family:var(--sans);color:var(--fg);}
+body{overflow-x:hidden;overflow-y:auto;padding:100px 40px;}
 
-/* HEADER */
-.hdr{position:fixed;top:0;left:0;right:0;z-index:200;height:52px;display:flex;align-items:center;padding:0 36px;}
+.hdr{position:fixed;top:0;left:0;right:0;z-index:200;height:52px;display:flex;align-items:center;padding:0 36px;background:rgba(15,15,15,.95);backdrop-filter:blur(10px);}
 .back{font-size:12px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;text-decoration:none;color:var(--dim);transition:color .2s;}
 .back:hover{color:var(--fg);}
 
-/* MAIN CONTAINER */
-.container{position:relative;width:100%;min-height:100vh;padding:60px 40px 40px;}
+/* TIMELINE CONTAINER */
+.timeline-wrapper{position:relative;width:100%;max-width:1600px;margin:0 auto;}
 
-/* LEFT SIDE — PORTRAIT */
-.portrait-section{
-  position:fixed;left:40px;top:100px;width:35%;height:calc(100vh - 140px);
-  display:flex;align-items:center;justify-content:center;z-index:10;
-}
-.portrait-wrapper{
-  width:100%;height:100%;position:relative;
-  display:flex;align-items:center;justify-content:center;
-}
-.portrait{
-  width:85%;height:85%;
-  background:url('images/assets/portrait-main.jpg') center/cover;
-  border-radius:50%;
-  box-shadow:0 40px 100px rgba(0,0,0,.15),inset -10px -10px 30px rgba(0,0,0,.1);
-  filter:blur(2px) brightness(1.05);
-  opacity:.85;
-  animation:float-soft 6s ease-in-out infinite;
-}
-@keyframes float-soft{0%,100%{transform:translate(0,0)}50%{transform:translate(8px,-12px)}}
+/* TIMELINE LINE */
+.timeline-line{position:absolute;left:50%;top:0;bottom:0;width:2px;background:linear-gradient(to bottom,var(--accent),rgba(77,106,255,.1));transform:translateX(-50%);}
 
-/* RIGHT SIDE — MOOD BOARD */
-.board-section{
-  margin-left:40%;padding-top:80px;padding-bottom:100px;
+/* YEARS LABELS */
+.years-row{display:flex;justify-content:space-between;margin-bottom:120px;position:relative;z-index:1;}
+.year-label{font-size:14px;font-weight:900;color:var(--accent);letter-spacing:.1em;position:relative;margin:0 40px;white-space:nowrap;}
+.year-label::before{content:'●';position:absolute;left:50%;top:-22px;transform:translateX(-50%);font-size:12px;}
+
+/* COLUMNS CONTAINER */
+.columns-container{position:relative;display:flex;justify-content:space-between;margin-bottom:60px;gap:20px;}
+
+/* SINGLE COLUMN */
+.column{position:relative;width:45%;display:flex;flex-direction:column;gap:20px;}
+.column.right{margin-left:auto;}
+
+/* IMAGES IN COLUMN */
+.image-item{
   position:relative;
-}
-.board-container{
-  position:relative;
-  width:100%;
-  min-height:150vh;
-}
-
-/* FLOATING ELEMENT STYLES */
-.float-item{
-  position:absolute;
-  backdrop-filter:blur(8px);
-  transition:all .3s cubic-bezier(.23,1,.32,1);
   cursor:pointer;
+  transition:all .3s cubic-bezier(.23,1,.32,1);
+  transform-origin:center;
 }
-.float-item:hover{
-  transform:scale(1.08) translate(0,-8px)!important;
-  filter:brightness(1.15) drop-shadow(0 15px 35px rgba(0,0,0,.2));
-  z-index:150!important;
+.image-item:hover{
+  transform:scale(1.05);
+  filter:brightness(1.2) drop-shadow(0 10px 30px rgba(77,106,255,.4));
+  z-index:100;
 }
-
-/* Image Thumbnails */
-.thumb-img{
-  width:100%;height:100%;
-  object-fit:cover;
-  border-radius:4px;
+.image-item img{
+  width:100%;
   display:block;
-  box-shadow:0 8px 24px rgba(0,0,0,.15);
-}
-.item-img{width:90px;height:90px;border-radius:3px;}
-.item-img.medium{width:120px;height:120px;}
-.item-img.small{width:65px;height:65px;}
-
-/* Text Labels & UI Fragments */
-.label-text{
-  font-size:11px;font-weight:700;letter-spacing:.12em;
-  text-transform:uppercase;
-  padding:8px 12px;
-  background:rgba(255,255,255,.8);
-  border:1px solid rgba(0,0,0,.08);
+  border:1px solid rgba(255,255,255,.1);
+  background:#1a1a1a;
+  aspect-ratio:3/2;
+  object-fit:cover;
   border-radius:2px;
-  color:var(--fg);
-  white-space:nowrap;
-}
-.label-text.accent{
-  background:var(--accent);color:#fff;
-  border-color:var(--accent);
-}
-.label-text.glow{
-  background:var(--glow);color:#fff;
-  box-shadow:0 4px 16px rgba(255,107,157,.3);
 }
 
-/* UI Fragments */
-.ui-fragment{
-  background:rgba(255,255,255,.6);
-  border:1px solid rgba(0,0,0,.1);
-  border-radius:3px;
-  padding:6px 10px;
-  font-size:9px;
-  color:var(--fg);
-  box-shadow:0 4px 12px rgba(0,0,0,.08);
-}
-.ui-fragment.icon{
-  width:48px;height:48px;
+/* MODAL */
+.modal{
+  position:fixed;inset:0;z-index:500;
   display:flex;align-items:center;justify-content:center;
-  border-radius:50%;
-  font-size:24px;
-  background:rgba(77,106,255,.08);
-  border-color:var(--accent);
+  background:rgba(0,0,0,.95);backdrop-filter:blur(10px);
+  opacity:0;visibility:hidden;
+  transition:opacity .3s,visibility .3s;
+  padding:40px;
 }
-
-/* Glowing circles */
-.glow-circle{
-  border-radius:50%;
-  background:radial-gradient(circle at 30% 30%,rgba(77,106,255,.2),rgba(77,106,255,.02));
-  border:1.5px solid rgba(77,106,255,.15);
-  box-shadow:0 0 30px rgba(77,106,255,.1),inset 0 0 30px rgba(77,106,255,.05);
+.modal.active{opacity:1;visibility:visible;}
+.modal-content{
+  position:relative;
+  background:#1a1a1a;
+  border:1px solid rgba(255,255,255,.1);
+  max-width:90vw;
+  max-height:90vh;
+  display:flex;
+  border-radius:3px;
+  overflow:hidden;
 }
-
-/* Scattered elements positioning */
-.element{position:absolute;}
-
-@keyframes float-1{0%,100%{transform:translateY(0) rotate(var(--rot,0deg))}50%{transform:translateY(-12px) rotate(var(--rot,0deg))}}
-@keyframes float-2{0%,100%{transform:translateY(0) rotate(var(--rot,0deg))}50%{transform:translateY(-8px) rotate(var(--rot,0deg))}}
-@keyframes float-3{0%,100%{transform:translateY(0) rotate(var(--rot,0deg))}50%{transform:translateY(-15px) rotate(var(--rot,0deg))}}
-@keyframes pulse-glow{0%,100%{box-shadow:0 0 20px rgba(77,106,255,.4)}50%{box-shadow:0 0 40px rgba(77,106,255,.8)}}
-
-.item-1{animation:float-1 4s ease-in-out infinite;}
-.item-2{animation:float-2 5s ease-in-out infinite;}
-.item-3{animation:float-3 6s ease-in-out infinite;}
-
-/* Hover blur effect */
-.blur-sm{filter:blur(1.5px);opacity:.7;}
-.blur-md{filter:blur(3px);opacity:.5;}
+.modal-image{flex:1;min-width:0;}
+.modal-image img{width:100%;height:100%;object-fit:contain;}
+.modal-info{
+  width:300px;
+  padding:40px;
+  display:flex;flex-direction:column;
+  gap:20px;
+  overflow-y:auto;
+  border-left:1px solid rgba(255,255,255,.1);
+}
+.modal-title{font-size:24px;font-weight:900;letter-spacing:-.01em;color:var(--fg);}
+.modal-subtitle{font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);}
+.modal-desc{font-size:13px;line-height:1.6;color:var(--dim);flex:1;}
+.modal-nav{display:flex;gap:10px;margin-top:20px;}
+.modal-nav button{
+  flex:1;padding:10px;border:1px solid rgba(255,255,255,.2);
+  background:none;color:var(--fg);cursor:pointer;
+  font-size:12px;font-weight:700;letter-spacing:.1em;
+  transition:all .2s;
+}
+.modal-nav button:hover{background:var(--accent);border-color:var(--accent);color:#000;}
+.modal-close{position:absolute;top:20px;right:20px;background:none;border:none;color:var(--dim);font-size:24px;cursor:pointer;z-index:10;transition:color .2s;}
+.modal-close:hover{color:var(--fg);}
 
 /* FOOTER */
 .ftl{position:fixed;bottom:24px;left:36px;z-index:50;font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;}
@@ -159,9 +110,11 @@ body{
 .ftr span{opacity:.1;color:var(--fg);}
 
 @media(max-width:1024px){
-  .portrait-section{position:relative;width:100%;height:300px;margin-bottom:40px;}
-  .board-section{margin-left:0;}
-  .container{padding:60px 20px 40px;}
+  .timeline-line{display:none;}
+  .columns-container{flex-direction:column;}
+  .column{width:100%;margin-left:0!important;}
+  .modal-content{flex-direction:column;}
+  .modal-info{width:100%;border-left:none;border-top:1px solid rgba(255,255,255,.1);}
 }
 </style>
 </head>
@@ -169,16 +122,23 @@ body{
 
 <div class="hdr"><a href="index.html" class="back">← Back</a></div>
 
-<div class="container">
-  <div class="portrait-section">
-    <div class="portrait-wrapper">
-      <div class="portrait"></div>
-    </div>
-  </div>
+<div class="timeline-wrapper" id="timeline">
+  <div class="timeline-line"></div>
+</div>
 
-  <div class="board-section">
-    <div class="board-container" id="board">
-      <!-- Elements will be generated by JS -->
+<!-- MODAL -->
+<div class="modal" id="modal">
+  <button class="modal-close" id="modalClose">✕</button>
+  <div class="modal-content">
+    <div class="modal-image"><img id="modalImg" src="" alt=""></div>
+    <div class="modal-info">
+      <div class="modal-title" id="modalTitle"></div>
+      <div class="modal-subtitle" id="modalSubtitle"></div>
+      <p class="modal-desc" id="modalDesc"></p>
+      <div class="modal-nav">
+        <button id="prevBtn">← Prev</button>
+        <button id="nextBtn">Next →</button>
+      </div>
     </div>
   </div>
 </div>
@@ -192,84 +152,121 @@ body{
 </div>
 
 <script>
-// Element data
-const elements = [
-  // Top row cluster
-  {type:'image',size:'medium',x:5,y:8,rot:-8,anim:1},
-  {type:'label',text:'#SWAG',x:15,y:6,rot:3,anim:2},
-  {type:'image',size:'small',x:25,y:12,rot:15,anim:3},
-  {type:'label',text:'mind',x:8,y:22,rot:-5,anim:1},
-  {type:'image',size:'medium',x:18,y:26,rot:8,anim:2},
-  {type:'ui',text:'○',x:12,y:35,rot:0,anim:1},
-  
-  // Middle section
-  {type:'image',size:'small',x:3,y:45,rot:-12,anim:2},
-  {type:'label',text:'love',x:22,y:48,rot:6,anim:3},
-  {type:'image',size:'medium',x:35,y:42,rot:-4,anim:1},
-  {type:'label',text:'music',x:28,y:58,rot:10,anim:2},
-  {type:'image',size:'small',x:10,y:65,rot:8,anim:3},
-  
-  // Right upper cluster
-  {type:'image',size:'medium',x:60,y:15,rot:-10,anim:1},
-  {type:'label',text:'BRAIN',x:72,y:8,rot:4,anim:2},
-  {type:'image',size:'small',x:68,y:28,rot:12,anim:3},
-  {type:'ui',text:'↑',x:75,y:35,rot:0,anim:1},
-  {type:'image',size:'small',x:82,y:42,rot:-6,anim:2},
-  
-  // Center-right
-  {type:'label',text:'life',x:45,y:35,rot:8,anim:3},
-  {type:'image',size:'medium',x:55,y:50,rot:-8,anim:1},
-  {type:'glow',size:'large',x:40,y:65,rot:0,anim:2},
-  
-  // Lower section
-  {type:'image',size:'small',x:8,y:80,rot:15,anim:2},
-  {type:'label',text:'STUFF',x:20,y:88,rot:-4,anim:3},
-  {type:'image',size:'medium',x:35,y:82,rot:6,anim:1},
-  {type:'image',size:'small',x:65,y:75,rot:-12,anim:2},
-  {type:'label',text:'art',x:78,y:85,rot:8,anim:3},
-  
-  // Bottom scattered
-  {type:'image',size:'small',x:12,y:105,rot:20,anim:1},
-  {type:'ui',text:'◆',x:45,y:110,rot:0,anim:2},
-  {type:'image',size:'medium',x:60,y:100,rot:-10,anim:3},
-  {type:'label',text:'create',x:75,y:115,rot:5,anim:1},
+const projects = [
+  {
+    year: 2019, name: 'PILOTS', subtitle: 'HAND DRAWINGS', 
+    path: 'images/assets/create/pilots/pilots',
+    count: 15,
+    desc: 'When I was younger, they shaped everything.\nAll my pain redirected through their image.\nEvery piece a different style, a different state.'
+  },
+  {
+    year: 2020, name: 'PORTRAIT', subtitle: 'NONE OF THEM IS ME',
+    path: 'images/assets/create/portrait/Portrait',
+    count: 6,
+    desc: 'A series about the gap between how you see yourself and how you appear.\n\nNone of the versions is definitive.'
+  },
+  {
+    year: 2022, name: 'SCAN', subtitle: 'GRAINS OF THE CITIES',
+    path: 'images/assets/create/scan/Scan',
+    count: 10,
+    desc: 'Cities leave marks.\nScanned surfaces, found materials.\nConcrete, rust, fabric, stone.'
+  },
+  {
+    year: 2023, name: 'CLO', subtitle: 'CUSTOM CLOTHING',
+    path: 'images/assets/create/clo/cloth',
+    count: 20,
+    desc: 'Hand-painted garments.\nNo sketch, no transfer.\nThe painting grew from the fabric up.'
+  },
+  {
+    year: 2024, name: 'BTI', subtitle: 'BEFORE THE IMPACT',
+    path: 'images/assets/create/bti/bti',
+    count: 4,
+    desc: 'Silent Horizon explores the moment when an ordinary landscape becomes the stage for an unexpected event.\n\nThe four-frame sequence captures a gradual shift in perception. What begins as a quiet, open field occupied by distant human figures transforms into a scene of tension and observation as a sudden trajectory appears in the sky.\n\nThe work investigates the relationship between landscape, technology, and the human witness. The scale of the environment contrasts with the fragility of human presence, emphasizing how rapidly familiar spaces can be redefined by unforeseen events.\n\nRather than depicting a specific narrative, the sequence reflects on perception, distance, and the transformation of landscape into a site of memory.'
+  }
 ];
 
-const board = document.getElementById('board');
+let currentProject = null;
+let currentImageIdx = 0;
 
-elements.forEach((el, idx) => {
-  const item = document.createElement('div');
-  item.className = `float-item element item-${el.anim}`;
-  item.style.left = el.x + '%';
-  item.style.top = el.y + '%';
-  item.style.setProperty('--rot', el.rot + 'deg');
+const timeline = document.getElementById('timeline');
+const modal = document.getElementById('modal');
+const modalImg = document.getElementById('modalImg');
+const modalTitle = document.getElementById('modalTitle');
+const modalSubtitle = document.getElementById('modalSubtitle');
+const modalDesc = document.getElementById('modalDesc');
+const modalClose = document.getElementById('modalClose');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+
+// Build timeline
+projects.forEach((proj, idx) => {
+  const yearsRow = document.createElement('div');
+  yearsRow.className = 'years-row';
+  yearsRow.innerHTML = `<div class="year-label">${proj.year}</div>`;
+  timeline.appendChild(yearsRow);
+
+  const colsContainer = document.createElement('div');
+  colsContainer.className = 'columns-container';
+
+  // Alternate left-right
+  const isLeft = idx % 2 === 0;
+  const leftCol = document.createElement('div');
+  leftCol.className = 'column' + (isLeft ? '' : ' right');
   
-  let html = '';
-  
-  if(el.type === 'image'){
-    const imgClass = el.size === 'medium' ? 'item-img medium' : el.size === 'small' ? 'item-img small' : 'item-img';
-    html = `<img src="images/assets/create/placeholder-${idx}.jpg" alt="" class="${imgClass} thumb-img">`;
+  // Add images
+  for(let i = 1; i <= proj.count; i++){
+    const item = document.createElement('div');
+    item.className = 'image-item';
+    const img = document.createElement('img');
+    img.src = `${proj.path}${i}.jpg`;
+    img.alt = `${proj.name} ${i}`;
+    img.onerror = function(){this.style.opacity = '0.3';};
+    item.appendChild(img);
+    
+    item.addEventListener('click', () => openModal(proj, i - 1));
+    leftCol.appendChild(item);
   }
-  else if(el.type === 'label'){
-    html = `<div class="label-text ${idx % 3 === 0 ? 'accent' : idx % 5 === 0 ? 'glow' : ''}">${el.text}</div>`;
-  }
-  else if(el.type === 'ui'){
-    html = `<div class="ui-fragment icon">${el.text}</div>`;
-  }
-  else if(el.type === 'glow'){
-    html = `<div class="glow-circle" style="width:140px;height:140px;"></div>`;
-  }
-  
-  item.innerHTML = html;
-  board.appendChild(item);
+
+  colsContainer.appendChild(leftCol);
+  timeline.appendChild(colsContainer);
 });
 
-// Simple image fallback
-document.querySelectorAll('.thumb-img').forEach(img => {
-  img.onerror = function(){
-    this.style.background = 'linear-gradient(135deg, #e8e4de 0%, #ddd 100%)';
-    this.style.opacity = '0.5';
-  };
+function openModal(proj, idx) {
+  currentProject = proj;
+  currentImageIdx = idx;
+  showImage();
+  modal.classList.add('active');
+}
+
+function showImage() {
+  const proj = currentProject;
+  const num = currentImageIdx + 1;
+  modalImg.src = `${proj.path}${num}.jpg`;
+  modalTitle.textContent = proj.name;
+  modalSubtitle.textContent = proj.subtitle;
+  modalDesc.textContent = proj.desc;
+}
+
+modalClose.addEventListener('click', () => modal.classList.remove('active'));
+modal.addEventListener('click', (e) => {
+  if(e.target === modal) modal.classList.remove('active');
+});
+
+prevBtn.addEventListener('click', () => {
+  currentImageIdx = (currentImageIdx - 1 + currentProject.count) % currentProject.count;
+  showImage();
+});
+
+nextBtn.addEventListener('click', () => {
+  currentImageIdx = (currentImageIdx + 1) % currentProject.count;
+  showImage();
+});
+
+document.addEventListener('keydown', (e) => {
+  if(!modal.classList.contains('active')) return;
+  if(e.key === 'Escape') modal.classList.remove('active');
+  if(e.key === 'ArrowLeft') prevBtn.click();
+  if(e.key === 'ArrowRight') nextBtn.click();
 });
 </script>
 
