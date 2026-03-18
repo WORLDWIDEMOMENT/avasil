@@ -230,10 +230,10 @@ body::before{
 
 /* ── FOOTER — at very bottom ── */
 .ftl{position:fixed;bottom:10px;left:36px;z-index:100;font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;}
-.ftl a{color:#f5f5f5;text-decoration:none;opacity:.22;transition:opacity .2s;}
+.ftl a{color:#f5f5f5;text-decoration:none;opacity:.75;transition:opacity .2s;}
 .ftl a:hover{opacity:1}
 .ftr{position:fixed;bottom:10px;right:36px;z-index:100;display:flex;gap:8px;align-items:center;font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;}
-.ftr a{color:#f5f5f5;text-decoration:none;opacity:.22;transition:opacity .2s;}
+.ftr a{color:#f5f5f5;text-decoration:none;opacity:.75;transition:opacity .2s;}
 .ftr a:hover{opacity:1}
 .ftr span{opacity:.08;color:#f5f5f5}
 </style>
@@ -639,7 +639,7 @@ function distributeColumns() {
 
   const PADDING  = 24;  /* left/right margin from edge */
   const COL_W    = 100; /* column width in px */
-  const RATIO    = 1.5; /* between-group / within-group gap ratio */
+  const RATIO    = 2.5; /* between-group / within-group gap ratio */
 
   /* collect column info before DOM restructure */
   const groups  = Array.from(scrollContainer.querySelectorAll('.project-group'));
