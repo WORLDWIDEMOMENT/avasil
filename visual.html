@@ -742,6 +742,8 @@ function distributeColumns() {
 
   const PADDING = 24;   /* ← отступ от краёв страницы */
   const COL_W   = 100;  /* ← ширина каждой колонны в px */
+  const BETWEEN_PROJ = 60; /* ← зазор между проектами в px */
+const WITHIN_PROJ  = 8;
 
   /* collect all columns still inside project-group wrappers */
   const groups = Array.from(scrollContainer.querySelectorAll('.project-group'));
