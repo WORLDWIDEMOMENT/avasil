@@ -186,40 +186,55 @@ body {
 
 /* ── MOBILE ── */
 @media (max-width: 900px) {
-  /* Sub-items always visible on mobile — no tap needed to reveal */
-  .sub { opacity: .78; }
-  .zone.active .sub { opacity: .85; }
+  /*
+    Image containment: override only size + position.
+    background-attachment stays fixed from original rule — NOT repeated here
+    to avoid the iOS repaint bug.
+    Result: image occupies ~14vh–70vh, black above and below.
+  */
+  body {
+    background-size: auto 56vh;
+    background-position: center 14vh;
+  }
 
-  /* Zones: lower on screen, below center */
-  #build {
-    left: 24px;
-    bottom: 140px;
-    top: auto;
+  .main-title { font-size: 42px; letter-spacing: .1em; }
+
+  /*
+    Zones: positioned just below the image (image bottom ≈ 70vh).
+    Gap between them is natural via left/right placement.
+  */
+  #build  {
+    left: 20px;
+    top: 72vh;
+    bottom: auto;
     transform: none;
   }
   #create {
-    right: 24px;
-    bottom: 140px;
-    top: auto;
-    transform: none;
+    right: 20px;
+    top: 72vh;
+    bottom: auto;
     text-align: right;
+    transform: none;
   }
 
-  .main-title { font-size: 38px; letter-spacing: .1em; }
+  /* Sub-items always visible on mobile — no tap needed to see them */
+  .sub { opacity: .55; pointer-events: auto; }
+  .zone.active .sub { opacity: 1; }
 
-  /* Bottom bar: About left, links right of center */
-  .bottom-bar { padding: 0 24px; font-size: 9px; bottom: 28px; }
-  .contact { gap: 10px; flex-wrap: nowrap; justify-content: flex-end; }
-  .contact a[href^="mailto"] { display: none; }
-  .contact .divider:first-of-type { display: none; }
+  /* Bottom bar: ABOUT left, links right — hide email to save space */
+  .bottom-bar { padding: 0 20px; font-size: 9px; }
+  .email-link { display: none; }
+  /* hide divider adjacent to hidden email */
+  .email-link + .divider { display: none; }
+  .contact { gap: 6px; }
 }
 
 @media (max-width: 560px) {
   .main-title { font-size: 30px; }
-  #build  { left: 16px; bottom: 130px; }
-  #create { right: 16px; bottom: 130px; }
-  .bottom-bar { padding: 0 16px; font-size: 8px; }
-  .contact { gap: 8px; }
+  #build  { left: 20px; }
+  #create { right: 20px; }
+  /* Keep contact visible (Instagram, Behance, LinkedIn) as in mockup */
+  .bottom-bar { justify-content: space-between; }
 }
 </style>
 </head>
@@ -260,7 +275,7 @@ body {
 <div class="bottom-bar ui-group">
   <a href="about.html">About</a>
   <div class="contact">
-    <a href="/cdn-cgi/l/email-protection#abc5caddc2c7cec5ebc9c085d9de"><span class="__cf_email__" data-cfemail="7f111e0916131a113f1d14510d0a">[email&#160;protected]</span></a>
+    <a href="mailto:navilen@bk.ru" class="email-link">navilen@bk.ru</a>
     <span class="divider">—</span>
     <a href="https://www.instagram.com/molodostibolshenebudet/" target="_blank">Instagram</a>
     <span class="divider">—</span>
