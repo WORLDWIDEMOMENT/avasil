@@ -36,11 +36,9 @@ html, body {
 /* ── BG CROSSFADE ── */
 .bg-a, .bg-b {
   position: fixed; inset: 0; z-index: 0;
-  background-size: cover;
-  background-position: center;
+  background-size: cover; background-position: center;
   background-repeat: no-repeat;
-  filter: blur(3px);
-  transform: scale(1.03);
+  filter: blur(3px); transform: scale(1.03);
   transition: opacity .9s ease;
 }
 .bg-a { opacity: 1; }
@@ -56,7 +54,7 @@ html, body {
   background-size: 180px;
 }
 
-/* ── PAGE (desktop) ── */
+/* ── PAGE ── */
 .page {
   position: fixed; inset: 0; z-index: 3;
   display: grid;
@@ -76,7 +74,6 @@ html, body {
   transition: color .2s; flex-shrink: 0; padding-top: 2px;
 }
 .back:hover { color: var(--white); }
-
 .manifesto {
   text-align: right; max-width: 340px; pointer-events: none;
   font-size: clamp(12px, 1.1vw, 15px);
@@ -108,11 +105,9 @@ html, body {
 .video-ratio iframe {
   position: absolute; inset: 0; width: 100%; height: 100%; border: none;
 }
-
 .video-info {
   display: flex; justify-content: space-between; align-items: baseline;
-  padding: 16px 2px 0;
-  height: 52px;
+  padding: 16px 2px 0; height: 52px;
 }
 .video-title {
   font-size: clamp(22px, 2.6vw, 34px);
@@ -126,21 +121,15 @@ html, body {
 }
 
 /* ── FILMSTRIP ── */
-.filmstrip-wrap {
-  padding: 0 44px;
-  overflow: visible;
-}
+.filmstrip-wrap { padding: 0 44px; overflow: visible; }
 .filmstrip {
   display: flex; gap: 10px;
-  overflow-x: auto;
-  overflow-y: visible;
+  overflow-x: auto; overflow-y: visible;
   padding-bottom: 6px;
-  padding-top: 180px;
-  margin-top: -180px;
+  padding-top: 180px; margin-top: -180px;
   scrollbar-width: none;
 }
 .filmstrip::-webkit-scrollbar { display: none; }
-
 .strip-item {
   flex-shrink: 0; width: 130px; cursor: none;
   opacity: .75; transition: opacity .2s, transform .2s;
@@ -164,29 +153,24 @@ html, body {
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 
-/* ── CINEMA TOOLTIP ── */
+/* ── CINEMA TOOLTIP (desktop hover) ── */
 .cinema-tooltip {
   position: absolute;
-  bottom: calc(100% + 18px);
-  left: 0;
+  bottom: calc(100% + 18px); left: 0;
   width: 210px;
   background: #0c0c0c;
   border: 1px solid rgba(238,238,238,.15);
   padding: 11px 13px 10px;
   pointer-events: none;
-  opacity: 0;
-  transform: translateY(8px);
+  opacity: 0; transform: translateY(8px);
   transition: opacity .2s ease, transform .2s ease;
   z-index: 100;
   box-shadow: inset 0 0 0 3px #0c0c0c, inset 0 0 0 4px rgba(238,238,238,.08);
 }
-.cinema-tooltip::before,
-.cinema-tooltip::after {
-  content: '';
-  position: absolute; left: 0; right: 0; height: 7px;
+.cinema-tooltip::before, .cinema-tooltip::after {
+  content: ''; position: absolute; left: 0; right: 0; height: 7px;
   background-image: repeating-linear-gradient(
-    90deg,
-    transparent 0, transparent 5px,
+    90deg, transparent 0, transparent 5px,
     rgba(238,238,238,.1) 5px, rgba(238,238,238,.1) 12px
   );
 }
@@ -203,6 +187,9 @@ html, body {
   color: rgba(238,238,238,.75);
 }
 .strip-item:hover .cinema-tooltip { opacity: 1; transform: translateY(0); }
+
+/* ── MOBILE CAPTION (скрыт на десктопе) ── */
+.mobile-caption { display: none; }
 
 /* ── BOTTOM BAR ── */
 .bottom-bar {
@@ -225,78 +212,104 @@ html, body {
 .footer-links .sep { opacity: .18; }
 
 /* ════════════════════════════════════════
-   MOBILE
+   MOBILE — только этот блок, десктоп не тронут
 ════════════════════════════════════════ */
 @media (max-width: 768px) {
+  html, body { overflow: hidden; height: 100%; cursor: auto; }
 
-  /* скролл вертикально */
-  html, body {
-    height: auto;
-    overflow-x: hidden;
-    overflow-y: auto;
-    cursor: auto;
-  }
-
-  /* .page выходит из fixed в нормальный поток */
+  /* Страница остаётся fixed, как на десктопе.
+     5 строк: topbar / video / caption / filmstrip / footer */
   .page {
-    position: relative;
-    inset: auto;
-    display: flex;
-    flex-direction: column;
-    min-height: 100svh;
+    position: fixed; inset: 0;
+    display: grid;
+    grid-template-rows: auto 1fr auto auto auto;
   }
 
-  /* фон фиксирован */
-  .bg-a, .bg-b, .bg-veil, .grain { position: fixed; }
-
-  /* top bar: Back слева, manifesto справа — без переноса */
+  /* ── top bar ── */
   .top-bar {
-    padding: 20px 16px 12px;
+    padding: 18px 16px 0;
     flex-wrap: nowrap;
     align-items: flex-start;
     gap: 12px;
   }
-  .back { flex-shrink: 0; }
+  .back { flex-shrink: 0; font-size: 11px; }
   .manifesto {
     flex: 1;
     max-width: none;
-    font-size: 10px;
-    line-height: 1.6;
+    font-size: clamp(10px, 2.8vw, 13px); /* заметно крупнее */
+    line-height: 1.65;
     text-align: right;
+    pointer-events: none;
   }
 
-  /* stage: стрелки убраны, видео на всю ширину */
+  /* ── stage: стрелки убраны, видео на всю ширину ── */
   .stage {
     padding: 0;
-    flex-direction: column;
-    align-items: stretch;
+    align-items: center;
+    justify-content: center;
   }
   .arrow { display: none; }
-  .video-frame { max-width: 100%; width: 100%; }
-  .video-info { height: auto; padding: 10px 16px 0; }
-  .video-title  { font-size: clamp(18px, 5vw, 26px); }
-  .video-counter { font-size: 12px; }
+  .video-frame {
+    max-width: 100%;
+    width: 100%;
+    padding: 0;        /* без боковых отступов */
+  }
+  .video-info {
+    height: auto;
+    padding: 8px 12px 0;
+  }
+  .video-title  { font-size: clamp(16px, 4.5vw, 22px); }
+  .video-counter { font-size: 11px; }
 
-  /* filmstrip */
-  .filmstrip-wrap { padding: 0 16px; }
-  .filmstrip { padding-top: 100px; margin-top: -100px; }
-  .strip-item { width: 90px; cursor: auto; }
-  .strip-thumb, .strip-ph { width: 90px; height: 51px; }
+  /* ── caption строка — замена тултипу на мобиле ── */
+  .mobile-caption {
+    display: block;
+    padding: 10px 16px 4px;
+    min-height: 38px;
+    font-size: 11px;
+    font-style: italic;
+    font-weight: 400;
+    line-height: 1.55;
+    letter-spacing: .01em;
+    color: rgba(238,238,238,.55);
+    /* film-frame стиль как у tooltip */
+    border-top: 1px solid rgba(238,238,238,.07);
+    border-bottom: 1px solid rgba(238,238,238,.07);
+    background: rgba(0,0,0,.18);
+  }
+
+  /* ── filmstrip ── */
+  .filmstrip-wrap {
+    padding: 0 12px;
+    overflow: visible;
+  }
+  .filmstrip {
+    padding-top: 0;     /* тултипы скрыты, отступ не нужен */
+    margin-top: 0;
+    padding-bottom: 10px;
+    gap: 8px;
+  }
+  .strip-item { width: 80px; cursor: auto; }
+  .strip-thumb, .strip-ph { width: 80px; height: 45px; }
+  .strip-name { font-size: 9px; }
+  /* тултипы скрыты — на тач hover не работает */
   .cinema-tooltip { display: none; }
 
-  /* footer: About слева, ссылки в два ряда справа */
+  /* ── footer прибит к низу через grid ── */
   .bottom-bar {
     flex-direction: row;
     align-items: flex-end;
     justify-content: space-between;
-    padding: 12px 16px 28px;
-    margin-top: 16px;
+    padding: 8px 16px 20px;
+    margin-top: 0;
   }
+  .footer-left a { font-size: 10px; }
   .footer-links {
     flex-direction: column;
     align-items: flex-end;
-    gap: 5px;
+    gap: 4px;
   }
+  .footer-links a { font-size: 10px; }
   .footer-links .sep { display: none; }
 }
 </style>
@@ -339,6 +352,9 @@ html, body {
       <svg viewBox="0 0 24 24"><polyline points="9 6 15 12 9 18"/></svg>
     </button>
   </div>
+
+  <!-- caption для мобиле (скрыт на десктопе через CSS) -->
+  <div class="mobile-caption" id="mobileCaption"></div>
 
   <div class="filmstrip-wrap">
     <div class="filmstrip" id="filmstrip"></div>
@@ -413,6 +429,7 @@ var activeLayer = 'a';
 var titleEl     = document.getElementById('vTitle');
 var counterEl   = document.getElementById('vCounter');
 var strip       = document.getElementById('filmstrip');
+var mobCaption  = document.getElementById('mobileCaption');
 
 function makePh(label) {
   var d = document.createElement('div');
@@ -428,8 +445,7 @@ VIDEOS.forEach(function(v, i) {
   if (v.thumb) {
     var img = document.createElement('img');
     img.className = 'strip-thumb';
-    img.src = v.thumb;
-    img.alt = v.title;
+    img.src = v.thumb; img.alt = v.title;
     img.onerror = function() { this.replaceWith(makePh(v.title)); };
     item.appendChild(img);
   } else {
@@ -441,6 +457,7 @@ VIDEOS.forEach(function(v, i) {
   nameEl.textContent = v.title;
   item.appendChild(nameEl);
 
+  /* cinema tooltip — десктоп hover */
   if (v.caption) {
     var tip = document.createElement('div');
     tip.className = 'cinema-tooltip';
@@ -465,13 +482,11 @@ VIDEOS.forEach(function(v, i) {
 function setBg(url) {
   if (activeLayer === 'a') {
     bgB.style.backgroundImage = url ? "url('" + url + "')" : 'none';
-    bgB.style.opacity = '1';
-    bgA.style.opacity = '0';
+    bgB.style.opacity = '1'; bgA.style.opacity = '0';
     activeLayer = 'b';
   } else {
     bgA.style.backgroundImage = url ? "url('" + url + "')" : 'none';
-    bgA.style.opacity = '1';
-    bgB.style.opacity = '0';
+    bgA.style.opacity = '1'; bgB.style.opacity = '0';
     activeLayer = 'a';
   }
 }
@@ -490,6 +505,9 @@ function goTo(i, skipHash) {
     String(current + 1).padStart(2, '0') + ' / ' +
     String(VIDEOS.length).padStart(2, '0');
 
+  /* обновляем мобильный caption */
+  if (mobCaption) mobCaption.textContent = v.caption || '';
+
   document.querySelectorAll('.strip-item').forEach(function(el, idx) {
     el.classList.toggle('active', idx === current);
   });
@@ -499,9 +517,7 @@ function goTo(i, skipHash) {
     activeItem.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
   }
 
-  if (!skipHash) {
-    history.replaceState(null, '', '#' + current);
-  }
+  if (!skipHash) history.replaceState(null, '', '#' + current);
 }
 
 document.getElementById('btnPrev').addEventListener('click', function() { goTo(current - 1); });
