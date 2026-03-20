@@ -1,25 +1,3 @@
-Понял на 100%! Я вижу проблему на скриншоте.
-
-Причина, по которой видео так жестоко обрезалось, кроется в особенности CSS Grid: длинная лента миниатюр внизу заставляла браузер "раздуть" весь каркас страницы до 1000 пикселей в ширину, поэтому телефон показывал вам только левый кусок этого гигантского экрана.
-
-Я сделал в точности так, как вы просили:
-
-Применил жесткий фикс min-width: 0 и max-width: 100vw, который запрещает странице раздуваться шире физического экрана телефона.
-
-Уменьшил ширину экрана до 90vw (90% от ширины экрана). Теперь видео гарантированно помещается полностью, оставляя по 5% аккуратного отступа слева и справа.
-
-Кнопки со стрелками выстроены идеально по центру под видео.
-
-Больше ничего не "улетит" вправо.
-
-Вот итоговый код (остальная часть не тронута, изменения только в самом низу в @media):
-
-code
-Html
-play_circle
-download
-content_copy
-expand_less
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -260,87 +238,58 @@ html, body {
 .footer-links a:hover { opacity: 1; }
 .footer-links .sep { opacity: .18; }
 
-/* ── MOBILE ── */
+/* ── MOBILE (ПОЛНОСТЬЮ ИСПРАВЛЕНО И ИЗОЛИРОВАНО) ── */
 @media (max-width: 768px) {
-  /* ЖЕСТКИЙ ФИКС ШИРИНЫ ЭКРАНА: не даем сетке растягиваться за пределы телефона */
+  html, body { overflow-y: auto; overflow-x: hidden; height: auto; }
+  
+  /* Контроль ширины страницы, чтобы контент не выталкивал верстку вправо */
   .page { 
-    width: 100vw; 
-    max-width: 100vw; 
+    position: relative; 
+    height: auto; 
+    min-height: 100svh; 
+    width: 100%; 
+    max-width: 100%; 
     overflow-x: hidden; 
   }
+  .bg-a, .bg-b, .bg-veil, .grain { position: fixed; }
 
-  /* Все главные блоки обязаны вписываться в ширину телефона (min-width: 0 спасает от раздутия Grid) */
-  .top-bar, .stage, .filmstrip-wrap, .bottom-bar {
-    width: 100vw;
-    max-width: 100vw;
+  /* Запрещаем сетке раздуваться */
+  .top-bar, .stage, .filmstrip-wrap, .bottom-bar { 
     min-width: 0; 
-    box-sizing: border-box;
+    box-sizing: border-box; 
   }
 
-  /* Шапка */
-  .top-bar { 
-    padding: 24px 5vw 0; 
-    flex-direction: column; 
-    gap: 12px; 
-  }
-  .manifesto { 
-    max-width: 100%; 
-    font-size: 12px; 
-    text-align: left; 
-  }
-
-  /* Сцена */
+  .top-bar { padding: 24px 20px 0; flex-direction: column; gap: 16px; flex-wrap: wrap; }
+  .manifesto { max-width: 100%; font-size: 13px; text-align: left; }
+  
+  /* Сцена: Идеальное размещение */
   .stage { 
-    padding: 0; 
+    padding: 30px 0; 
     flex-wrap: wrap; 
-    align-content: center;
-    justify-content: center;
+    justify-content: center; 
   }
   
-  /* ВИДЕО УМЕНЬШЕНО И ВЛЕЗАЕТ ИДЕАЛЬНО: ровно 90% от ширины экрана телефона */
+  /* ВИДЕО ЗАНИМАЕТ 85% — оно станет меньше и не будет обрезаться */
   .video-frame { 
-    flex: 0 0 90vw; 
-    width: 90vw; 
-    max-width: 90vw; 
+    flex: 0 0 85%; 
+    max-width: 85%; 
     order: 1; 
   }
+  .video-info { height: auto; padding-top: 12px; }
+  .video-title { font-size: 18px; white-space: normal; word-break: break-word; }
   
-  .video-info { 
-    padding: 12px 0 0; 
-    height: auto; 
-  }
+  /* Кнопки четко по центру под видео */
+  .arrow { margin-top: 20px; width: 44px; height: 44px; }
+  #btnPrev { order: 2; margin-right: 12px; }
+  #btnNext { order: 3; margin-left: 12px; }
   
-  .video-title { 
-    font-size: 16px; /* Чуть меньше для аккуратности */
-    white-space: normal;
-    word-break: break-word; /* Если текст длинный - он перенесется, а не вылезет за край */
-  }
-
-  /* Кнопки теперь ровно по центру под видео */
-  .arrow { 
-    margin-top: 16px; 
-    width: 44px; 
-    height: 44px; 
-  }
-  #btnPrev { order: 2; margin-right: 8px; }
-  #btnNext { order: 3; margin-left: 8px; }
-
-  /* Миниатюры: выровнены по левому краю видео (5vw отступ) */
-  .filmstrip-wrap { 
-    padding: 0 5vw; 
-  }
+  /* Остальное выравнивание под ширину 85% */
+  .filmstrip-wrap { padding: 0 7.5%; } /* 7.5% слева и справа = ровно под видео */
   .strip-item { width: 90px; }
-  .strip-thumb, .strip-ph { width: 90px; height: 50px; }
+  .strip-thumb, .strip-ph { width: 90px; height: 51px; }
   .cinema-tooltip { width: 140px; font-size: 10px; }
-
-  /* Подвал */
-  .bottom-bar { 
-    flex-direction: column; 
-    gap: 10px; 
-    align-items: flex-start; 
-    padding: 12px 5vw 24px; 
-    margin-top: 0; 
-  }
+  
+  .bottom-bar { flex-direction: column; gap: 12px; align-items: flex-start; padding: 20px 7.5% 24px; }
   .footer-links { flex-wrap: wrap; gap: 8px; }
   .footer-links .sep { display: none; }
 }
