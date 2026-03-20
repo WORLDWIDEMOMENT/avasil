@@ -228,15 +228,16 @@ html, body {
   /* ── top bar ── */
   .top-bar {
     padding: 18px 16px 0;
-    flex-wrap: nowrap;
-    align-items: flex-start;
-    gap: 12px;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 8px 12px;
   }
   .back { flex-shrink: 0; font-size: 11px; }
   .manifesto {
     flex: 1;
+    min-width: 0;
     max-width: none;
-    font-size: clamp(10px, 2.8vw, 13px); /* заметно крупнее */
+    font-size: clamp(10px, 2.8vw, 13px);
     line-height: 1.65;
     text-align: right;
     pointer-events: none;
@@ -365,7 +366,7 @@ html, body {
       <a href="about.html">About</a>
     </div>
     <div class="footer-links">
-      <a href="mailto:navilen@bk.ru">navilen@bk.ru</a>
+      <a href="/cdn-cgi/l/email-protection#2a444b5c43464f446a484104585f"><span class="__cf_email__" data-cfemail="b5dbd4c3dcd9d0dbf5d7de9bc7c0">[email&#160;protected]</span></a>
       <span class="sep">&mdash;</span>
       <a href="https://www.instagram.com/molodostibolshenebudet/" target="_blank">Instagram</a>
       <span class="sep">&mdash;</span>
@@ -375,7 +376,7 @@ html, body {
 
 </div>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 var VIDEOS = [
   {
     id:      '1171844542',
@@ -540,11 +541,4 @@ if (window.matchMedia('(hover: hover)').matches) {
     cur.style.left = e.clientX + 'px';
     cur.style.top  = e.clientY + 'px';
   });
-  document.querySelectorAll('a, button, .strip-item').forEach(function(el) {
-    el.addEventListener('mouseenter', function() { cur.classList.add('big'); });
-    el.addEventListener('mouseleave', function() { cur.classList.remove('big'); });
-  });
-}
-</script>
-</body>
-</html>
+  document.querySelectorAll('a, button, .stri
