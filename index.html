@@ -187,12 +187,11 @@ body {
 /* ── MOBILE ── */
 @media (max-width: 900px) {
   /*
-    Image containment: override only size + position.
-    background-attachment stays fixed from original rule — NOT repeated here
-    to avoid the iOS repaint bug.
-    Result: image occupies ~14vh–70vh, black above and below.
+    iOS fix: background-attachment:fixed freezes the page on Safari/iOS.
+    Override to scroll on mobile. Nothing else changed.
   */
   body {
+    background-attachment: scroll;
     background-size: auto 56vh;
     background-position: center 14vh;
   }
