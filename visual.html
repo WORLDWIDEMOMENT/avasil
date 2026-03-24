@@ -630,8 +630,10 @@ const projects = [
     type:'case',
     desc:'A group exhibition on urban memory, material trace, and disappearance.\n\nArt direction — self-initiated concept, 2025.',
     files:[]
+
   },
   {
+    
     id:'graph', year:'—', name:'GRAPH',
     subtitle:'GRAPHIC DESIGN · AI TOOLS',
     desc:'Visual experiments in graphic design.\nPoster generation, identity exploration.\nAI-assisted image work.\n— in progress',
@@ -780,61 +782,120 @@ function openModalCase(proj) {
 
   /* Right: rich case study info */
   modalInfo.classList.add('case-info');
-  modalInfo.innerHTML = `
-    <span class="case-label">Art direction — self-initiated · 2025</span>
-    <div style="font-size:22px;font-weight:900;letter-spacing:-.01em;color:#f5f5f5;line-height:1;margin-bottom:4px;">ОСТАТОК</div>
-    <div style="font-size:8px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#B03020;margin-bottom:0;">RESIDUE</div>
-    <div class="case-rule"></div>
+ modalInfo.innerHTML = `
+  <span class="case-label">Art direction — self-initiated · 2025</span>
 
-    <span class="case-tag">Exhibition concept</span>
-    <span class="case-tag">Visual identity</span>
-    <span class="case-tag">Art direction</span>
+  <div style="font-size:22px;font-weight:900;letter-spacing:-.01em;color:#f5f5f5;line-height:1;margin-bottom:4px;">
+    ОСТАТОК
+  </div>
+  <div style="font-size:8px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#B03020;">
+    RESIDUE
+  </div>
 
-    <div class="case-rule full"></div>
+  <div class="case-rule"></div>
 
-    <span class="case-label">Concept</span>
-    <p class="case-body">A group exhibition on urban memory, material trace, and disappearance. <strong>Cities accumulate and erase simultaneously.</strong> What remains — in grain, in scar, in scan — is rarely what was meant to be preserved.</p>
-    <p class="case-body" style="margin-top:8px;">Post-Soviet urban space built on layers of overwriting. Works in scan, photography, architectural drawing, video and textile. <strong>Venue: former industrial space or municipal archive.</strong> The architecture is part of the argument.</p>
+  <span class="case-tag">Exhibition concept</span>
+  <span class="case-tag">Visual system</span>
+  <span class="case-tag">Art direction</span>
 
-    <div class="case-rule full"></div>
+  <div class="case-rule full"></div>
 
-    <span class="case-label">Color system</span>
-    <div class="case-swatches">
-      <div class="case-swatch" style="background:#0F0D0C;border:1px solid #2A2520;">
-        <span style="color:#5A5048;">Residue Black</span>
-      </div>
-      <div class="case-swatch" style="background:#F0EBE3;border:1px solid #C8C2BA;">
-        <span style="color:#8A7F78;">Archive White</span>
-      </div>
-      <div class="case-swatch" style="background:#B03020;">
-        <span style="color:#F0CFC8;">Trace Red</span>
+  <span class="case-label">Brief (hypothetical)</span>
+  <p class="case-body">
+    Independent curatorial group preparing a group exhibition on urban memory.
+    The task — develop a visual identity that works across exhibition, editorial and digital formats,
+    without competing with the artworks.
+  </p>
+
+  <p class="case-body" style="margin-top:6px;">
+    <strong>Challenge:</strong> avoid generic “contemporary art” aesthetics and build a system that behaves like an archive rather than branding.
+  </p>
+
+  <div class="case-rule full"></div>
+
+  <span class="case-label">Concept</span>
+  <p class="case-body">
+    The city is treated not as an image, but as a <strong>data surface</strong>.
+  </p>
+
+  <p class="case-body" style="margin-top:6px;">
+    Identity borrows from scanning artifacts:
+    horizontal noise, compression errors, fragmented geometry.
+  </p>
+
+  <p class="case-body" style="margin-top:6px;">
+    → the system records rather than decorates
+  </p>
+
+  <div class="case-rule full"></div>
+
+  <span class="case-label">System rules</span>
+  <div class="case-steps">
+
+    <div class="case-step">
+      <span class="case-step-num">01</span>
+      <div class="case-step-text">
+        <strong>Color logic</strong>
+        Black / white — base layer.  
+        Red — only appears as disruption, never decoration.
       </div>
     </div>
 
-    <div class="case-rule full"></div>
-
-    <span class="case-label">Art director logic</span>
-    <div class="case-steps">
-      <div class="case-step">
-        <span class="case-step-num">01</span>
-        <div class="case-step-text"><strong>Concept as constraint</strong>One phrase: «Scanning as archive». Everything that doesn't work with this phrase is out. Red — only a trace, never decoration.</div>
-      </div>
-      <div class="case-step">
-        <span class="case-step-num">02</span>
-        <div class="case-step-text"><strong>Form from context</strong>Post-Soviet urbanism as typography: Cyrillic at the same size as English — not as exoticism, but as architectural fact.</div>
-      </div>
-      <div class="case-step">
-        <span class="case-step-num">03</span>
-        <div class="case-step-text"><strong>System, not a set of files</strong>Poster, catalogue, and social media follow the same rules. Remove the logo — it's still clearly one exhibition.</div>
-      </div>
-      <div class="case-step">
-        <span class="case-step-num">04</span>
-        <div class="case-step-text"><strong>Space for curating</strong>The identity doesn't compete with the works. It's the archival paper beneath them.</div>
+    <div class="case-step">
+      <span class="case-step-num">02</span>
+      <div class="case-step-text">
+        <strong>Typography</strong>
+        Cyrillic and Latin are equal.  
+        No hierarchy based on language.
       </div>
     </div>
 
-    <p class="case-note">Concept developed and directed independently. No client. No brief. One constraint: what does a city remember?</p>
-  `;
+    <div class="case-step">
+      <span class="case-step-num">03</span>
+      <div class="case-step-text">
+        <strong>Composition</strong>
+        Strict grid + controlled breaks.  
+        Visual “errors” are designed, not random.
+      </div>
+    </div>
+
+    <div class="case-step">
+      <span class="case-step-num">04</span>
+      <div class="case-step-text">
+        <strong>Image behavior</strong>
+        No decorative imagery.  
+        All visuals behave like scans or traces.
+      </div>
+    </div>
+
+  </div>
+
+  <div class="case-rule full"></div>
+
+  <span class="case-label">Application logic</span>
+  <p class="case-body">
+    The system scales depending on context:
+  </p>
+
+  <p class="case-body" style="margin-top:6px;">
+    <strong>Poster</strong> — maximum distortion, attention point  
+    <br>
+    <strong>Editorial</strong> — reduced noise, readability  
+    <br>
+    <strong>Digital</strong> — modular fragments of the system
+  </p>
+
+  <div class="case-rule full"></div>
+
+  <span class="case-label">Role</span>
+  <p class="case-body">
+    Art direction, concept development, visual system design.
+  </p>
+
+  <p class="case-note">
+    Self-initiated project. Built as a system, not a set of visuals.
+  </p>
+`;
 
   showNav(false);
   modal.classList.add('active');
