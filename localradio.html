@@ -659,6 +659,36 @@ body::before {
 
     requestAnimationFrame(animate);
   }
+<!--
+     
+     Логика: хэш = индекс плейлиста (0, 1, 2…)
+     Подсвечивает карточку + прокручивает к ней.
+     
+     Вставить в конец <script>, перед </script>
+     ══════════════════════════════════════════ -->
+<script id="radio-snippet">
+// ── DEEP LINK: localradio.html#2 → подсветить плейлист 02 ──
+(function () {
+  const hash = location.hash.slice(1).trim();
+  if (hash === '' || isNaN(Number(hash))) return;
+  setTimeout(function () {
+    const card = document.getElementById('card-' + hash);
+    if (!card) return;
+    // подсвечиваем как будто выпал барабан
+    document.querySelectorAll('.playlist-card').forEach(function (c) {
+      c.classList.remove('drumlit');
+    });
+    card.classList.add('drumlit');
+    // показываем кнопку Play
+    const result = document.getElementById('spinResult');
+    if (result) {
+      result.href = card.href;
+      result.classList.add('show');
+    }
+    card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }, 400); // чуть дольше — ждём oEmbed-загрузку обложек
+}());
+  
 </script>
 </body>
 </html>
