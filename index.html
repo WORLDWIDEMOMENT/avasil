@@ -48,14 +48,18 @@ body {
   background: white;
   z-index: 51;
   pointer-events: none;
-  transition: height .7s cubic-bezier(.77, 0, .18, 1);
+  transition: height .7s cubic-bezier(.77, 0, .18, 1),
+              opacity .5s ease;
 }
 #intro-line.rise { height: 100vh; }
 #intro-line.settle {
   background: rgba(255,255,255,.15);
-  transition: background .8s ease;
+  transition: background .8s ease, opacity .5s ease;
 }
-.build-active #intro-line { background: rgba(0,0,0,.1); }
+
+/* Line fades out when any layer is active */
+.build-active  #intro-line { opacity: 0; }
+.create-active #intro-line { opacity: 0; }
 
 /* ── LAYERS ── */
 .layer {
@@ -101,22 +105,27 @@ body {
 .ui-group { opacity: 0; transition: opacity .8s ease; }
 .ui-group.visible { opacity: 1; }
 
-/* ── ZONES ── */
+/* ── ZONES ──
+   max-width keeps them from overlapping when viewport narrows.
+   clamp() makes the title fluid so it never wraps awkwardly.
+*/
 .zone {
   position: absolute; bottom: 120px;
   z-index: 10;
+  max-width: calc(50vw - 90px);          /* ← overlap prevention */
   transition: opacity .4s ease, transform .4s ease, color .4s ease;
 }
 #build  { left: 80px; }
 #create { right: 80px; text-align: right; }
 
-/* Main title — BUILD is a link, CREATE is not */
 .main-title {
-  font-size: 72px; font-weight: 700;
+  font-size: clamp(36px, 5.6vw, 72px);   /* ← fluid title */
+  font-weight: 700;
   letter-spacing: .14em; text-transform: uppercase;
   cursor: none; line-height: 1;
   transition: color .4s ease;
   user-select: none;
+  white-space: nowrap;
 }
 .main-title a {
   color: inherit; text-decoration: none;
@@ -137,30 +146,22 @@ body {
   pointer-events: auto;
 }
 
-/* TO BUILD subs — all go to same page, underline together */
 .sub-build a {
   display: block; color: inherit; text-decoration: none;
   padding: 7px 0;
   border-bottom: 1px solid transparent;
   transition: border-color .18s;
 }
-/* all three underline when hovering ANY of them */
-.sub-build:hover a {
-  border-bottom-color: currentColor;
-}
+.sub-build:hover a { border-bottom-color: currentColor; }
 
-/* TO CREATE subs — each independent */
 .sub-create a {
   display: block; color: inherit; text-decoration: none;
   padding: 7px 0;
   border-bottom: 1px solid transparent;
   transition: border-color .18s;
 }
-.sub-create a:hover {
-  border-bottom-color: currentColor;
-}
+.sub-create a:hover { border-bottom-color: currentColor; }
 
-/* text inversion on white layer */
 .build-active .zone { color: black; }
 
 .fade-out {
@@ -184,43 +185,226 @@ body {
 .divider { opacity: .2; }
 .build-active .bottom-bar { color: black; }
 
+/* ══════════════════════════════════════════
+   ── ROULETTE TRIGGER ──
+   small icon + label in top-right corner
+   ══════════════════════════════════════════ */
+#roulette-btn {
+  position: fixed;
+  top: 28px; right: 36px;
+  z-index: 100;
+  display: flex; align-items: center; gap: 10px;
+  background: none; border: none;
+  cursor: none;
+  padding: 0;
+  opacity: 0;
+  transition: opacity .8s ease;
+}
+#roulette-btn.visible { opacity: 1; }
+
+/* contour icon — outline circle with a crosshair dot */
+.r-icon {
+  width: 18px; height: 18px;
+  position: relative;
+  flex-shrink: 0;
+  opacity: .32;
+  transition: opacity .22s ease;
+}
+.r-icon svg {
+  width: 18px; height: 18px;
+  display: block;
+  stroke: white;
+  fill: none;
+  transition: stroke .4s ease;
+}
+
+/* label */
+.r-label {
+  font-size: 9px; font-weight: 700;
+  letter-spacing: .28em; text-transform: uppercase;
+  color: white;
+  opacity: .32;
+  white-space: nowrap;
+  transition: opacity .22s ease, color .4s ease;
+}
+
+/* hover: both icon + label brighten */
+#roulette-btn:hover .r-icon,
+#roulette-btn:hover .r-label,
+#roulette-btn.spinning .r-icon,
+#roulette-btn.spinning .r-label { opacity: 1; }
+
+/* spinning animation on the icon */
+#roulette-btn.spinning .r-icon svg {
+  animation: r-spin .5s linear infinite;
+}
+@keyframes r-spin { to { transform: rotate(360deg); } }
+
+/* inversion on white (build) layer */
+.build-active #roulette-btn .r-icon svg { stroke: black; }
+.build-active #roulette-btn .r-label    { color: black; }
+
+/* ══════════════════════════════════════════
+   ── ROULETTE POPUP ──
+   ══════════════════════════════════════════ */
+#roulette-popup {
+  position: fixed;
+  top: 62px; right: 36px;
+  width: 288px;
+  z-index: 200;
+  opacity: 0;
+  transform: translateY(-10px) scale(.97);
+  pointer-events: none;
+  transition: opacity .32s cubic-bezier(.77,0,.18,1),
+              transform .32s cubic-bezier(.77,0,.18,1);
+}
+#roulette-popup.open {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+
+.popup-inner {
+  background: rgba(0,0,0,.84);
+  backdrop-filter: blur(20px) saturate(1.5);
+  -webkit-backdrop-filter: blur(20px) saturate(1.5);
+  border: 1px solid rgba(255,255,255,.11);
+  overflow: hidden;
+}
+
+/* image / drum area */
+.popup-image {
+  width: 100%; height: 158px;
+  background: rgba(255,255,255,.05);
+  overflow: hidden;
+  position: relative;
+  cursor: none;
+}
+.popup-image img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity .5s ease;
+  display: block;
+}
+.popup-image img.loaded { opacity: 1; }
+
+/* drum overlay */
+.popup-drum {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(0,0,0,.52);
+  transition: opacity .4s ease;
+  pointer-events: none;
+}
+.popup-drum.hidden { opacity: 0; }
+
+.drum-text {
+  font-size: 11px; font-weight: 700;
+  letter-spacing: .3em; text-transform: uppercase;
+  color: white;
+  white-space: nowrap; overflow: hidden;
+  max-width: 250px; text-overflow: ellipsis;
+}
+
+/* hint on image hover */
+.popup-image::after {
+  content: 'spin again';
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 9px; font-weight: 700;
+  letter-spacing: .3em; text-transform: uppercase;
+  color: rgba(255,255,255,.0);
+  transition: color .2s;
+}
+.popup-image:hover::after { color: rgba(255,255,255,.55); }
+
+/* info */
+.popup-info { padding: 16px 20px 18px; }
+
+.popup-category {
+  font-size: 9px; font-weight: 700;
+  letter-spacing: .32em; text-transform: uppercase;
+  color: rgba(255,255,255,.35);
+  margin-bottom: 7px;
+}
+
+.popup-title {
+  font-size: 17px; font-weight: 700;
+  letter-spacing: .06em; text-transform: uppercase;
+  line-height: 1.15;
+  margin-bottom: 10px;
+  min-height: 40px;
+}
+
+.popup-desc {
+  font-size: 10px; font-weight: 400;
+  letter-spacing: .04em;
+  color: rgba(255,255,255,.48);
+  line-height: 1.65;
+  margin-bottom: 16px;
+  min-height: 33px;
+  opacity: 0;
+  transition: opacity .4s ease .12s;
+}
+.popup-desc.show { opacity: 1; }
+
+.popup-actions {
+  display: flex; align-items: center; justify-content: space-between;
+}
+
+.popup-link {
+  font-size: 10px; font-weight: 700;
+  letter-spacing: .24em; text-transform: uppercase;
+  color: white; text-decoration: none;
+  opacity: 0;
+  border-bottom: 1px solid transparent;
+  padding-bottom: 1px;
+  transition: opacity .4s ease .18s, border-color .18s;
+}
+.popup-link.show { opacity: .65; }
+.popup-link.show:hover { opacity: 1; border-bottom-color: white; }
+
+.popup-close {
+  background: none; border: none; cursor: none;
+  font-size: 9px; font-weight: 700;
+  letter-spacing: .24em; text-transform: uppercase;
+  color: rgba(255,255,255,.25);
+  padding: 0;
+  transition: color .2s;
+}
+.popup-close:hover { color: rgba(255,255,255,.65); }
+
 /* ── MOBILE ── */
 @media (max-width: 900px) {
-  /* Картинка выше и уменьшена — сохраняю fixed attachment */
   body {
     background-size: 120%;
     background-position: center 32%;
     background-attachment: fixed;
   }
-
   .main-title { font-size: 42px; letter-spacing: .1em; }
-  
-  /* Zones ниже картинки */
+  .zone { max-width: none; }                         /* full-width sub-items on mobile */
   #build  { left: 20px; bottom: auto; top: auto; transform: none; padding-top: 600px; }
   #create { right: 20px; bottom: auto; top: auto; transform: none; padding-top: 600px; }
-  
-  /* Bottom bar: ABOUT слева, остальное справа */
-  .bottom-bar { 
-    padding: 0;
+  .bottom-bar {
+    padding: 0 20px;
     font-size: 9px;
     bottom: 20px;
-    width: 100%;
-    justify-content: space-between;
-    padding-left: 20px;
-    padding-right: 20px;
   }
-  
-  .contact { 
-    gap: 6px; 
-    flex-wrap: wrap; 
-    justify-content: flex-end;
-    align-items: center;
-  }
-  
+  .contact { gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
   .divider { display: inline; }
-  
   .sub { opacity: .35; }
   .zone.active .sub { opacity: .85; pointer-events: auto; }
+
+  /* Roulette: full-width popup, button stays top-right */
+  #roulette-btn { right: 20px; }
+  #roulette-popup {
+    right: 16px;
+    left: 16px;
+    width: auto;
+    top: 60px;
+  }
+  .r-label { display: none; }       /* just the icon on mobile */
 }
 
 @media (max-width: 560px) {
@@ -229,18 +413,10 @@ body {
     background-position: center 30%;
     background-attachment: fixed;
   }
-
   .main-title { font-size: 30px; }
-  
   #build  { left: 16px; padding-top: 510px; }
   #create { right: 16px; padding-top: 510px; }
-  
-  .bottom-bar { 
-    padding-left: 16px;
-    padding-right: 16px;
-    bottom: 16px;
-  }
-  
+  .bottom-bar { padding: 0 16px; bottom: 16px; }
   .contact { gap: 4px; }
   .divider { display: none; }
 }
@@ -258,7 +434,51 @@ body {
 
 <div class="author ui-group">A. Vasileuskaya</div>
 
-<!-- TO BUILD — title + all subs → architecture.html -->
+<!-- ══════════ ROULETTE TRIGGER ══════════ -->
+<button id="roulette-btn" aria-label="Random experience">
+  <!-- contour dial icon: outer ring + tick marks + center dot -->
+  <div class="r-icon">
+    <svg viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg"
+         stroke-width="1" stroke-linecap="round">
+      <circle cx="9" cy="9" r="7.5"/>
+      <circle cx="9" cy="9" r="1" fill="white" stroke="none"/>
+      <!-- tick marks at 12, 3, 6, 9 o'clock -->
+      <line x1="9" y1="2"   x2="9" y2="3.6"/>
+      <line x1="16" y1="9"  x2="14.4" y2="9"/>
+      <line x1="9" y1="16"  x2="9" y2="14.4"/>
+      <line x1="2" y1="9"   x2="3.6" y2="9"/>
+      <!-- pointer hand -->
+      <line x1="9" y1="9" x2="9" y2="3.8" stroke-width="1.2"/>
+    </svg>
+  </div>
+  <span class="r-label">Random Experience</span>
+</button>
+
+<!-- ══════════ ROULETTE POPUP ══════════ -->
+<div id="roulette-popup" role="dialog" aria-label="Random project">
+  <div class="popup-inner">
+
+    <div class="popup-image" id="popup-image-area">
+      <img id="popup-img" src="" alt="">
+      <div class="popup-drum" id="popup-drum">
+        <span class="drum-text" id="drum-text">—</span>
+      </div>
+    </div>
+
+    <div class="popup-info">
+      <div class="popup-category" id="popup-category">—</div>
+      <div class="popup-title" id="popup-title">—</div>
+      <div class="popup-desc"  id="popup-desc"></div>
+      <div class="popup-actions">
+        <a href="#" id="popup-link" class="popup-link">Open →</a>
+        <button class="popup-close" id="popup-close">✕ close</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- TO BUILD -->
 <div class="zone ui-group" id="build">
   <div class="main-title">
     <a href="architecture.html">To Build</a>
@@ -270,7 +490,7 @@ body {
   </div>
 </div>
 
-<!-- TO CREATE — title is not a link, subs go to separate pages -->
+<!-- TO CREATE -->
 <div class="zone ui-group" id="create">
   <div class="main-title">To Create</div>
   <div class="sub sub-create">
@@ -292,99 +512,230 @@ body {
 </div>
 
 <script>
-  // ── CURSOR ──
-  const cur = document.getElementById('cur');
-  if (window.matchMedia('(hover: hover)').matches) {
-    document.addEventListener('mousemove', e => {
-      cur.style.left = e.clientX + 'px';
-      cur.style.top  = e.clientY + 'px';
-    });
-    document.querySelectorAll('a, .main-title').forEach(el => {
-      el.addEventListener('mouseenter', () => cur.classList.add('big'));
-      el.addEventListener('mouseleave', () => cur.classList.remove('big'));
-    });
+// ── CURSOR ──
+const cur = document.getElementById('cur');
+if (window.matchMedia('(hover: hover)').matches) {
+  document.addEventListener('mousemove', e => {
+    cur.style.left = e.clientX + 'px';
+    cur.style.top  = e.clientY + 'px';
+  });
+  document.querySelectorAll('a, .main-title, #roulette-btn, .popup-close').forEach(el => {
+    el.addEventListener('mouseenter', () => cur.classList.add('big'));
+    el.addEventListener('mouseleave', () => cur.classList.remove('big'));
+  });
+}
+
+// ── INTRO SEQUENCE ──
+const veil  = document.getElementById('intro-veil');
+const line  = document.getElementById('intro-line');
+const uiEls = document.querySelectorAll('.ui-group');
+const rBtn  = document.getElementById('roulette-btn');
+
+setTimeout(() => veil.classList.add('darken'), 1800);
+setTimeout(() => line.classList.add('rise'), 2200);
+setTimeout(() => {
+  veil.style.opacity    = '0';
+  veil.style.transition = 'opacity .5s ease';
+  line.classList.add('settle');
+  uiEls.forEach(el => el.classList.add('visible'));
+  rBtn.classList.add('visible');
+}, 2900);
+
+// ── BUILD / CREATE LOGIC ──
+const buildZone   = document.getElementById('build');
+const createZone  = document.getElementById('create');
+const buildLayer  = document.querySelector('.build-layer');
+const createLayer = document.querySelector('.create-layer');
+const grid        = document.querySelector('.grid');
+const isTouch     = () => !window.matchMedia('(hover: hover)').matches;
+
+function activateBuild() {
+  buildLayer.style.clipPath = 'circle(150% at 0% 100%)';
+  document.body.classList.add('build-active');
+  document.body.classList.remove('create-active');
+  createZone.classList.add('fade-out');
+  createZone.classList.remove('active');
+  grid.classList.add('active');
+  buildZone.classList.add('active');
+}
+function deactivateBuild() {
+  buildLayer.style.clipPath = 'circle(0px at 0% 100%)';
+  document.body.classList.remove('build-active');
+  createZone.classList.remove('fade-out');
+  grid.classList.remove('active');
+  buildZone.classList.remove('active');
+}
+function activateCreate() {
+  createLayer.style.clipPath = 'circle(150% at 100% 100%)';
+  document.body.classList.add('create-active');
+  document.body.classList.remove('build-active');
+  buildZone.classList.add('fade-out');
+  buildZone.classList.remove('active');
+  createZone.classList.add('active');
+}
+function deactivateCreate() {
+  createLayer.style.clipPath = 'circle(0px at 100% 100%)';
+  document.body.classList.remove('create-active');
+  buildZone.classList.remove('fade-out');
+  createZone.classList.remove('active');
+}
+function deactivateAll() { deactivateBuild(); deactivateCreate(); }
+
+buildZone.addEventListener('mouseenter',  activateBuild);
+buildZone.addEventListener('mouseleave',  deactivateBuild);
+createZone.addEventListener('mouseenter', activateCreate);
+createZone.addEventListener('mouseleave', deactivateCreate);
+
+let createOpen = false;
+buildZone.addEventListener('click', e => {
+  if (!isTouch()) return;
+  if (e.target.tagName === 'A') return;
+});
+createZone.addEventListener('click', e => {
+  if (!isTouch()) return;
+  if (e.target.tagName === 'A' && createOpen) return;
+  e.stopPropagation();
+  if (createOpen) { deactivateAll(); createOpen = false; }
+  else { deactivateAll(); activateCreate(); createOpen = true; }
+});
+document.addEventListener('click', () => {
+  if (!isTouch()) return;
+  deactivateAll();
+  createOpen = false;
+});
+
+// ══════════════════════════════════════════
+// ── ROULETTE LOGIC ──
+// ══════════════════════════════════════════
+let projects = [];
+let rouletteOpen = false;
+let spinTimer = null;
+
+fetch('projects.json')
+  .then(r => r.json())
+  .then(data => { projects = data; })
+  .catch(() => {
+    projects = [
+      { title: "Housing Block A",  category: "Architecture",    description: "Жилой комплекс в контексте существующей застройки.",     image: "", url: "architecture.html" },
+      { title: "Urban Void",       category: "Urban · Research",description: "Картографирование незастроенных территорий.",            image: "", url: "architecture.html" },
+      { title: "GAN Facade",       category: "AI Experiments",  description: "Генерация фасадных решений с помощью нейросети.",        image: "", url: "architecture.html" },
+      { title: "Interference",     category: "Visual",          description: "Серия работ о наложении систем.",                       image: "", url: "visual.html"       },
+      { title: "Noise Floor",      category: "Video",           description: "Пространство между звуком и тишиной.",                  image: "", url: "video.html"        },
+      { title: "Broadcast 01",     category: "Local Radio",     description: "О звуке двора и полевых записях.",                      image: "", url: "localradio.html"   }
+    ];
+  });
+
+const popup      = document.getElementById('roulette-popup');
+const drumEl     = document.getElementById('popup-drum');
+const drumText   = document.getElementById('drum-text');
+const popupImg   = document.getElementById('popup-img');
+const popupCat   = document.getElementById('popup-category');
+const popupTitle = document.getElementById('popup-title');
+const popupDesc  = document.getElementById('popup-desc');
+const popupLink  = document.getElementById('popup-link');
+const popupClose = document.getElementById('popup-close');
+const imgArea    = document.getElementById('popup-image-area');
+
+function openPopup() {
+  if (projects.length === 0) return;
+  rouletteOpen = true;
+  popup.classList.add('open');
+  rBtn.classList.add('spinning');
+
+  // reset
+  popupDesc.classList.remove('show');
+  popupLink.classList.remove('show');
+  drumEl.classList.remove('hidden');
+  popupImg.classList.remove('loaded');
+  popupImg.src = '';
+
+  const allTitles = projects.map(p => p.title);
+  const totalTicks = 24;
+  const fastPhase  = 15;
+  const chosenIdx  = Math.floor(Math.random() * projects.length);
+
+  // build eased interval sequence: fast → decelerate
+  const intervals = Array.from({ length: totalTicks }, (_, i) => {
+    const t = i / totalTicks;
+    return t < (fastPhase / totalTicks)
+      ? 52
+      : Math.round(52 + Math.pow((t - fastPhase/totalTicks) / (1 - fastPhase/totalTicks), 2.2) * 500);
+  });
+
+  function runTick(i) {
+    if (i >= totalTicks) {
+      rBtn.classList.remove('spinning');
+      showProject(projects[chosenIdx]);
+      return;
+    }
+    const idx = (chosenIdx + totalTicks - i) % allTitles.length;
+    drumText.textContent  = allTitles[idx].toUpperCase();
+    popupTitle.textContent = allTitles[idx].toUpperCase();
+    popupCat.textContent   = projects[idx].category.toUpperCase();
+    spinTimer = setTimeout(() => runTick(i + 1), intervals[i]);
   }
 
-  // ── INTRO SEQUENCE ──
-  const veil  = document.getElementById('intro-veil');
-  const line  = document.getElementById('intro-line');
-  const uiEls = document.querySelectorAll('.ui-group');
+  setTimeout(() => runTick(0), 100);
+}
 
-  setTimeout(() => veil.classList.add('darken'), 1800);
-  setTimeout(() => line.classList.add('rise'), 2200);
+function showProject(project) {
+  popupTitle.textContent = project.title.toUpperCase();
+  popupCat.textContent   = project.category.toUpperCase();
+  drumText.textContent   = project.title.toUpperCase();
+  popupLink.href         = project.url;
+
+  if (project.image) {
+    const img = new Image();
+    img.onload = () => {
+      popupImg.src = project.image;
+      popupImg.classList.add('loaded');
+      setTimeout(() => drumEl.classList.add('hidden'), 150);
+    };
+    img.onerror = () => drumEl.classList.add('hidden');
+    img.src = project.image;
+  } else {
+    drumEl.classList.add('hidden');
+  }
+
   setTimeout(() => {
-    veil.style.opacity    = '0';
-    veil.style.transition = 'opacity .5s ease';
-    line.classList.add('settle');
-    uiEls.forEach(el => el.classList.add('visible'));
-  }, 2900);
+    popupDesc.textContent = project.description;
+    popupDesc.classList.add('show');
+    popupLink.classList.add('show');
+  }, 160);
+}
 
-  // ── BUILD / CREATE LOGIC ──
-  const buildZone  = document.getElementById('build');
-  const createZone = document.getElementById('create');
-  const buildLayer = document.querySelector('.build-layer');
-  const createLayer= document.querySelector('.create-layer');
-  const grid       = document.querySelector('.grid');
-  const isTouch    = () => !window.matchMedia('(hover: hover)').matches;
+function closePopup() {
+  rouletteOpen = false;
+  popup.classList.remove('open');
+  rBtn.classList.remove('spinning');
+  clearTimeout(spinTimer);
+}
 
-  function activateBuild() {
-    buildLayer.style.clipPath = 'circle(150% at 0% 100%)';
-    document.body.classList.add('build-active');
-    createZone.classList.add('fade-out');
-    createZone.classList.remove('active');
-    grid.classList.add('active');
-    buildZone.classList.add('active');
-  }
-  function deactivateBuild() {
-    buildLayer.style.clipPath = 'circle(0px at 0% 100%)';
-    document.body.classList.remove('build-active');
-    createZone.classList.remove('fade-out');
-    grid.classList.remove('active');
-    buildZone.classList.remove('active');
-  }
-  function activateCreate() {
-    createLayer.style.clipPath = 'circle(150% at 100% 100%)';
-    buildZone.classList.add('fade-out');
-    buildZone.classList.remove('active');
-    createZone.classList.add('active');
-  }
-  function deactivateCreate() {
-    createLayer.style.clipPath = 'circle(0px at 100% 100%)';
-    buildZone.classList.remove('fade-out');
-    createZone.classList.remove('active');
-  }
-  function deactivateAll() { deactivateBuild(); deactivateCreate(); }
+rBtn.addEventListener('click', e => {
+  e.stopPropagation();
+  rouletteOpen ? closePopup() : openPopup();
+});
 
-  // desktop hover
-  buildZone.addEventListener('mouseenter',  activateBuild);
-  buildZone.addEventListener('mouseleave',  deactivateBuild);
-  createZone.addEventListener('mouseenter', activateCreate);
-  createZone.addEventListener('mouseleave', deactivateCreate);
+popupClose.addEventListener('click', e => {
+  e.stopPropagation();
+  closePopup();
+});
 
-  // mobile tap
-  let createOpen = false;
+// Spin again on image click
+imgArea.addEventListener('click', e => {
+  e.stopPropagation();
+  openPopup();
+});
 
-  // TO BUILD: ссылки работают сразу, без активации слоя на мобиле
-  buildZone.addEventListener('click', e => {
-    if (!isTouch()) return;
-    // На мобиле позволяем переходить по ссылкам без активации слоя
-    if (e.target.tagName === 'A') return;
-  });
+// Close on outside click
+document.addEventListener('click', e => {
+  if (rouletteOpen && !popup.contains(e.target) && e.target !== rBtn) closePopup();
+});
 
-  createZone.addEventListener('click', e => {
-    if (!isTouch()) return;
-    // Позволяем переходить по ссылкам
-    if (e.target.tagName === 'A' && createOpen) return;
-    e.stopPropagation();
-    if (createOpen) { deactivateAll(); createOpen = false; }
-    else { deactivateAll(); activateCreate(); createOpen = true; }
-  });
-
-  document.addEventListener('click', () => {
-    if (!isTouch()) return;
-    deactivateAll();
-    createOpen = false;
-  });
+// Escape
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && rouletteOpen) closePopup();
+});
 </script>
 </body>
 </html>
