@@ -206,7 +206,7 @@ The result combines our vision of modern style for the area, the client's desire
     <div class="card-meta"><div class="card-info"><div class="card-name">1295 — Residential Complex</div><div class="card-year">2024 · Minsk / Moscow</div></div><div class="card-tags"><button class="tag" data-filter="masterplan">#MASTERPLAN</button><button class="tag" data-filter="residential">#RESIDENTIAL</button></div></div>
   </div>
 
-  <div class="project-card"  data-slug="Meaning of Fortification" data-tags="conceptual published" data-title="Meaning of Fortification" data-year="2022" data-location="Quarteira, Portugal" data-type="Urban / Public" data-studio="ULisboa · Erasmus" data-tools="AutoCAD, ArchiCAD, Photoshop" data-desc="Three boards represent the final stage of the semester project in urban design at ULisboa. The main theme: defense fortification. Analyzing Portugal's history, a tower was designed with levels for various needs — as a symbol of protection.
+  <div class="project-card"  data-slug="meaning-of-fortification" data-tags="conceptual published" data-title="Meaning of Fortification" data-year="2022" data-location="Quarteira, Portugal" data-type="Urban / Public" data-studio="ULisboa · Erasmus" data-tools="AutoCAD, ArchiCAD, Photoshop" data-desc="Three boards represent the final stage of the semester project in urban design at ULisboa. The main theme: defense fortification. Analyzing Portugal's history, a tower was designed with levels for various needs — as a symbol of protection.
 
 Board 01: axonometry of the tower with all details. Board 02: floor plans, main sections. Board 03: topography, materials, sections and layers.
 
@@ -230,7 +230,7 @@ Published in the magazine of the Universitat Politecnica de Catalunya (Barcelona
     <div class="card-meta"><div class="card-info"><div class="card-name">TVEL — Industrial facility facades and interiors</div><div class="card-year">2024–2025 · Russia</div></div><div class="card-tags"><button class="tag" data-filter="residential">#FACADES</button></div></div>
   </div>
 
-  <div class="project-card"  data-slug="House for a Young Couple" data-tags="interior conceptual ai" data-title="House for a Young Couple" data-year="2026" data-location="Cascais, Portugal" data-type="Interior / Conceptual / AI Experiments" data-studio="Independent" data-tools="SketchUp, Lumion, AI" data-desc="A compact courtyard house designed for a young couple seeking a calm connection between interior and nature. Large sliding openings extend the living spaces into a private patio, while textured materials and soft daylight create a warm and intimate atmosphere. The project explores simplicity, natural light and subtle transitions between inside and outside." data-images='["images/assets/build/interior/interior1.jpg","images/assets/build/interior/interior2.jpeg","images/assets/build/interior/interior3.jpeg","images/assets/build/interior/interior4.jpeg"]'>
+  <div class="project-card"  data-slug="house-for-a-young-couple" data-tags="interior conceptual ai" data-title="House for a Young Couple" data-year="2026" data-location="Cascais, Portugal" data-type="Interior / Conceptual / AI Experiments" data-studio="Independent" data-tools="SketchUp, Lumion, AI" data-desc="A compact courtyard house designed for a young couple seeking a calm connection between interior and nature. Large sliding openings extend the living spaces into a private patio, while textured materials and soft daylight create a warm and intimate atmosphere. The project explores simplicity, natural light and subtle transitions between inside and outside." data-images='["images/assets/build/interior/interior1.jpg","images/assets/build/interior/interior2.jpeg","images/assets/build/interior/interior3.jpeg","images/assets/build/interior/interior4.jpeg"]'>
     <span class="card-number">06</span>
     <div class="card-img" data-ph="House for a Young Couple"><img src="images/assets/build/interior/interior1.jpg" alt="House for a Young Couple"><div class="card-overlay"><span class="overlay-txt">Open project</span></div></div>
     <div class="card-meta"><div class="card-info"><div class="card-name">House for a Young Couple</div><div class="card-year">2026 · Cascais</div></div><div class="card-tags"><button class="tag" data-filter="interior">#INTERIOR</button><button class="tag" data-filter="conceptual">#CONCEPTUAL</button><button class="tag" data-filter="ai">#AI</button></div></div>
@@ -254,7 +254,7 @@ Published in the magazine of the Universitat Politecnica de Catalunya (Barcelona
     <div class="card-meta"><div class="card-info"><div class="card-name">Magnit — Retail Interiors</div><div class="card-year">2025 · Russia</div></div><div class="card-tags"><button class="tag" data-filter="interior">#INTERIOR</button></div></div>
   </div>
 
-  <div class="project-card" data-slug="Masterplan in Dominican Republic" data-tags="masterplan residential" data-title="Masterplan in Dominican Republic" data-year="2023" data-location="Dominican Republic" data-type="Masterplan Residential" data-studio="Archidom Studio" data-tools="SketchUp, Lumion, Photoshop" data-desc="Development of a masterplan and two standard villa types for a coastal site in Cabrera, Dominican Republic (La Perla, 32,000 m²), created in collaboration with the lead architect of Archidom. The project includes first-line beachfront villas and second-line villas; the first villa type has already been approved by the client.
+  <div class="project-card" data-slug="masterplan-in-dominican-republic" data-tags="masterplan residential" data-title="Masterplan in Dominican Republic" data-year="2023" data-location="Dominican Republic" data-type="Masterplan Residential" data-studio="Archidom Studio" data-tools="SketchUp, Lumion, Photoshop" data-desc="Development of a masterplan and two standard villa types for a coastal site in Cabrera, Dominican Republic (La Perla, 32,000 m²), created in collaboration with the lead architect of Archidom. The project includes first-line beachfront villas and second-line villas; the first villa type has already been approved by the client.
 
 The design focuses on ocean views, strong indoor–outdoor connections, large social spaces, and integration with surrounding vegetation. First-line villas emphasize expansive outdoor living areas and direct garden access from interior rooms, while second-line villas are organized on two levels with social spaces above, private rooms below, and rooftop terraces with pools." data-images='["images/assets/build/vrd/vrd1.jpg","images/assets/build/vrd/vrd2.jpg","images/assets/build/vrd/vrd3.jpg","images/assets/build/vrd/vrd4.jpg","images/assets/build/vrd/vrd5.jpg","images/assets/build/vrd/vrd6.jpg","images/assets/build/vrd/vrd7.jpg","images/assets/build/vrd/vrd8.jpg"]'>
     <span class="card-number">10</span>
@@ -389,14 +389,18 @@ This project is an ode to nature's raw power — the movement of titanic plates 
     img.src = src; // src после appendChild — браузер начнёт загрузку
   }
 
-  function closeModal() { modal.classList.remove('active'); setBlur(false); }
+  function closeModal() {
+  modal.classList.remove('active');
+  setBlur(false);
+  history.replaceState(null, '', window.location.pathname);
+}
 
   document.querySelectorAll('.project-card').forEach(card => {
     card.addEventListener('click', e => {
       if (e.target.classList.contains('tag')) return;
       if (card.dataset.externalUrl) { window.open(card.dataset.externalUrl, '_blank', 'noopener'); return; }
      if (card.dataset.slug) {
-  history.replaceState(null, '', window.location.pathname);
+  history.replaceState(null, '', '#' + card.dataset.slug);
 }
       openModal(card);
     });
@@ -427,7 +431,9 @@ This project is an ode to nature's raw power — the movement of titanic plates 
   if (btnSingle && btnDouble) {
     btnSingle.addEventListener('click', () => { grid.classList.remove('cols-2'); grid.classList.add('cols-1'); btnSingle.classList.add('active'); btnDouble.classList.remove('active'); });
     btnDouble.addEventListener('click', () => { grid.classList.add('cols-2'); grid.classList.remove('cols-1'); btnDouble.classList.add('active'); btnSingle.classList.remove('active'); });
- function openFromHash() {
+ 
+  }
+  function openFromHash() {
   const hash = window.location.hash.replace('#', '');
   if (!hash) return;
 
@@ -436,7 +442,6 @@ This project is an ode to nature's raw power — the movement of titanic plates 
 }
 
 window.addEventListener('load', openFromHash);
-  }
 </script>
 </body>
 </html>
