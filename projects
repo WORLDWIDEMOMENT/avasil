@@ -1,0 +1,107 @@
+[
+  {
+    "title": "Housing Block A",
+    "category": "Architecture",
+    "description": "Жилой комплекс в контексте существующей застройки. Работа с масштабом и типологией.",
+    "image": "images/proj_arch_01.jpg",
+    "url": "architecture.html"
+  },
+  {
+    "title": "Pavilion Study",
+    "category": "Architecture",
+    "description": "Временный павильон как исследование структуры, света и материала.",
+    "image": "images/proj_arch_02.jpg",
+    "url": "architecture.html"
+  },
+  {
+    "title": "Urban Void",
+    "category": "Urban · Research",
+    "description": "Картографирование незастроенных территорий и потенциалов пустых мест в городе.",
+    "image": "images/proj_urban_01.jpg",
+    "url": "architecture.html"
+  },
+  {
+    "title": "Street Section",
+    "category": "Urban · Research",
+    "description": "Разрез улицы как инструмент анализа: что остаётся невидимым в плане.",
+    "image": "images/proj_urban_02.jpg",
+    "url": "architecture.html"
+  },
+  {
+    "title": "Density Maps",
+    "category": "Urban · Research",
+    "description": "Визуализация плотности населения и активности через слои данных.",
+    "image": "images/proj_urban_03.jpg",
+    "url": "architecture.html"
+  },
+  {
+    "title": "GAN Facade",
+    "category": "AI Experiments",
+    "description": "Генерация фасадных решений с помощью нейросети, обученной на исторической застройке.",
+    "image": "images/proj_ai_01.jpg",
+    "url": "architecture.html"
+  },
+  {
+    "title": "Latent Plans",
+    "category": "AI Experiments",
+    "description": "Исследование латентного пространства планировочных решений.",
+    "image": "images/proj_ai_02.jpg",
+    "url": "architecture.html"
+  },
+  {
+    "title": "Prompt to Plan",
+    "category": "AI Experiments",
+    "description": "Текст как инструкция. Архитектурный план, рождённый из языковой модели.",
+    "image": "images/proj_ai_03.jpg",
+    "url": "architecture.html"
+  },
+  {
+    "title": "Interference",
+    "category": "Visual",
+    "description": "Серия графических работ о наложении систем и возникновении паразитного ритма.",
+    "image": "images/proj_vis_01.jpg",
+    "url": "visual.html"
+  },
+  {
+    "title": "Field Notes",
+    "category": "Visual",
+    "description": "Визуальные заметки с городских исследований. Документация как медиум.",
+    "image": "images/proj_vis_02.jpg",
+    "url": "visual.html"
+  },
+  {
+    "title": "Noise Floor",
+    "category": "Video",
+    "description": "Короткометражная работа о пространстве между звуком и тишиной.",
+    "image": "images/proj_vid_01.jpg",
+    "url": "video.html"
+  },
+  {
+    "title": "Transit",
+    "category": "Video",
+    "description": "Документальное видео: архитектура в движении, снятая из транспорта.",
+    "image": "images/proj_vid_02.jpg",
+    "url": "video.html"
+  },
+  {
+    "title": "Broadcast 01",
+    "category": "Local Radio",
+    "description": "Первый выпуск: о звуке двора, интервью с жителями и полевые записи.",
+    "image": "images/proj_radio_01.jpg",
+    "url": "localradio.html"
+  },
+  {
+    "title": "Dead Air",
+    "category": "Local Radio",
+    "description": "Эксперимент с тишиной в эфире. Что значит пауза в публичном пространстве.",
+    "image": "images/proj_radio_02.jpg",
+    "url": "localradio.html"
+  },
+  {
+    "title": "Frequency Atlas",
+    "category": "Local Radio",
+    "description": "Звуковая карта района: частоты, источники, слои.",
+    "image": "images/proj_radio_03.jpg",
+    "url": "localradio.html"
+  }
+]
