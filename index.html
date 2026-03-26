@@ -20,10 +20,8 @@ body {
 #cur {
   position: fixed;
   width: 10px; height: 10px;
-  background: white;
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: 9999;
+  background: white; border-radius: 50%;
+  pointer-events: none; z-index: 9999;
   transform: translate(-50%, -50%);
   transition: width .16s, height .16s;
   mix-blend-mode: difference;
@@ -33,54 +31,34 @@ body {
 
 /* ── INTRO ── */
 #intro-veil {
-  position: fixed; inset: 0;
-  background: black;
-  opacity: 0; z-index: 50;
-  pointer-events: none;
+  position: fixed; inset: 0; background: black;
+  opacity: 0; z-index: 50; pointer-events: none;
   transition: opacity 1.0s ease;
 }
 #intro-veil.darken { opacity: .22; }
 
 #intro-line {
-  position: fixed;
-  left: 50%; bottom: 0;
-  width: 1px; height: 0;
-  background: white;
-  z-index: 51;
-  pointer-events: none;
-  transition: height .7s cubic-bezier(.77, 0, .18, 1),
-              opacity .5s ease;
+  position: fixed; left: 50%; bottom: 0;
+  width: 1px; height: 0; background: white;
+  z-index: 51; pointer-events: none;
+  transition: height .7s cubic-bezier(.77, 0, .18, 1), opacity .5s ease;
 }
 #intro-line.rise { height: 100vh; }
 #intro-line.settle {
   background: rgba(255,255,255,.15);
   transition: background .8s ease, opacity .5s ease;
 }
-
-/* Line fades out when any layer is active */
-.build-active  #intro-line { opacity: 0; }
+.build-active  #intro-line,
 .create-active #intro-line { opacity: 0; }
 
 /* ── LAYERS ── */
-.layer {
-  position: fixed; inset: 0;
-  transition: clip-path 1.2s cubic-bezier(.77, 0, .18, 1);
-}
-.build-layer {
-  background: white;
-  z-index: 2;
-  clip-path: circle(0px at 0% 100%);
-}
-.create-layer {
-  background: url("images/main1.jpg") center/cover no-repeat;
-  z-index: 1;
-  clip-path: circle(0px at 100% 100%);
-}
+.layer { position: fixed; inset: 0; transition: clip-path 1.2s cubic-bezier(.77, 0, .18, 1); }
+.build-layer  { background: white; z-index: 2; clip-path: circle(0px at 0% 100%); }
+.create-layer { background: url("images/main1.jpg") center/cover no-repeat; z-index: 1; clip-path: circle(0px at 100% 100%); }
 
 /* ── GRID ── */
 .grid {
-  position: fixed; inset: 0;
-  pointer-events: none; opacity: 0; z-index: 3;
+  position: fixed; inset: 0; pointer-events: none; opacity: 0; z-index: 3;
   transition: opacity .7s ease;
   background-image:
     linear-gradient(rgba(0,0,0,.07) 1px, transparent 1px),
@@ -89,180 +67,68 @@ body {
 }
 .grid.active { opacity: 1; }
 
-/* ── SIGNATURE ── */
-.author {
-  position: fixed; top: 34px; left: 50%;
-  transform: translateX(-50%);
-  font-size: 10px; font-weight: 700;
-  letter-spacing: .28em; text-transform: uppercase;
-  opacity: .3; z-index: 20;
-  white-space: nowrap; pointer-events: none;
-  transition: color .4s;
-}
-.build-active .author { color: black; }
-
 /* ── UI REVEAL ── */
 .ui-group { opacity: 0; transition: opacity .8s ease; }
 .ui-group.visible { opacity: 1; }
 
-/* ── ZONES ──
-   max-width keeps them from overlapping when viewport narrows.
-   clamp() makes the title fluid so it never wraps awkwardly.
-*/
-.zone {
-  position: absolute; bottom: 120px;
-  z-index: 10;
-  max-width: calc(50vw - 90px);          /* ← overlap prevention */
-  transition: opacity .4s ease, transform .4s ease, color .4s ease;
+/* ── MARQUEE ── */
+.marquee-wrap {
+  position: fixed; top: 14px; left: 0; right: 0;
+  overflow: hidden; white-space: nowrap;
+  z-index: 20; pointer-events: none;
 }
-#build  { left: 80px; }
-#create { right: 80px; text-align: right; }
-
-.main-title {
-  font-size: clamp(36px, 5.6vw, 72px);   /* ← fluid title */
-  font-weight: 700;
-  letter-spacing: .14em; text-transform: uppercase;
-  cursor: none; line-height: 1;
-  transition: color .4s ease;
-  user-select: none;
-  white-space: nowrap;
-}
-.main-title a {
-  color: inherit; text-decoration: none;
-}
-
-/* ── SUB ITEMS ── */
-.sub {
-  margin-top: 16px;
-  font-size: 11px; font-weight: 400;
-  letter-spacing: .24em; text-transform: uppercase;
+.marquee-track {
+  display: inline-block;
+  font-size: clamp(36px, 5.6vw, 72px);
+  font-weight: 700; letter-spacing: .14em; text-transform: uppercase;
   line-height: 1;
-  opacity: .28;
-  transition: opacity .35s ease;
-  pointer-events: none;
+  color: rgba(255,255,255,.20);
+  animation: marquee-scroll 60s linear infinite;
+  transition: color .4s ease;
 }
-.zone.active .sub {
-  opacity: .85;
-  pointer-events: auto;
+@keyframes marquee-scroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
 }
+.build-active .marquee-track { color: rgba(0,0,0,.15); }
 
-.sub-build a {
-  display: block; color: inherit; text-decoration: none;
-  padding: 7px 0;
-  border-bottom: 1px solid transparent;
-  transition: border-color .18s;
-}
-.sub-build:hover a { border-bottom-color: currentColor; }
-
-.sub-create a {
-  display: block; color: inherit; text-decoration: none;
-  padding: 7px 0;
-  border-bottom: 1px solid transparent;
-  transition: border-color .18s;
-}
-.sub-create a:hover { border-bottom-color: currentColor; }
-
-.build-active .zone { color: black; }
-
-.fade-out {
-  opacity: 0 !important;
-  transform: translateY(6px);
-  pointer-events: none;
-}
-
-/* ── BOTTOM BAR ── */
-.bottom-bar {
-  position: absolute; bottom: 36px; width: 100%;
-  padding: 0 80px;
-  display: flex; justify-content: space-between; align-items: center;
-  font-size: 11px; font-weight: 700;
-  letter-spacing: .2em; text-transform: uppercase;
-  z-index: 20; transition: color .4s ease;
-}
-.bottom-bar a { color: inherit; text-decoration: none; opacity: .45; transition: opacity .25s; }
-.bottom-bar a:hover { opacity: 1; }
-.contact { display: flex; gap: 14px; align-items: center; }
-.divider { opacity: .2; }
-.build-active .bottom-bar { color: black; }
-
-/* ══════════════════════════════════════════
-   ── ROULETTE TRIGGER ──
-   small icon + label in top-right corner
-   ══════════════════════════════════════════ */
+/* ── ROULETTE TRIGGER ── */
 #roulette-btn {
-  position: fixed;
-  top: 28px; right: 36px;
+  position: fixed; top: 14px; right: 36px;
   z-index: 100;
   display: flex; align-items: center; gap: 10px;
-  background: none; border: none;
-  cursor: none;
-  padding: 0;
-  opacity: 0;
-  transition: opacity .8s ease;
+  background: none; border: none; cursor: none; padding: 0;
+  opacity: 0; transition: opacity .8s ease;
+  height: clamp(36px, 5.6vw, 72px);
 }
 #roulette-btn.visible { opacity: 1; }
 
-/* contour icon — outline circle with a crosshair dot */
-.r-icon {
-  width: 18px; height: 18px;
-  position: relative;
-  flex-shrink: 0;
-  opacity: .32;
-  transition: opacity .22s ease;
-}
-.r-icon svg {
-  width: 18px; height: 18px;
-  display: block;
-  stroke: white;
-  fill: none;
-  transition: stroke .4s ease;
-}
-
-/* label */
+.r-icon { width: 18px; height: 18px; flex-shrink: 0; opacity: .32; transition: opacity .22s; }
+.r-icon svg { width: 18px; height: 18px; display: block; stroke: white; fill: none; transition: stroke .4s; }
 .r-label {
   font-size: 9px; font-weight: 700;
   letter-spacing: .28em; text-transform: uppercase;
-  color: white;
-  opacity: .32;
-  white-space: nowrap;
-  transition: opacity .22s ease, color .4s ease;
+  color: white; opacity: .32; white-space: nowrap;
+  transition: opacity .22s, color .4s;
 }
-
-/* hover: both icon + label brighten */
 #roulette-btn:hover .r-icon,
 #roulette-btn:hover .r-label,
 #roulette-btn.spinning .r-icon,
 #roulette-btn.spinning .r-label { opacity: 1; }
-
-/* spinning animation on the icon */
-#roulette-btn.spinning .r-icon svg {
-  animation: r-spin .5s linear infinite;
-}
+#roulette-btn.spinning .r-icon svg { animation: r-spin .5s linear infinite; }
 @keyframes r-spin { to { transform: rotate(360deg); } }
-
-/* inversion on white (build) layer */
 .build-active #roulette-btn .r-icon svg { stroke: black; }
 .build-active #roulette-btn .r-label    { color: black; }
 
-/* ══════════════════════════════════════════
-   ── ROULETTE POPUP ──
-   ══════════════════════════════════════════ */
+/* ── ROULETTE POPUP ── */
 #roulette-popup {
   position: fixed;
-  top: 62px; right: 36px;
-  width: 288px;
-  z-index: 200;
-  opacity: 0;
-  transform: translateY(-10px) scale(.97);
-  pointer-events: none;
-  transition: opacity .32s cubic-bezier(.77,0,.18,1),
-              transform .32s cubic-bezier(.77,0,.18,1);
+  top: calc(clamp(36px, 5.6vw, 72px) + 28px);
+  right: 36px; width: 288px; z-index: 200;
+  opacity: 0; transform: translateY(-10px) scale(.97); pointer-events: none;
+  transition: opacity .32s cubic-bezier(.77,0,.18,1), transform .32s cubic-bezier(.77,0,.18,1);
 }
-#roulette-popup.open {
-  opacity: 1;
-  transform: translateY(0) scale(1);
-  pointer-events: auto;
-}
+#roulette-popup.open { opacity: 1; transform: none; pointer-events: auto; }
 
 .popup-inner {
   background: rgba(0,0,0,.84);
@@ -271,154 +137,128 @@ body {
   border: 1px solid rgba(255,255,255,.11);
   overflow: hidden;
 }
-
-/* image / drum area */
 .popup-image {
-  width: 100%; height: 158px;
-  background: rgba(255,255,255,.05);
-  overflow: hidden;
-  position: relative;
-  cursor: none;
+  width: 100%; height: 158px; background: rgba(255,255,255,.05);
+  overflow: hidden; position: relative; cursor: none;
 }
-.popup-image img {
-  width: 100%; height: 100%;
-  object-fit: cover;
-  opacity: 0;
-  transition: opacity .5s ease;
-  display: block;
-}
+.popup-image img { width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity .5s; display: block; }
 .popup-image img.loaded { opacity: 1; }
-
-/* drum overlay */
 .popup-drum {
-  position: absolute; inset: 0;
-  display: flex; align-items: center; justify-content: center;
-  background: rgba(0,0,0,.52);
-  transition: opacity .4s ease;
-  pointer-events: none;
+  position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+  background: rgba(0,0,0,.52); transition: opacity .4s; pointer-events: none;
 }
 .popup-drum.hidden { opacity: 0; }
-
-.drum-text {
-  font-size: 11px; font-weight: 700;
-  letter-spacing: .3em; text-transform: uppercase;
-  color: white;
-  white-space: nowrap; overflow: hidden;
-  max-width: 250px; text-overflow: ellipsis;
-}
-
-/* hint on image hover */
+.drum-text { font-size: 11px; font-weight: 700; letter-spacing: .3em; text-transform: uppercase; color: white; white-space: nowrap; overflow: hidden; max-width: 250px; text-overflow: ellipsis; }
 .popup-image::after {
-  content: 'spin again';
-  position: absolute; inset: 0;
+  content: 'spin again'; position: absolute; inset: 0;
   display: flex; align-items: center; justify-content: center;
-  font-size: 9px; font-weight: 700;
-  letter-spacing: .3em; text-transform: uppercase;
-  color: rgba(255,255,255,.0);
-  transition: color .2s;
+  font-size: 9px; font-weight: 700; letter-spacing: .3em; text-transform: uppercase;
+  color: rgba(255,255,255,0); transition: color .2s;
 }
 .popup-image:hover::after { color: rgba(255,255,255,.55); }
-
-/* info */
 .popup-info { padding: 16px 20px 18px; }
-
-.popup-category {
-  font-size: 9px; font-weight: 700;
-  letter-spacing: .32em; text-transform: uppercase;
-  color: rgba(255,255,255,.35);
-  margin-bottom: 7px;
-}
-
-.popup-title {
-  font-size: 17px; font-weight: 700;
-  letter-spacing: .06em; text-transform: uppercase;
-  line-height: 1.15;
-  margin-bottom: 10px;
-  min-height: 40px;
-}
-
-.popup-desc {
-  font-size: 10px; font-weight: 400;
-  letter-spacing: .04em;
-  color: rgba(255,255,255,.48);
-  line-height: 1.65;
-  margin-bottom: 16px;
-  min-height: 33px;
-  opacity: 0;
-  transition: opacity .4s ease .12s;
-}
+.popup-category { font-size: 9px; font-weight: 700; letter-spacing: .32em; text-transform: uppercase; color: rgba(255,255,255,.35); margin-bottom: 7px; }
+.popup-title { font-size: 17px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; line-height: 1.15; margin-bottom: 10px; min-height: 40px; }
+.popup-desc { font-size: 10px; font-weight: 400; letter-spacing: .04em; color: rgba(255,255,255,.48); line-height: 1.65; margin-bottom: 16px; min-height: 33px; opacity: 0; transition: opacity .4s ease .12s; }
 .popup-desc.show { opacity: 1; }
-
-.popup-actions {
-  display: flex; align-items: center; justify-content: space-between;
-}
-
-.popup-link {
-  font-size: 10px; font-weight: 700;
-  letter-spacing: .24em; text-transform: uppercase;
-  color: white; text-decoration: none;
-  opacity: 0;
-  border-bottom: 1px solid transparent;
-  padding-bottom: 1px;
-  transition: opacity .4s ease .18s, border-color .18s;
-}
+.popup-actions { display: flex; align-items: center; justify-content: space-between; }
+.popup-link { font-size: 10px; font-weight: 700; letter-spacing: .24em; text-transform: uppercase; color: white; text-decoration: none; opacity: 0; border-bottom: 1px solid transparent; padding-bottom: 1px; transition: opacity .4s ease .18s, border-color .18s; }
 .popup-link.show { opacity: .65; }
 .popup-link.show:hover { opacity: 1; border-bottom-color: white; }
-
-.popup-close {
-  background: none; border: none; cursor: none;
-  font-size: 9px; font-weight: 700;
-  letter-spacing: .24em; text-transform: uppercase;
-  color: rgba(255,255,255,.25);
-  padding: 0;
-  transition: color .2s;
-}
+.popup-close { background: none; border: none; cursor: none; font-size: 9px; font-weight: 700; letter-spacing: .24em; text-transform: uppercase; color: rgba(255,255,255,.25); padding: 0; transition: color .2s; }
 .popup-close:hover { color: rgba(255,255,255,.65); }
 
-/* ── MOBILE ── */
+/* ── ZONES ── */
+.zone {
+  position: fixed; bottom: 120px; z-index: 10;
+  max-width: calc(50vw - 90px);
+  transition: opacity .4s ease, transform .4s ease, color .4s ease;
+}
+#build  { left: 80px; }
+#create { right: 80px; text-align: right; }
+
+.main-title {
+  font-size: clamp(36px, 5.6vw, 72px);
+  font-weight: 700; letter-spacing: .14em; text-transform: uppercase;
+  cursor: none; line-height: 1; user-select: none; white-space: nowrap;
+  transition: color .4s ease;
+}
+.main-title a { color: inherit; text-decoration: none; }
+
+/* ── SUB ITEMS ── */
+.sub {
+  margin-top: 16px;
+  font-size: 11px; font-weight: 400;
+  letter-spacing: .24em; text-transform: uppercase; line-height: 1;
+  opacity: .52;
+  transition: opacity .35s ease;
+  pointer-events: none;
+}
+.zone.active .sub { opacity: .82; pointer-events: auto; }
+.sub a { display: block; color: inherit; text-decoration: none; padding: 7px 0; border-bottom: 1px solid transparent; transition: border-color .18s; }
+.sub a:hover { border-bottom-color: currentColor; }
+
+.build-active .zone { color: black; }
+.fade-out { opacity: 0 !important; transform: translateY(6px); pointer-events: none; }
+
+/* ── BOTTOM BAR ── */
+.bottom-bar {
+  position: fixed; bottom: 36px; width: 100%; padding: 0 80px;
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 11px; font-weight: 700; letter-spacing: .2em; text-transform: uppercase;
+  z-index: 20; transition: color .4s ease;
+}
+.bottom-bar a { color: inherit; text-decoration: none; opacity: .45; transition: opacity .25s; }
+.bottom-bar a:hover { opacity: 1; }
+.contact { display: flex; gap: 14px; align-items: center; }
+.divider { opacity: .2; }
+.build-active .bottom-bar { color: black; }
+
+/* ══════════════════════════════════════
+   ── MOBILE ──
+   ══════════════════════════════════════ */
 @media (max-width: 900px) {
   body {
-    background-size: 120%;
-    background-position: center 32%;
-    background-attachment: fixed;
+    background-attachment: scroll;
+    background-size: cover;
+    background-position: center 30%;
   }
-  .main-title { font-size: 42px; letter-spacing: .1em; }
-  .zone { max-width: none; }                         /* full-width sub-items on mobile */
-  #build  { left: 20px; bottom: auto; top: auto; transform: none; padding-top: 600px; }
-  #create { right: 20px; bottom: auto; top: auto; transform: none; padding-top: 600px; }
-  .bottom-bar {
-    padding: 0 20px;
-    font-size: 9px;
-    bottom: 20px;
-  }
-  .contact { gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
-  .divider { display: inline; }
-  .sub { opacity: .35; }
-  .zone.active .sub { opacity: .85; pointer-events: auto; }
 
-  /* Roulette: full-width popup, button stays top-right */
-  #roulette-btn { right: 20px; }
-  #roulette-popup {
-    right: 16px;
-    left: 16px;
-    width: auto;
-    top: 60px;
+  .zone {
+    bottom: 88px;
+    max-width: calc(50vw - 22px);
   }
-  .r-label { display: none; }       /* just the icon on mobile */
+  #build  { left: 16px; right: auto; }
+  #create { right: 16px; left: auto; }
+
+  .main-title {
+    font-size: clamp(24px, 7.5vw, 36px);
+    letter-spacing: .08em;
+    white-space: nowrap;
+  }
+
+  /* Sub-items always visible & directly clickable on mobile */
+  .sub { margin-top: 12px; font-size: 10px; opacity: .52; pointer-events: auto; }
+  .zone.active .sub { opacity: .52; } /* prevent hover-state override on mobile */
+
+  /* TO BUILD title text only on mobile — sub-links handle navigation */
+  #build .main-title a { pointer-events: none; }
+
+  /* Bottom bar: stack contact links to prevent overlap */
+  .bottom-bar { padding: 0 16px; bottom: 16px; font-size: 9px; align-items: flex-end; }
+  .contact { flex-direction: column; gap: 5px; align-items: flex-end; }
+  .divider { display: none; }
+
+  #roulette-btn { right: 16px; top: 14px; }
+  #roulette-popup { right: 16px; left: 16px; width: auto; top: 68px; }
+  .r-label { display: none; }
 }
 
 @media (max-width: 560px) {
-  body {
-    background-size: 130%;
-    background-position: center 30%;
-    background-attachment: fixed;
-  }
-  .main-title { font-size: 30px; }
-  #build  { left: 16px; padding-top: 510px; }
-  #create { right: 16px; padding-top: 510px; }
-  .bottom-bar { padding: 0 16px; bottom: 16px; }
-  .contact { gap: 4px; }
-  .divider { display: none; }
+  .main-title { font-size: clamp(22px, 6.5vw, 28px); letter-spacing: .05em; }
+  .zone { bottom: 76px; max-width: calc(50vw - 18px); }
+  .sub { font-size: 9px; letter-spacing: .18em; }
+  .bottom-bar { bottom: 12px; padding: 0 12px; }
 }
 </style>
 </head>
@@ -432,74 +272,71 @@ body {
 <div class="layer create-layer"></div>
 <div class="grid"></div>
 
-<div class="author ui-group">A. Vasileuskaya</div>
+<!-- ── MARQUEE ── -->
+<div class="marquee-wrap ui-group">
+  <div class="marquee-track">VASILEUSKAYA.&ensp;VASILEUSKAYA.&ensp;VASILEUSKAYA.&ensp;VASILEUSKAYA.&ensp;VASILEUSKAYA.&ensp;VASILEUSKAYA.&ensp;VASILEUSKAYA.&ensp;VASILEUSKAYA.&ensp;VASILEUSKAYA.&ensp;VASILEUSKAYA.&ensp;VASILEUSKAYA.&ensp;VASILEUSKAYA.&ensp;</div>
+</div>
 
-<!-- ══════════ ROULETTE TRIGGER ══════════ -->
+<!-- ── ROULETTE TRIGGER ── -->
 <button id="roulette-btn" aria-label="Random experience">
-  <!-- contour dial icon: outer ring + tick marks + center dot -->
   <div class="r-icon">
-    <svg viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg"
-         stroke-width="1" stroke-linecap="round">
+    <svg viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg" stroke-width="1" stroke-linecap="round">
       <circle cx="9" cy="9" r="7.5"/>
       <circle cx="9" cy="9" r="1" fill="white" stroke="none"/>
-      <!-- tick marks at 12, 3, 6, 9 o'clock -->
-      <line x1="9" y1="2"   x2="9" y2="3.6"/>
+      <line x1="9"  y1="2"  x2="9"    y2="3.6"/>
       <line x1="16" y1="9"  x2="14.4" y2="9"/>
-      <line x1="9" y1="16"  x2="9" y2="14.4"/>
-      <line x1="2" y1="9"   x2="3.6" y2="9"/>
-      <!-- pointer hand -->
-      <line x1="9" y1="9" x2="9" y2="3.8" stroke-width="1.2"/>
+      <line x1="9"  y1="16" x2="9"    y2="14.4"/>
+      <line x1="2"  y1="9"  x2="3.6"  y2="9"/>
+      <line x1="9"  y1="9"  x2="9"    y2="3.8" stroke-width="1.2"/>
     </svg>
   </div>
   <span class="r-label">Random Experience</span>
 </button>
 
-<!-- ══════════ ROULETTE POPUP ══════════ -->
+<!-- ── ROULETTE POPUP ── -->
 <div id="roulette-popup" role="dialog" aria-label="Random project">
   <div class="popup-inner">
-
     <div class="popup-image" id="popup-image-area">
       <img id="popup-img" src="" alt="">
       <div class="popup-drum" id="popup-drum">
         <span class="drum-text" id="drum-text">—</span>
       </div>
     </div>
-
     <div class="popup-info">
       <div class="popup-category" id="popup-category">—</div>
-      <div class="popup-title" id="popup-title">—</div>
-      <div class="popup-desc"  id="popup-desc"></div>
+      <div class="popup-title"   id="popup-title">—</div>
+      <div class="popup-desc"    id="popup-desc"></div>
       <div class="popup-actions">
         <a href="#" id="popup-link" class="popup-link">Open →</a>
         <button class="popup-close" id="popup-close">✕ close</button>
       </div>
     </div>
-
   </div>
 </div>
 
-<!-- TO BUILD -->
+<!-- ── TO BUILD ── -->
 <div class="zone ui-group" id="build">
   <div class="main-title">
     <a href="architecture.html">To Build</a>
   </div>
-  <div class="sub sub-build">
+  <div class="sub">
     <a href="architecture.html">Architecture</a>
     <a href="architecture.html">Urban · Research</a>
     <a href="architecture.html">AI Experiments</a>
   </div>
 </div>
 
-<!-- TO CREATE -->
+<!-- ── TO CREATE ── -->
 <div class="zone ui-group" id="create">
   <div class="main-title">To Create</div>
-  <div class="sub sub-create">
+  <div class="sub">
     <a href="visual.html">Visual</a>
     <a href="video.html">Video</a>
     <a href="localradio.html">Local Radio</a>
   </div>
 </div>
 
+<!-- ── BOTTOM BAR ── -->
 <div class="bottom-bar ui-group">
   <a href="about.html">About</a>
   <div class="contact">
@@ -512,7 +349,7 @@ body {
 </div>
 
 <script>
-// ── CURSOR ──
+// ── CURSOR (desktop only) ──
 const cur = document.getElementById('cur');
 if (window.matchMedia('(hover: hover)').matches) {
   document.addEventListener('mousemove', e => {
@@ -526,116 +363,89 @@ if (window.matchMedia('(hover: hover)').matches) {
 }
 
 // ── INTRO SEQUENCE ──
-const veil  = document.getElementById('intro-veil');
-const line  = document.getElementById('intro-line');
-const uiEls = document.querySelectorAll('.ui-group');
-const rBtn  = document.getElementById('roulette-btn');
+const veil = document.getElementById('intro-veil');
+const line = document.getElementById('intro-line');
+const rBtn = document.getElementById('roulette-btn');
 
 setTimeout(() => veil.classList.add('darken'), 1800);
 setTimeout(() => line.classList.add('rise'), 2200);
 setTimeout(() => {
-  veil.style.opacity    = '0';
-  veil.style.transition = 'opacity .5s ease';
+  veil.style.cssText = 'opacity:0; transition:opacity .5s ease';
   line.classList.add('settle');
-  uiEls.forEach(el => el.classList.add('visible'));
+  document.querySelectorAll('.ui-group').forEach(el => el.classList.add('visible'));
   rBtn.classList.add('visible');
 }, 2900);
 
-// ── BUILD / CREATE LOGIC ──
+// ── BUILD / CREATE (desktop hover only) ──
 const buildZone   = document.getElementById('build');
 const createZone  = document.getElementById('create');
 const buildLayer  = document.querySelector('.build-layer');
 const createLayer = document.querySelector('.create-layer');
 const grid        = document.querySelector('.grid');
-const isTouch     = () => !window.matchMedia('(hover: hover)').matches;
 
-function activateBuild() {
-  buildLayer.style.clipPath = 'circle(150% at 0% 100%)';
-  document.body.classList.add('build-active');
-  document.body.classList.remove('create-active');
-  createZone.classList.add('fade-out');
-  createZone.classList.remove('active');
-  grid.classList.add('active');
-  buildZone.classList.add('active');
+if (window.matchMedia('(hover: hover)').matches) {
+  buildZone.addEventListener('mouseenter', () => {
+    buildLayer.style.clipPath = 'circle(150% at 0% 100%)';
+    document.body.classList.add('build-active');
+    document.body.classList.remove('create-active');
+    createZone.classList.add('fade-out');
+    createZone.classList.remove('active');
+    grid.classList.add('active');
+    buildZone.classList.add('active');
+  });
+  buildZone.addEventListener('mouseleave', () => {
+    buildLayer.style.clipPath = 'circle(0px at 0% 100%)';
+    document.body.classList.remove('build-active');
+    createZone.classList.remove('fade-out');
+    grid.classList.remove('active');
+    buildZone.classList.remove('active');
+  });
+  createZone.addEventListener('mouseenter', () => {
+    createLayer.style.clipPath = 'circle(150% at 100% 100%)';
+    document.body.classList.add('create-active');
+    document.body.classList.remove('build-active');
+    buildZone.classList.add('fade-out');
+    buildZone.classList.remove('active');
+    createZone.classList.add('active');
+  });
+  createZone.addEventListener('mouseleave', () => {
+    createLayer.style.clipPath = 'circle(0px at 100% 100%)';
+    document.body.classList.remove('create-active');
+    buildZone.classList.remove('fade-out');
+    createZone.classList.remove('active');
+  });
 }
-function deactivateBuild() {
-  buildLayer.style.clipPath = 'circle(0px at 0% 100%)';
-  document.body.classList.remove('build-active');
-  createZone.classList.remove('fade-out');
-  grid.classList.remove('active');
-  buildZone.classList.remove('active');
-}
-function activateCreate() {
-  createLayer.style.clipPath = 'circle(150% at 100% 100%)';
-  document.body.classList.add('create-active');
-  document.body.classList.remove('build-active');
-  buildZone.classList.add('fade-out');
-  buildZone.classList.remove('active');
-  createZone.classList.add('active');
-}
-function deactivateCreate() {
-  createLayer.style.clipPath = 'circle(0px at 100% 100%)';
-  document.body.classList.remove('create-active');
-  buildZone.classList.remove('fade-out');
-  createZone.classList.remove('active');
-}
-function deactivateAll() { deactivateBuild(); deactivateCreate(); }
 
-buildZone.addEventListener('mouseenter',  activateBuild);
-buildZone.addEventListener('mouseleave',  deactivateBuild);
-createZone.addEventListener('mouseenter', activateCreate);
-createZone.addEventListener('mouseleave', deactivateCreate);
-
-let createOpen = false;
-buildZone.addEventListener('click', e => {
-  if (!isTouch()) return;
-  if (e.target.tagName === 'A') return;
-});
-createZone.addEventListener('click', e => {
-  if (!isTouch()) return;
-  if (e.target.tagName === 'A' && createOpen) return;
-  e.stopPropagation();
-  if (createOpen) { deactivateAll(); createOpen = false; }
-  else { deactivateAll(); activateCreate(); createOpen = true; }
-});
-document.addEventListener('click', () => {
-  if (!isTouch()) return;
-  deactivateAll();
-  createOpen = false;
-});
-
-// ══════════════════════════════════════════
-// ── ROULETTE LOGIC ──
-// ══════════════════════════════════════════
+// ── ROULETTE ──
 let projects = [];
 let rouletteOpen = false;
 let spinTimer = null;
 
 fetch('projects.json')
   .then(r => r.json())
-  .then(data => { projects = data; })
+  .then(d => { projects = d; })
   .catch(() => {
     projects = [
-      { title: "Myriads.",         category: "Architecture", description: "Design code of the residential district.",                          image: "images/assets/build/als/miriady.jpg",          url: "architecture.html#01" },
-      { title: "1295",   category: "Architecture", description: "Residential Complex.",                           image: "images/assets/build/1295/12951.jpg",           url: "architecture.html#02" },
-      { title: "Meaning of Fortification",     category: "Architecture", description: "The final stage of the semester project in urban design at ULisboa. The main theme: defense fortification.",      image: "images/assets/build/fortification/fortification1.jpg", url: "architecture.html#03" },
-      { title: "House for a Young Couple",     category: "Architecture", description: "A compact courtyard house designed for a young couple.",                              image: "images/assets/build/interior/interior1.jpg",   url: "architecture.html#06" },
-      { title: "Brownie Coffeehouse",          category: "Architecture", description: "Interior design for local coffeehouse.",       image: "images/assets/build/brownie/brownie1.JPG",     url: "architecture.html#11" },
-      { title: "Museum of Modern Art NOVA",    category: "Architecture", description: "The Museum of Modern Art NOVA.",      image: "images/assets/build/nova/nova2.jpg",           url: "architecture.html#14" },
-      { title: "PILOTS / Hand Drawings",       category: "Visual",       description: "Early touches of the materials.",        image: "images/assets/create/pilots/pilots1.jpg",      url: "visual.html#pilots"   },
-      { title: "None of them is me",           category: "Visual",       description: "A Self-Portrait series.",                               image: "images/assets/create/portrait/Portrait1.jpg",  url: "visual.html#Self-Portrait" },
-      { title: "SCAN — Grains of the Cities",  category: "Visual",       description: "Fragments of urban texture.",                      image: "images/assets/create/scan/Scan1.jpg",          url: "visual.html#scan"     },
-      { title: "CLO — Custom Clothing",        category: "Visual",       description: "Hand-painted garments as wearable architecture.",                             image: "images/assets/create/clo/cloth1.jpg",          url: "visual.html#clo"      },
-      { title: "ОСТАТОК / Residue",            category: "Visual",       description: "A group exhibition on urban memory.",      image: "",                                             url: "visual.html#ostatok"  },
-      { title: "BIRDS",                        category: "Video",        description: "From Paris with love.",                              image: "images/video/videobirds1.jpg",                 url: "video.html#0"         },
-      { title: "Rebirth Cycles",               category: "Video",        description: "A journey into the past.",                       image: "images/video/videoRebirthCycles.jpg",          url: "video.html#1"         },
-      { title: "Special Diary",               category: "Video",        description: "This is how life used to feel.",                   image: "images/video/videocrystal1.jpg",               url: "video.html#2"         },
-       { title: "Short Walks Down Long Roads",               category: "Video",        description: "Just a feeling.",                   image: "images/video/videoshort1.jpg",               url: "video.html#3"         },
-      { title: "Channel 01",                   category: "Local Radio",  description: "Made for you.",                        image: "https://open.spotify.com/playlist/0mg0X028fIt8EwH5yi3Czf",                                             url: "localradio.html#0"    },
-      { title: "Channel 02",                   category: "Local Radio",  description: "Made for you.",                        image: "https://open.spotify.com/playlist/4YMNrlPjp3nTenV6Qkn4Tc",                                             url: "localradio.html#1"    },
-      { title: "Channel 03",                   category: "Local Radio",  description: "Made for you.",           image: "https://open.spotify.com/playlist/2BAdX7KOSo3hsDMlq37IBD",                                             url: "localradio.html#2"    },
-      { title: "Channel 04",                   category: "Local Radio",  description: "Made for you.",              image: "https://open.spotify.com/playlist/77mIWmxJFdJGWar4EJdrjq",                                             url: "localradio.html#3"    },
-      { title: "Channel 05",                   category: "Local Radio",  description: "Made for you.",              image: "https://open.spotify.com/playlist/1ajzqkENf7NBuPTVNyJPjQ",                                             url: "localradio.html#4"    }
+      { title: "Myriads.",                    category: "Architecture", description: "Design code of the residential district.",                           image: "images/assets/build/als/miriady.jpg",              url: "architecture.html#01" },
+      { title: "1295",                        category: "Architecture", description: "Residential Complex.",                                               image: "images/assets/build/1295/12951.jpg",               url: "architecture.html#02" },
+      { title: "Meaning of Fortification",    category: "Architecture", description: "The final stage of the semester project in urban design at ULisboa.", image: "images/assets/build/fortification/fortification1.jpg", url: "architecture.html#03" },
+      { title: "House for a Young Couple",    category: "Architecture", description: "A compact courtyard house designed for a young couple.",              image: "images/assets/build/interior/interior1.jpg",       url: "architecture.html#06" },
+      { title: "Brownie Coffeehouse",         category: "Architecture", description: "Interior design for local coffeehouse.",                              image: "images/assets/build/brownie/brownie1.JPG",         url: "architecture.html#11" },
+      { title: "Museum of Modern Art NOVA",   category: "Architecture", description: "The Museum of Modern Art NOVA.",                                     image: "images/assets/build/nova/nova2.jpg",               url: "architecture.html#14" },
+      { title: "PILOTS / Hand Drawings",      category: "Visual",       description: "Early touches of the materials.",                                    image: "images/assets/create/pilots/pilots1.jpg",          url: "visual.html#pilots"   },
+      { title: "None of them is me",          category: "Visual",       description: "A Self-Portrait series.",                                            image: "images/assets/create/portrait/Portrait1.jpg",      url: "visual.html#Self-Portrait" },
+      { title: "SCAN — Grains of the Cities", category: "Visual",       description: "Fragments of urban texture.",                                        image: "images/assets/create/scan/Scan1.jpg",              url: "visual.html#scan"     },
+      { title: "CLO — Custom Clothing",       category: "Visual",       description: "Hand-painted garments as wearable architecture.",                    image: "images/assets/create/clo/cloth1.jpg",              url: "visual.html#clo"      },
+      { title: "ОСТАТОК / Residue",           category: "Visual",       description: "A group exhibition on urban memory.",                               image: "",                                                 url: "visual.html#ostatok"  },
+      { title: "BIRDS",                       category: "Video",        description: "From Paris with love.",                                              image: "images/video/videobirds1.jpg",                     url: "video.html#0"         },
+      { title: "Rebirth Cycles",              category: "Video",        description: "A journey into the past.",                                           image: "images/video/videoRebirthCycles.jpg",              url: "video.html#1"         },
+      { title: "Special Diary",               category: "Video",        description: "This is how life used to feel.",                                     image: "images/video/videocrystal1.jpg",                   url: "video.html#2"         },
+      { title: "Short Walks Down Long Roads", category: "Video",        description: "Just a feeling.",                                                    image: "images/video/videoshort1.jpg",                     url: "video.html#3"         },
+      { title: "Channel 01",                  category: "Local Radio",  description: "Made for you.",                                                      image: "",                                                 url: "localradio.html#0"    },
+      { title: "Channel 02",                  category: "Local Radio",  description: "Made for you.",                                                      image: "",                                                 url: "localradio.html#1"    },
+      { title: "Channel 03",                  category: "Local Radio",  description: "Made for you.",                                                      image: "",                                                 url: "localradio.html#2"    },
+      { title: "Channel 04",                  category: "Local Radio",  description: "Made for you.",                                                      image: "",                                                 url: "localradio.html#3"    },
+      { title: "Channel 05",                  category: "Local Radio",  description: "Made for you.",                                                      image: "",                                                 url: "localradio.html#4"    }
     ];
   });
 
@@ -651,71 +461,49 @@ const popupClose = document.getElementById('popup-close');
 const imgArea    = document.getElementById('popup-image-area');
 
 function openPopup() {
-  if (projects.length === 0) return;
+  if (!projects.length) return;
   rouletteOpen = true;
   popup.classList.add('open');
   rBtn.classList.add('spinning');
-
-  // reset
   popupDesc.classList.remove('show');
   popupLink.classList.remove('show');
   drumEl.classList.remove('hidden');
   popupImg.classList.remove('loaded');
   popupImg.src = '';
 
-  const allTitles = projects.map(p => p.title);
-  const totalTicks = 24;
-  const fastPhase  = 15;
+  const totalTicks = 24, fastPhase = 15;
   const chosenIdx  = Math.floor(Math.random() * projects.length);
-
-  // build eased interval sequence: fast → decelerate
-  const intervals = Array.from({ length: totalTicks }, (_, i) => {
+  const intervals  = Array.from({ length: totalTicks }, (_, i) => {
     const t = i / totalTicks;
-    return t < (fastPhase / totalTicks)
+    return t < fastPhase / totalTicks
       ? 52
-      : Math.round(52 + Math.pow((t - fastPhase/totalTicks) / (1 - fastPhase/totalTicks), 2.2) * 500);
+      : Math.round(52 + Math.pow((t - fastPhase / totalTicks) / (1 - fastPhase / totalTicks), 2.2) * 500);
   });
 
-  function runTick(i) {
-    if (i >= totalTicks) {
-      rBtn.classList.remove('spinning');
-      showProject(projects[chosenIdx]);
-      return;
-    }
-    const idx = (chosenIdx + totalTicks - i) % allTitles.length;
-    drumText.textContent  = allTitles[idx].toUpperCase();
-    popupTitle.textContent = allTitles[idx].toUpperCase();
+  (function runTick(i) {
+    if (i >= totalTicks) { rBtn.classList.remove('spinning'); showProject(projects[chosenIdx]); return; }
+    const idx = (chosenIdx + totalTicks - i) % projects.length;
+    drumText.textContent   = projects[idx].title.toUpperCase();
+    popupTitle.textContent = projects[idx].title.toUpperCase();
     popupCat.textContent   = projects[idx].category.toUpperCase();
     spinTimer = setTimeout(() => runTick(i + 1), intervals[i]);
-  }
-
-  setTimeout(() => runTick(0), 100);
+  })(0);
 }
 
-function showProject(project) {
-  popupTitle.textContent = project.title.toUpperCase();
-  popupCat.textContent   = project.category.toUpperCase();
-  drumText.textContent   = project.title.toUpperCase();
-  popupLink.href         = project.url;
-
-  if (project.image) {
-    const img = new Image();
-    img.onload = () => {
-      popupImg.src = project.image;
-      popupImg.classList.add('loaded');
-      setTimeout(() => drumEl.classList.add('hidden'), 150);
-    };
+function showProject(p) {
+  popupTitle.textContent = p.title.toUpperCase();
+  popupCat.textContent   = p.category.toUpperCase();
+  drumText.textContent   = p.title.toUpperCase();
+  popupLink.href         = p.url;
+  if (p.image) {
+    const img   = new Image();
+    img.onload  = () => { popupImg.src = p.image; popupImg.classList.add('loaded'); setTimeout(() => drumEl.classList.add('hidden'), 150); };
     img.onerror = () => drumEl.classList.add('hidden');
-    img.src = project.image;
+    img.src = p.image;
   } else {
     drumEl.classList.add('hidden');
   }
-
-  setTimeout(() => {
-    popupDesc.textContent = project.description;
-    popupDesc.classList.add('show');
-    popupLink.classList.add('show');
-  }, 160);
+  setTimeout(() => { popupDesc.textContent = p.description; popupDesc.classList.add('show'); popupLink.classList.add('show'); }, 160);
 }
 
 function closePopup() {
@@ -725,31 +513,11 @@ function closePopup() {
   clearTimeout(spinTimer);
 }
 
-rBtn.addEventListener('click', e => {
-  e.stopPropagation();
-  rouletteOpen ? closePopup() : openPopup();
-});
-
-popupClose.addEventListener('click', e => {
-  e.stopPropagation();
-  closePopup();
-});
-
-// Spin again on image click
-imgArea.addEventListener('click', e => {
-  e.stopPropagation();
-  openPopup();
-});
-
-// Close on outside click
-document.addEventListener('click', e => {
-  if (rouletteOpen && !popup.contains(e.target) && e.target !== rBtn) closePopup();
-});
-
-// Escape
-document.addEventListener('keydown', e => {
-  if (e.key === 'Escape' && rouletteOpen) closePopup();
-});
+rBtn.addEventListener('click',       e => { e.stopPropagation(); rouletteOpen ? closePopup() : openPopup(); });
+popupClose.addEventListener('click', e => { e.stopPropagation(); closePopup(); });
+imgArea.addEventListener('click',    e => { e.stopPropagation(); openPopup(); });
+document.addEventListener('click',   e => { if (rouletteOpen && !popup.contains(e.target) && e.target !== rBtn) closePopup(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && rouletteOpen) closePopup(); });
 </script>
 </body>
 </html>
