@@ -30,21 +30,21 @@
     .nav-fixed{
       position:fixed;top:0;left:0;right:0;height:42px;z-index:220;
       display:flex;align-items:center;justify-content:space-between;
-      padding:0 36px;
-      background:rgba(10,10,10,.82);
+      padding:0 36px;gap:20px;
+      background:rgba(10,10,10,.9);
       backdrop-filter:blur(6px);
     }
-    .back{font-size:12px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;text-decoration:none;color:#555;transition:color .2s;white-space:nowrap}
+    .back{font-size:12px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;text-decoration:none;color:#555;transition:color .2s;white-space:nowrap;flex-shrink:0}
     .back:hover{color:#f5f5f5}
-    /* Page links: same style as .back */
-    .page-links{display:flex;align-items:center;gap:22px;flex-wrap:wrap;justify-content:flex-end}
+    /* Page links: same style as .back, always on one line */
+    .page-links{display:flex;align-items:center;gap:22px;flex-shrink:0}
     .page-links a{font-size:12px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;text-decoration:none;color:#555;transition:color .2s;white-space:nowrap}
     .page-links a:hover{color:#f5f5f5}
 
     /* ── TICKER ── */
-    .ticker-bar{position:fixed;top:42px;left:0;right:0;z-index:210;overflow:hidden;padding:4px 0 3px;border-bottom:1px solid rgba(255,255,255,.08)}
-    .ticker-text{display:flex;white-space:nowrap;animation:marquee 40s linear infinite;color:rgba(255,255,255,.82);font-size:18px;font-weight:900;letter-spacing:-.03em;text-transform:uppercase;line-height:1}
-    .ticker-text span{padding-right:14px;flex-shrink:0}
+    .ticker-bar{position:fixed;top:42px;left:0;right:0;z-index:210;overflow:hidden;padding:5px 0 4px;background:#f0f0f0;border-bottom:1px solid rgba(0,0,0,.1)}
+    .ticker-text{display:flex;white-space:nowrap;animation:marquee 40s linear infinite;color:#0a0a0a;font-size:16px;font-weight:900;letter-spacing:-.03em;text-transform:uppercase;line-height:1}
+    .ticker-text span{padding-right:12px;flex-shrink:0}
     @keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 
 
@@ -62,8 +62,8 @@
     .column{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:20px 8px;gap:6px;flex-shrink:0}
     .column-header{text-align:center;margin-bottom:12px;z-index:10}
     .column-year{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#888}
-    .column-title{font-size:14px;font-weight:900;letter-spacing:-.01em;text-transform:uppercase;margin-top:4px;color:#000}
-    .column-subtitle{font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;margin-top:3px;color:#222}
+    .column-title{font-size:14px;font-weight:900;letter-spacing:-.01em;text-transform:uppercase;margin-top:4px;color:#f5f5f5}
+    .column-subtitle{font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;margin-top:3px;color:#777}
 
     /* ── IMAGE ITEMS ── */
     .image-item{position:relative;border:1px solid rgba(255,255,255,.07);background:#1a1a1a;overflow:hidden;border-radius:1px;flex-shrink:0;transition:filter .3s}
@@ -500,3 +500,14 @@ function buildScrollContainer() {
   spacer.style.cssText = 'flex-shrink:0;width:24px;min-width:24px';
   scrollContainer.appendChild(spacer);
 }
+buildScrollContainer();
+
+// Debounced rebuild on resize
+let resizeTimer;
+window.addEventListener('resize', () => {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(buildScrollContainer, 150);
+});
+</script>
+</body>
+</html>
