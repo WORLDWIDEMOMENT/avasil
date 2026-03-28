@@ -1,564 +1,192 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Visual — AV</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;600;700;900&display=swap" rel="stylesheet">
-<style>
-*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-* { cursor: none !important; }
-html,body{width:100%;height:100%;background:#0a0a0a;font-family:'Barlow',sans-serif;color:#f5f5f5;overflow:hidden}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Visual — AV</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;600;700;900&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    *{cursor:none !important}
+    html,body{width:100%;height:100%;background:#0a0a0a;font-family:'Barlow',sans-serif;color:#f5f5f5;overflow:hidden}
+    body{
+      display:flex;flex-direction:column;
+      background-image:url('images/assets/create/visualmain.webp');
+      background-size:cover;background-position:center;background-attachment:fixed;
+    }
+    body::before{content:'';position:fixed;inset:0;background:rgba(10,10,10,.68);z-index:-1}
 
-body{
-  display:flex;
-  flex-direction:column;
-  background-image:url('images/assets/create/visualmain.webp');
-  background-size:cover;
-  background-position:center;
-  background-attachment:fixed;
-}
-body::before{
-  content:'';
-  position:fixed;
-  inset:0;
-  background:rgba(10,10,10,.68);
-  z-index:-1;
-}
+    /* ── CURSOR ── */
+    #cur-ring{position:fixed;width:30px;height:30px;border:1px solid rgba(210,35,35,.55);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:left .1s ease,top .1s ease,width .2s,height .2s,border-color .2s}
+    #cur-ring.hover{width:46px;height:46px;border-color:rgba(210,35,35,.9)}
+    #cur-cross{position:fixed;pointer-events:none;z-index:9999;transform:translate(-50%,-50%)}
+    #cur-cross::before,#cur-cross::after{content:'';position:absolute;background:rgba(210,35,35,.8)}
+    #cur-cross::before{width:12px;height:1px;top:0;left:-6px}
+    #cur-cross::after{width:1px;height:12px;left:0;top:-6px}
+    @media(hover:none),(pointer:coarse){*{cursor:auto !important}#cur-ring,#cur-cross{display:none}}
 
-/* ── CURSOR ── */
-#cur-ring {
-  position:fixed;width:30px;height:30px;
-  border:1px solid rgba(210,35,35,.55);border-radius:50%;
-  pointer-events:none;z-index:9998;transform:translate(-50%,-50%);
-  transition:left .1s ease,top .1s ease,width .2s,height .2s,border-color .2s;
-}
-#cur-ring.hover{width:46px;height:46px;border-color:rgba(210,35,35,.9);}
-#cur-cross{position:fixed;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);}
-#cur-cross::before,#cur-cross::after{content:'';position:absolute;background:rgba(210,35,35,.8);}
-#cur-cross::before{width:12px;height:1px;top:0;left:-6px;}
-#cur-cross::after{width:1px;height:12px;left:0;top:-6px;}
-@media (hover:none),(pointer:coarse){
-  *{cursor:auto !important;}
-  #cur-ring,#cur-cross{display:none;}
-}
+    /* ── FIXED NAV BAR ── */
+    .nav-fixed{
+      position:fixed;top:0;left:0;right:0;height:42px;z-index:220;
+      display:flex;align-items:center;justify-content:space-between;
+      padding:0 36px;
+    }
+    .back{font-size:12px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;text-decoration:none;color:#555;transition:color .2s;white-space:nowrap}
+    .back:hover{color:#f5f5f5}
+    .page-links{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase}
+    .page-links a{color:#f5f5f5;text-decoration:none;opacity:.55;transition:opacity .2s;white-space:nowrap}
+    .page-links a:hover{opacity:1}
+    .page-links .sep{opacity:.18;color:#f5f5f5}
 
-.scroll-container{
-  flex:1;
-  position:relative;
-  overflow:hidden;
-  padding-top:50px;
-  padding-bottom:86px;
-}
+    /* ── TICKER ── */
+    .ticker-bar{position:fixed;top:42px;left:0;right:0;z-index:210;overflow:hidden;padding:3px 0;border-bottom:1px solid rgba(255,255,255,.05)}
+    .ticker-text{display:flex;white-space:nowrap;animation:marquee 40s linear infinite;color:rgba(139,139,139,.55);font-size:10px;letter-spacing:.28em;text-transform:uppercase}
+    .ticker-text span{padding-right:24px;flex-shrink:0}
+    @keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 
-.project-group{ display:contents; }
+    /* ── GLOBAL NAV ARROWS ── */
+    .g-arrow{
+      position:fixed;top:50%;transform:translateY(-50%);z-index:300;
+      width:44px;height:44px;border-radius:50%;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(20,20,20,.55);backdrop-filter:blur(10px);
+      color:#f5f5f5;font-size:22px;
+      display:flex;align-items:center;justify-content:center;
+      transition:.2s;
+    }
+    .g-arrow:hover{background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.25)}
+    #gPrev{left:12px}
+    #gNext{right:12px}
+    .g-arrow[hidden]{display:none !important}
 
-.column{
-  position:absolute;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:flex-start;
-  padding:20px 8px;
-  gap:6px;
-}
+    /* ── SCROLL CONTAINER ── */
+    .scroll-container{
+      flex:1;min-height:0;
+      display:flex;flex-direction:row;align-items:flex-start;
+      overflow-x:auto;overflow-y:hidden;
+      padding-top:68px;padding-bottom:86px;
+      scrollbar-width:none;
+    }
+    .scroll-container::-webkit-scrollbar{display:none}
 
-/* ── CASE STUDY COLUMN — clickable, has a mini poster ── */
-.column.case-clickable {
-  cursor: pointer !important;
-}
-.column.case-clickable:hover .column-title {
-  color: #B03020;
-  transition: color .2s;
-}
-.column.case-clickable.as-case:hover .column-title {
-  color: #C6E832;
-}
-.case-mini-poster {
-  width: 84px;
-  margin-top: 12px;
-  border: 1px solid rgba(176,48,32,.35);
-  border-radius: 2px;
-  overflow: hidden;
-  background: #0F0D0C;
-}
-.case-mini-poster.as-poster {
-  border-color: rgba(198,232,50,.3);
-}
-.case-mini-poster svg { display: block; }
-.case-open-hint {
-  font-size: 8px;
-  font-weight: 700;
-  letter-spacing: .12em;
-  text-transform: uppercase;
-  color: #B03020;
-  margin-top: 8px;
-  opacity: .7;
-}
-.case-open-hint.as-hint { color: #C6E832; }
+    /* ── COLUMNS ── */
+    .column{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:20px 8px;gap:6px;flex-shrink:0}
+    .column-header{text-align:center;margin-bottom:12px;z-index:10}
+    .column-year{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#888}
+    .column-title{font-size:14px;font-weight:900;letter-spacing:-.01em;text-transform:uppercase;margin-top:4px;color:#000}
+    .column-subtitle{font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;margin-top:3px;color:#222}
 
-.column-header{text-align:center;margin-bottom:12px;z-index:10;}
-.column-year{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#888;}
-.column-title{font-size:14px;font-weight:900;letter-spacing:-.01em;text-transform:uppercase;margin-top:4px;color:#000;}
-.column-subtitle{font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;margin-top:3px;color:#222;}
+    /* ── IMAGE ITEMS ── */
+    .image-item{position:relative;border:1px solid rgba(255,255,255,.07);background:#1a1a1a;overflow:hidden;border-radius:1px;flex-shrink:0;transition:filter .3s}
+    .image-item img{width:100%;height:100%;display:block;object-fit:cover}
+    .image-item:hover{filter:brightness(1.15);z-index:20;position:relative}
 
-.image-item{
-  position:relative;
-  border:1px solid rgba(255,255,255,.07);
-  background:#1a1a1a;
-  overflow:hidden;
-  border-radius:1px;
-  flex-shrink:0;
-  margin-top:-18px;
-  transition:filter .3s;
-}
-.image-item:first-of-type{ margin-top:0; }
-.image-item img{width:100%;height:100%;display:block;object-fit:cover;}
-.image-item:hover{
-  filter:brightness(1.15);
-  z-index:20;
-  position:relative;
-}
+    /* ── MODAL ── */
+    .modal{
+      position:fixed;inset:0;z-index:500;
+      background:rgba(0,0,0,.45);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+      display:flex;align-items:center;justify-content:center;
+      opacity:0;visibility:hidden;transition:opacity .3s,visibility .3s;padding:40px;
+    }
+    .modal.active{opacity:1;visibility:visible}
+    .modal-content{position:relative;border:1px solid rgba(255,255,255,.12);max-width:95vw;max-height:90vh;width:100%;display:flex;border-radius:2px;overflow:hidden}
+    .modal-content.mode-row{max-width:99vw;max-height:96vh}
+    .modal-image-section{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(4,4,4,.65);position:relative}
+    .modal-single{flex:1;width:100%;min-height:0;display:flex;align-items:center;justify-content:center}
+    .modal-single img{max-width:100%;max-height:100%;object-fit:contain}
+    .modal-multi{display:none;flex:1;width:100%;min-height:0;padding:12px;gap:5px;align-items:center;justify-content:center;flex-wrap:nowrap;overflow:hidden}
+    .modal-multi.show{display:flex}
+    .modal-multi.mode-collage{flex-wrap:wrap;align-content:center}
+    .modal-multi.mode-collage img{width:calc(33.33% - 5px);height:auto;max-height:42vh;object-fit:contain;border:1px solid rgba(255,255,255,.05)}
+    .modal-multi.mode-row img{flex:1 1 0;min-width:0;height:78vh;object-fit:contain;border:1px solid rgba(255,255,255,.05)}
+    .modal-multi.mode-group img{flex:1 1 0;min-width:0;height:65vh;object-fit:contain;border:1px solid rgba(255,255,255,.05)}
+    .modal-nav-btn{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:#f5f5f5;width:40px;height:40px;border-radius:50%;font-size:18px;transition:all .2s;z-index:10}
+    .modal-nav-btn:hover{background:rgba(255,255,255,.18)}
+    .modal-nav-btn.prev{left:15px}.modal-nav-btn.next{right:15px}
+    .modal-nav-btn.off{display:none}
+    .modal-info{width:300px;padding:32px 28px;display:flex;flex-direction:column;gap:16px;overflow-y:auto;border-left:1px solid rgba(255,255,255,.08);flex-shrink:0;background:rgba(14,14,14,.92)}
+    .modal-info::-webkit-scrollbar{width:3px}
+    .modal-info::-webkit-scrollbar-thumb{background:#333;border-radius:2px}
+    .modal-title{font-size:18px;font-weight:900;letter-spacing:-.01em;color:#f5f5f5}
+    .modal-subtitle{font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#888}
+    .modal-desc{font-size:11px;line-height:1.65;color:#999;white-space:pre-line;flex:1}
+    .modal-close{position:absolute;top:18px;right:18px;background:none;border:none;color:#888;font-size:22px;transition:color .2s;z-index:10}
+    .modal-close:hover{color:#f5f5f5}
 
-.hdr{position:fixed;top:18px;left:36px;z-index:150;}
-.back{font-size:12px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;text-decoration:none;color:#555;transition:color .2s;}
-.back:hover{color:#f5f5f5}
+    /* ── BOTTOM GRADIENT ── */
+    .bottom-bar{position:fixed;bottom:0;left:0;right:0;height:160px;background:linear-gradient(to top,rgba(8,8,8,.96) 0%,rgba(8,8,8,.7) 35%,rgba(8,8,8,.3) 65%,transparent 100%);pointer-events:none;z-index:199}
 
-.modal{
-  position:fixed;inset:0;z-index:500;
-  background:rgba(0,0,0,.45);
-  backdrop-filter:blur(18px);
-  -webkit-backdrop-filter:blur(18px);
-  display:flex;align-items:center;justify-content:center;
-  opacity:0;visibility:hidden;
-  transition:opacity .3s,visibility .3s;
-  padding:40px;
-}
-.modal.active{opacity:1;visibility:visible;}
+    /* ── FOOTER LINKS ── */
+    .ftl,.ftr{position:fixed;bottom:10px;z-index:201;display:flex;align-items:center;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase}
+    .ftl{left:36px}
+    .ftr{right:36px;gap:8px;flex-wrap:wrap;justify-content:flex-end;max-width:calc(100vw - 130px)}
+    .ftl a,.ftr a{color:#f5f5f5;text-decoration:none;opacity:.75;transition:opacity .2s;pointer-events:auto;white-space:nowrap}
+    .ftl a:hover,.ftr a:hover{opacity:1}
+    .ftr .sep{opacity:.14}
 
-.modal-content{
-  position:relative;
-  border:1px solid rgba(255,255,255,.12);
-  max-width:95vw;max-height:90vh;width:100%;
-  display:flex;border-radius:2px;overflow:hidden;
-}
-.modal-content.mode-row{max-width:99vw;max-height:96vh;}
-
-/* ── CASE STUDY MODAL — wider, no image section ── */
-.modal-content.mode-case {
-  max-width: 720px;
-  max-height: 88vh;
-}
-
-/* ── ARCHIVE/SPACE wider modal ── */
-.modal-content.mode-case-as {
-  max-width: 860px;
-  max-height: 90vh;
-}
-
-.modal-image-section{
-  flex:1;min-width:0;display:flex;flex-direction:column;
-  align-items:center;justify-content:center;
-  background:rgba(4,4,4,.65);
-  position:relative;
-}
-
-/* ── CASE POSTER SECTION ── */
-.modal-image-section.case-poster {
-  background: #0F0D0C;
-  flex: none;
-  width: 260px;
-  min-width: 260px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 24px;
-}
-
-.modal-single{flex:1;width:100%;min-height:0;display:flex;align-items:center;justify-content:center;}
-.modal-single img{max-width:100%;max-height:100%;object-fit:contain;}
-
-.modal-multi{
-  display:none;flex:1;width:100%;min-height:0;
-  padding:12px;gap:5px;align-items:center;justify-content:center;
-  flex-wrap:nowrap;overflow:hidden;
-}
-.modal-multi.show{display:flex;}
-.modal-multi.mode-collage{flex-wrap:wrap;align-content:center;}
-.modal-multi.mode-collage img{width:calc(33.33% - 5px);height:auto;max-height:42vh;object-fit:contain;border:1px solid rgba(255,255,255,.05);}
-.modal-multi.mode-row img{flex:1 1 0;min-width:0;height:78vh;object-fit:contain;border:1px solid rgba(255,255,255,.05);}
-.modal-multi.mode-group img{flex:1 1 0;min-width:0;height:65vh;object-fit:contain;border:1px solid rgba(255,255,255,.05);}
-
-.modal-nav-btn{
-  position:absolute;top:50%;transform:translateY(-50%);
-  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);
-  color:#f5f5f5;width:40px;height:40px;border-radius:50%;font-size:18px;
-  transition:all .2s;z-index:10;
-}
-.modal-nav-btn:hover{background:rgba(255,255,255,.18);}
-.modal-nav-btn.prev{left:15px}.modal-nav-btn.next{right:15px}
-.modal-nav-btn.off,.modal-counter.off{display:none}
-.modal-counter{position:absolute;bottom:15px;left:15px;font-size:10px;color:#999;background:rgba(0,0,0,.4);padding:6px 10px;border-radius:2px;}
-
-.modal-info{
-  width:300px;padding:32px 28px;display:flex;flex-direction:column;
-  gap:16px;overflow-y:auto;border-left:1px solid rgba(255,255,255,.08);
-  flex-shrink:0;
-  background:rgba(14,14,14,.92);
-}
-.modal-info::-webkit-scrollbar{width:3px}
-.modal-info::-webkit-scrollbar-thumb{background:#333;border-radius:2px}
-
-/* ── CASE STUDY INFO PANEL ── */
-.modal-info.case-info {
-  width: 100%;
-  flex: 1;
-  gap: 0;
-  border-left: none;
-  padding: 32px 32px;
-  background: rgba(10,10,10,.95);
-}
-
-.modal-title{font-size:18px;font-weight:900;letter-spacing:-.01em;color:#f5f5f5;}
-.modal-subtitle{font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#888;}
-.modal-desc{font-size:11px;line-height:1.65;color:#999;white-space:pre-line;flex:1;}
-
-/* ── CASE STUDY RICH CONTENT STYLES ── */
-.case-label {
-  font-size: 8px;
-  font-weight: 700;
-  letter-spacing: .16em;
-  text-transform: uppercase;
-  color: #555;
-  margin-bottom: 6px;
-  display: block;
-}
-.case-rule {
-  height: 1px;
-  background: #B03020;
-  width: 32px;
-  margin: 18px 0 14px;
-}
-.case-rule.full { width: 100%; background: rgba(255,255,255,.07); margin: 20px 0; }
-.case-body {
-  font-size: 11px;
-  line-height: 1.7;
-  color: #888;
-}
-.case-body strong {
-  color: #ccc;
-  font-weight: 600;
-}
-.case-swatches {
-  display: flex;
-  gap: 8px;
-  margin-top: 10px;
-}
-.case-swatch {
-  flex: 1;
-  height: 28px;
-  border-radius: 2px;
-  display: flex;
-  align-items: flex-end;
-  padding: 3px 5px;
-}
-.case-swatch span {
-  font-size: 7px;
-  letter-spacing: .06em;
-  text-transform: uppercase;
-}
-.case-steps {
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-  margin-top: 8px;
-}
-.case-step {
-  display: flex;
-  gap: 12px;
-  align-items: flex-start;
-  padding: 8px 0;
-  border-bottom: 1px solid rgba(255,255,255,.05);
-}
-.case-step:last-child { border-bottom: none; }
-.case-step-num {
-  font-size: 8px;
-  color: #444;
-  min-width: 16px;
-  padding-top: 2px;
-  letter-spacing: .06em;
-}
-.case-step-text {
-  font-size: 10px;
-  line-height: 1.6;
-  color: #777;
-}
-.case-step-text strong {
-  color: #bbb;
-  font-weight: 700;
-  display: block;
-  font-size: 10px;
-  margin-bottom: 2px;
-}
-.case-tag {
-  display: inline-block;
-  font-size: 8px;
-  padding: 2px 7px;
-  border: 1px solid rgba(176,48,32,.4);
-  border-radius: 20px;
-  color: #B03020;
-  letter-spacing: .06em;
-  text-transform: uppercase;
-  margin-right: 4px;
-  margin-bottom: 4px;
-}
-.case-note {
-  font-size: 9px;
-  line-height: 1.6;
-  color: #555;
-  border-left: 1px solid #B03020;
-  padding-left: 10px;
-  margin-top: 12px;
-}
-
-/* ── ARCHIVE/SPACE case specific ── */
-.as-case-info {
-  width: 100%;
-  flex: 1;
-  gap: 0;
-  border-left: 1px solid rgba(198,232,50,.1);
-  padding: 28px 30px;
-  background: rgba(10,10,10,.97);
-  overflow-y: auto;
-}
-.as-case-info::-webkit-scrollbar{width:3px}
-.as-case-info::-webkit-scrollbar-thumb{background:#1e1e1e;border-radius:2px}
-
-.modal-close{
-  position:absolute;top:18px;right:18px;background:none;border:none;
-  color:#888;font-size:22px;transition:color .2s;z-index:10;
-}
-.modal-close:hover{color:#f5f5f5}
-
-.bottom-bar {
-  position:fixed;
-  bottom:0; left:0; right:0;
-  height:200px;
-  background: linear-gradient(to top,
-    rgba(8,8,8,.97) 0%,
-    rgba(8,8,8,.88) 25%,
-    rgba(8,8,8,.60) 50%,
-    rgba(8,8,8,.22) 72%,
-    rgba(8,8,8,.0)  100%
-  );
-  backdrop-filter: blur(3px);
-  -webkit-backdrop-filter: blur(3px);
-  z-index:199;
-  pointer-events:none;
-}
-
-.timeline-bottom{
-  position:fixed;
-  bottom:32px;
-  left:0;right:0;
-  height:46px;
-  display:flex;align-items:center;
-  z-index:200;
-  pointer-events:none;
-}
-
-.timeline-line{
-  position:absolute;
-  left:24px;right:24px;
-  height:1px;
-  background:rgba(255,255,255,.12);
-  top:50%;transform:translateY(-50%);
-  z-index:1;
-}
-
-.timeline-content{
-  position:relative;width:100%;height:100%;
-  display:flex;align-items:center;
-  justify-content:space-between;
-  padding:0 24px;
-  z-index:2;
-}
-
-.year-marker{
-  display:flex;flex-direction:column;align-items:center;
-  gap:4px;white-space:nowrap;flex-shrink:0;
-}
-
-.year-dot{
-  border-radius:50%;
-  background:rgba(255,255,255,.55);
-  flex-shrink:0;
-}
-.year-marker.future .year-dot{background:#4d6aff;box-shadow:0 0 8px rgba(77,106,255,.5);}
-
-.year-label{font-size:7px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#777;}
-.year-marker.future .year-label{color:#4d6aff;}
-
-.ftl{position:fixed;bottom:10px;left:36px;z-index:201;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;}
-.ftl a{color:#f5f5f5;text-decoration:none;opacity:.75;transition:opacity .2s;pointer-events:auto;}
-.ftl a:hover{opacity:1}
-.ftr{position:fixed;bottom:10px;right:36px;z-index:201;display:flex;gap:8px;align-items:center;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;}
-.ftr a{color:#f5f5f5;text-decoration:none;opacity:.75;transition:opacity .2s;pointer-events:auto;}
-.ftr a:hover{opacity:1}
-.ftr span{opacity:.1;color:#f5f5f5}
-
-.modal-counter { display: none !important; }
-
-@media (max-width: 640px), (max-height: 500px) {
-  .modal {
-    padding: 0;
-    align-items: flex-start;
-    overflow-y: auto;
-  }
-  .modal-content {
-    flex-direction: column;
-    width: 100%;
-    max-width: 100vw;
-    height: auto;
-    min-height: 100vh;
-    max-height: none;
-    border-radius: 0;
-    border: none;
-  }
-  .modal-content.mode-row { max-width: 100vw; max-height: none; }
-  .modal-content.mode-case,
-  .modal-content.mode-case-as {
-    max-width: 100vw;
-    max-height: none;
-  }
-  .modal-image-section {
-    flex: none;
-    width: 100%;
-    height: auto;
-    max-height: none;
-    min-height: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    justify-content: flex-end;
-  }
-  .modal-image-section.case-poster {
-    width: 100%;
-    min-width: 0;
-    padding: 32px 24px;
-  }
-  .modal-single {
-    flex: none;
-    width: 100%;
-    height: auto;
-  }
-  .modal-single img {
-    width: 100%;
-    height: auto;
-    max-height: none;
-    object-fit: contain;
-  }
-  .modal-multi {
-    flex: none;
-    width: 100%;
-    height: auto;
-    padding: 8px;
-    gap: 6px;
-    overflow-x: auto;
-    overflow-y: hidden;
-    flex-wrap: nowrap;
-    justify-content: flex-start;
-    align-items: center;
-  }
-  .modal-multi.mode-row {
-    overflow-x: auto;
-  }
-  .modal-multi.mode-row img {
-    height: 50vw;
-    width: auto;
-    flex-shrink: 0;
-    object-fit: contain;
-  }
-  .modal-multi.mode-group img {
-    height: 65vw;
-    width: auto;
-    flex-shrink: 0;
-    object-fit: contain;
-  }
-  .modal-multi.mode-collage {
-    flex-wrap: wrap;
-    overflow-x: hidden;
-    justify-content: center;
-  }
-  .modal-multi.mode-collage img {
-    width: calc(50% - 4px);
-    height: auto;
-    max-height: none;
-    object-fit: contain;
-  }
-  .modal-image-section { position: relative; }
-  .modal-nav-btn {
-    top: auto;
-    bottom: 12px;
-    transform: none;
-    background: rgba(140,140,140,.25);
-    border-color: rgba(180,180,180,.3);
-    color: rgba(255,255,255,.7);
-    width: 36px; height: 36px; font-size: 16px;
-  }
-  .modal-nav-btn.prev { left: 12px; }
-  .modal-nav-btn.next { right: 12px; }
-  .modal-info {
-    flex: none;
-    width: 100%;
-    height: auto;
-    max-height: none;
-    border-left: none;
-    border-top: 1px solid rgba(255,255,255,.1);
-    padding: 24px 20px 48px;
-    overflow-y: visible;
-  }
-  .modal-info.case-info,
-  .as-case-info {
-    padding: 24px 20px 48px;
-  }
-}
-
-@media (max-width: 768px) {
-  .scroll-container {
-    overflow-x: auto;
-    overflow-y: hidden;
-    display: flex;
-    flex-direction: row;
-    align-items: flex-start;
-    padding-top: 60px;
-    padding-bottom: 90px;
-  }
-  .column {
-    position: relative !important;
-    left: auto !important;
-    top: auto !important;
-    width: 45vw !important;
-    flex-shrink: 0;
-    margin-right: 4px;
-  }
-  .column.group-start { margin-left: 24px; }
-}
-</style>
+    /* ── MOBILE ── */
+    @media(max-width:640px),(max-height:500px){
+      .modal{padding:0;align-items:flex-start;overflow-y:auto}
+      .modal-content{flex-direction:column;width:100%;max-width:100vw;height:auto;min-height:100vh;max-height:none;border-radius:0;border:none}
+      .modal-content.mode-row{max-width:100vw;max-height:none}
+      .modal-image-section{flex:none;width:100%;height:auto;min-height:0}
+      .modal-single{flex:none;width:100%;height:auto}
+      .modal-single img{width:100%;height:auto;max-height:none;object-fit:contain}
+      .modal-multi{flex:none;width:100%;height:auto;padding:8px;gap:6px;overflow-x:auto;overflow-y:hidden;flex-wrap:nowrap;justify-content:flex-start}
+      .modal-multi.mode-row img{height:50vw;width:auto;flex-shrink:0;object-fit:contain}
+      .modal-multi.mode-group img{height:65vw;width:auto;flex-shrink:0;object-fit:contain}
+      .modal-multi.mode-collage{flex-wrap:wrap;overflow-x:hidden;justify-content:center}
+      .modal-multi.mode-collage img{width:calc(50% - 4px);height:auto;max-height:none;object-fit:contain}
+      .modal-image-section{position:relative}
+      .modal-nav-btn{top:auto;bottom:12px;transform:none;background:rgba(140,140,140,.25);border-color:rgba(180,180,180,.3);color:rgba(255,255,255,.7);width:36px;height:36px;font-size:16px}
+      .modal-nav-btn.prev{left:12px}.modal-nav-btn.next{right:12px}
+      .modal-info{flex:none;width:100%;height:auto;max-height:none;border-left:none;border-top:1px solid rgba(255,255,255,.1);padding:24px 20px 48px;overflow-y:visible}
+      /* Smaller global arrows on mobile */
+      .g-arrow{width:36px;height:36px;font-size:18px}
+      #gPrev{left:4px}#gNext{right:4px}
+      .nav-fixed{padding:0 14px;height:40px}
+      .page-links{gap:6px;font-size:10px}
+      .ticker-bar{top:40px}
+      .scroll-container{padding-top:64px}
+      .ftl{left:14px;font-size:9px}
+      .ftr{right:14px;font-size:9px;max-width:calc(100vw - 80px)}
+    }
+  </style>
 </head>
 <body>
 
 <div id="cur-ring"></div>
 <div id="cur-cross"></div>
 
-<div class="hdr"><a href="index.html" class="back">← Back</a></div>
+<!-- Fixed nav -->
+<header class="nav-fixed">
+  <a href="index.html" class="back">← Back</a>
+  <nav class="page-links">
+    <a href="architecture.html">To Build</a>
+    <span class="sep">—</span>
+    <a href="video.html">Video</a>
+    <span class="sep">—</span>
+    <a href="localradio.html">Local Radio</a>
+  </nav>
+</header>
+
+<!-- Ticker -->
+<div class="ticker-bar" aria-hidden="true">
+  <span class="ticker-text">
+    <span>A.VASILEUSKAYA. </span><span>A.VASILEUSKAYA. </span><span>A.VASILEUSKAYA. </span><span>A.VASILEUSKAYA. </span><span>A.VASILEUSKAYA. </span><span>A.VASILEUSKAYA. </span><span>A.VASILEUSKAYA. </span><span>A.VASILEUSKAYA. </span>
+  </span>
+</div>
+
+<!-- Global navigation arrows -->
+<button class="g-arrow" id="gPrev" aria-label="Previous image">‹</button>
+<button class="g-arrow" id="gNext" aria-label="Next image">›</button>
 
 <div class="scroll-container" id="scrollContainer"></div>
 
-<!-- MODAL -->
-<div class="modal" id="modal">
-  <button class="modal-close" id="modalClose">✕</button>
+<!-- Modal -->
+<div class="modal" id="modal" aria-hidden="true">
+  <button class="modal-close" id="modalClose" aria-label="Close">✕</button>
   <div class="modal-content" id="modalContent">
     <div class="modal-image-section" id="modalImageSection">
       <div class="modal-single" id="modalSingleView">
@@ -567,7 +195,6 @@ body::before{
       <div class="modal-multi" id="modalMultiView"></div>
       <button class="modal-nav-btn prev" id="modalPrev">‹</button>
       <button class="modal-nav-btn next" id="modalNext">›</button>
-      <div class="modal-counter" id="modalCounter"></div>
     </div>
     <div class="modal-info" id="modalInfo">
       <div class="modal-title"    id="modalTitle"></div>
@@ -577,124 +204,121 @@ body::before{
   </div>
 </div>
 
-<div class="bottom-bar"></div>
-
-
+<div class="bottom-bar" aria-hidden="true"></div>
 
 <div class="ftl"><a href="about.html">About</a></div>
 <div class="ftr">
-  <a href="mailto:navilen@bk.ru">navilen@bk.ru</a><span>—</span>
-  <a href="https://instagram.com/molodostibolshenebudet/" target="_blank">Instagram</a><span>—</span>
-  <a href="https://linkedin.com/in/worldwidemoment/" target="_blank">LinkedIn</a>
+  <a href="mailto:navilen@bk.ru">navilen@bk.ru</a>
+  <span class="sep">—</span>
+  <a href="https://instagram.com/molodostibolshenebudet/" target="_blank" rel="noopener">Instagram</a>
+  <span class="sep">—</span>
+  <a href="https://linkedin.com/in/worldwidemoment/" target="_blank" rel="noopener">LinkedIn</a>
 </div>
 
 <script>
 /* ── CLO GROUPS ── */
 const CLO_GROUPS = [
   { files:[0,1,2], name:'TEKKONKINKREET', desc:'Hand-painted garments inspired by the aesthetic.\nNo sketch, no transfer.\nThe painting grew from the fabric up.' },
-  { files:[3,4], name:'1ST PLACE', desc:'The very first experience of creation, simply due to the fact that the printing workshop refused to apply a print to the top of the T-shirt.' },
-  { files:[5,6], name:'Bandito Crew · I', desc:'Another full-fledged merch case for the released Twenty One Pilots album.' },
+  { files:[3,4],   name:'1ST PLACE',       desc:'The very first experience of creation, simply due to the fact that the printing workshop refused to apply a print to the top of the T-shirt.' },
+  { files:[5,6],   name:'Bandito Crew · I',desc:'Another full-fledged merch case for the released Twenty One Pilots album.' },
   { files:[7,8,9], name:'Vans OldSchool · II', desc:'Old things are not recyclable - they have a new life.' },
-  { files:[10,11], name:'NARUTO · III', desc:'New nike t-shirt & itachi uchiha collab.\nRestraint in palette, density in application.' },
-  { files:[12], name:'Local Bandito', desc:'A standalone work — singular in approach and execution.\nThis one needed nothing added.' },
+  { files:[10,11], name:'NARUTO · III',    desc:'New nike t-shirt & itachi uchiha collab.\nRestraint in palette, density in application.' },
+  { files:[12],    name:'Local Bandito',   desc:'A standalone work — singular in approach and execution.\nThis one needed nothing added.' },
   { files:[13,14,15], name:'Fairly local · IV', desc:'From creating art by hand,\nto recreating it on clothes and to selling it.' },
-  { files:[16,17], name:'Chlorine · V', desc:'Late series. Restraint where earlier was excess.\nLess surface, more intention.' },
-  { files:[18,19], name:'DATA CL · VI', desc:'Final works in the CLO series.\nWhat remains when the system is exhausted.' }
+  { files:[16,17], name:'Chlorine · V',    desc:'Late series. Restraint where earlier was excess.\nLess surface, more intention.' },
+  { files:[18,19], name:'DATA CL · VI',   desc:'Final works in the CLO series.\nWhat remains when the system is exhausted.' }
 ];
 
 function getCloGroup(idx) {
-  for (const g of CLO_GROUPS) {
-    if (g.files.includes(idx)) return g;
-  }
+  for (const g of CLO_GROUPS) if (g.files.includes(idx)) return g;
   return { files:[idx], name:null, desc:null };
 }
 
 /* ── PROJECTS ── */
+const R = () => Math.round;
 const projects = [
   {
     id:'pilots', year:'2018–2021', name:'PILOTS / HAND DRAWINGS',
     subtitle:'HAND DRAWINGS · 2018–2021',
     desc:'Early studies in line, texture and atmosphere — before digital tools took over. A way of thinking on paper.',
-    files:Array.from({length:14},(_,i)=>({path:`images/assets/create/pilots/pilots${i+1}.webp`,width:Math.round(62+Math.random()*14),height:Math.round(46+Math.random()*16)}))
+    files: Array.from({length:14}, (_,i) => ({path:`images/assets/create/pilots/pilots${i+1}.webp`, width:R()(62+Math.random()*14), height:R()(46+Math.random()*16)}))
   },
   {
     id:'Self-Portrait', year:'2024', name:'NONE OF THEM IS ME',
     subtitle:'SELF-PORTRAIT SERIES · 2024',
     desc:'Exploring the gap between how we see ourselves and how we appear. A study in identity through framing and gesture.\n\nNone of the versions is definitive.',
-    files:Array.from({length:6},(_,i)=>({path:`images/assets/create/portrait/Portrait${i+1}.webp`,width:Math.round(64+Math.random()*12),height:Math.round(82+Math.random()*14)}))
+    files: Array.from({length:6}, (_,i) => ({path:`images/assets/create/portrait/Portrait${i+1}.webp`, width:R()(64+Math.random()*12), height:R()(82+Math.random()*14)}))
   },
   {
     id:'scan', year:'2025–2026', name:'SCAN',
     subtitle:'GRAINS OF THE CITIES',
     desc:'Fragments of urban texture — scanned, layered, recomposed. A visual archive of places in transition.',
-    files:Array.from({length:10},(_,i)=>({path:`images/assets/create/scan/Scan${i+1}.webp`,width:Math.round(66+Math.random()*14),height:Math.round(50+Math.random()*14)}))
+    files: Array.from({length:10}, (_,i) => ({path:`images/assets/create/scan/Scan${i+1}.webp`, width:R()(66+Math.random()*14), height:R()(50+Math.random()*14)}))
   },
   {
-    id:'clo', year:'2021-2023', name:'CLO',
+    id:'clo', year:'2021–2023', name:'CLO',
     subtitle:'CUSTOM CLOTHING',
     desc:'Hand-painted garments as wearable architecture. Material, body and gesture — one surface.',
-    files:Array.from({length:20},(_,i)=>({path:`images/assets/create/clo/cloth${i+1}.webp`,width:Math.round(60+Math.random()*18),height:Math.round(46+Math.random()*16),subproject:i<3?0:i<5?1:2}))
+    files: Array.from({length:20}, (_,i) => ({path:`images/assets/create/clo/cloth${i+1}.webp`, width:R()(60+Math.random()*18), height:R()(46+Math.random()*16)}))
   },
   {
     id:'bti', year:'2022', name:'BEFORE THE IMPACT',
     subtitle:'A diptych in four parts',
     desc:'Silent Horizon explores the moment when an ordinary landscape becomes the stage for an unexpected event.\n\nThe four-frame sequence captures a gradual shift in perception.',
-    files:Array.from({length:4},(_,i)=>({path:`images/assets/create/bti/bti${i+1}.jpg`,width:Math.round(68+Math.random()*14),height:Math.round(50+Math.random()*14)}))
+    files: Array.from({length:4}, (_,i) => ({path:`images/assets/create/bti/bti${i+1}.jpg`, width:R()(68+Math.random()*14), height:R()(50+Math.random()*14)}))
   },
   {
-    id:'BY HAND', year:'2022–2026', name:'BY HAND',
-    subtitle:'PIESES OF ART OF DIFFERENT TIME.',
+    id:'byhand', year:'2022–2026', name:'BY HAND',
+    subtitle:'PIECES OF ART OF DIFFERENT TIME',
     desc:'A constellation of objects, drawings and experiments made over time. No single medium, one continuous curiosity.',
-    files:Array.from({length:10},(_,i)=>({path:`images/assets/create/art/art${i+1}.webp`,width:Math.round(66+Math.random()*14),height:Math.round(50+Math.random()*14)}))
-  },
-  /* ── ARCHIVE / SPACE case study ── */
-  {
-    id:'archive-space',
-    year:'2026',
-    name:'ARCHIVE / SPACE',
-    subtitle:'VISUAL IDENTITY SYSTEM',
-    type:'case',
-    desc:'Visual identity for an architectural archive and cultural institution. Identity as classification infrastructure.',
-    files:[]
+    files: Array.from({length:10}, (_,i) => ({path:`images/assets/create/art/art${i+1}.webp`, width:R()(66+Math.random()*14), height:R()(50+Math.random()*14)}))
   }
 ];
 
+/* ── FLAT IMAGE LIST for global arrows ──
+   CLO: one representative (first of each group) to avoid repeating same group view. */
+const flatImages = [];
+projects.forEach(proj => {
+  if (proj.id === 'clo') {
+    CLO_GROUPS.forEach(g => flatImages.push({ proj, fileIdx: g.files[0] }));
+  } else {
+    proj.files.forEach((f, i) => flatImages.push({ proj, fileIdx: i }));
+  }
+});
+let globalIdx = 0;
+
 /* ── DOM REFS ── */
-const scrollContainer = document.getElementById('scrollContainer');
-const timelineContent = document.getElementById('timelineContent');
-const modal           = document.getElementById('modal');
-const modalContent    = document.getElementById('modalContent');
-const modalImageSection = document.getElementById('modalImageSection');
-const modalSingleView = document.getElementById('modalSingleView');
-const modalMultiView  = document.getElementById('modalMultiView');
-const modalImg        = document.getElementById('modalImg');
-const modalTitle      = document.getElementById('modalTitle');
-const modalSubtitle   = document.getElementById('modalSubtitle');
-const modalDesc       = document.getElementById('modalDesc');
-const modalInfo       = document.getElementById('modalInfo');
-const modalCounter    = document.getElementById('modalCounter');
-const modalClose      = document.getElementById('modalClose');
-const modalPrev       = document.getElementById('modalPrev');
-const modalNext       = document.getElementById('modalNext');
+const scrollContainer   = document.getElementById('scrollContainer');
+const modal             = document.getElementById('modal');
+const modalContent      = document.getElementById('modalContent');
+const modalSingleView   = document.getElementById('modalSingleView');
+const modalMultiView    = document.getElementById('modalMultiView');
+const modalImg          = document.getElementById('modalImg');
+const modalTitle        = document.getElementById('modalTitle');
+const modalSubtitle     = document.getElementById('modalSubtitle');
+const modalDesc         = document.getElementById('modalDesc');
+const modalClose        = document.getElementById('modalClose');
+const modalPrev         = document.getElementById('modalPrev');
+const modalNext         = document.getElementById('modalNext');
+const gPrev             = document.getElementById('gPrev');
+const gNext             = document.getElementById('gNext');
 
 let currentProject  = null;
 let currentImageIdx = 0;
 
-/* ── CURSOR ── */
+/* ── CUSTOM CURSOR ── */
 const curRing  = document.getElementById('cur-ring');
 const curCross = document.getElementById('cur-cross');
-if (window.matchMedia('(hover: hover)').matches) {
+if (window.matchMedia('(hover:hover)').matches) {
   document.addEventListener('mousemove', e => {
-    curRing.style.left  = e.clientX + 'px';
-    curRing.style.top   = e.clientY + 'px';
-    curCross.style.left = e.clientX + 'px';
-    curCross.style.top  = e.clientY + 'px';
+    curRing.style.left  = curCross.style.left = e.clientX + 'px';
+    curRing.style.top   = curCross.style.top  = e.clientY + 'px';
   });
   document.addEventListener('mouseover', e => {
-    if (e.target.closest('a, button, .image-item, .case-clickable')) curRing.classList.add('hover');
+    if (e.target.closest('a,button,.image-item')) curRing.classList.add('hover');
   });
   document.addEventListener('mouseout', e => {
-    if (e.target.closest('a, button, .image-item, .case-clickable')) curRing.classList.remove('hover');
+    if (e.target.closest('a,button,.image-item')) curRing.classList.remove('hover');
   });
 }
 
@@ -702,18 +326,16 @@ if (window.matchMedia('(hover: hover)').matches) {
 function setSingle() {
   modalSingleView.style.display = 'flex';
   modalMultiView.className = 'modal-multi';
-  modalContent.classList.remove('mode-row','mode-case','mode-case-as');
+  modalContent.classList.remove('mode-row');
 }
 function setMulti(mode) {
   modalSingleView.style.display = 'none';
   modalMultiView.className = 'modal-multi show mode-' + mode;
-  if (mode==='row') modalContent.classList.add('mode-row');
-  else modalContent.classList.remove('mode-row');
+  modalContent.classList.toggle('mode-row', mode === 'row');
 }
 function showNav(on) {
-  modalPrev.classList.toggle('off',!on);
-  modalNext.classList.toggle('off',!on);
-  modalCounter.classList.toggle('off',!on);
+  modalPrev.classList.toggle('off', !on);
+  modalNext.classList.toggle('off', !on);
 }
 function setInfo(title, subtitle, desc) {
   modalTitle.textContent    = title    || '';
@@ -725,614 +347,205 @@ function buildMultiImgs(paths) {
   paths.forEach(src => {
     const img = document.createElement('img');
     img.src = src; img.alt = '';
-    img.onerror = ()=>{ img.style.opacity='0.2'; };
+    img.onerror = () => { img.style.opacity = '0.2'; };
     modalMultiView.appendChild(img);
   });
 }
 
-/* ── RESET MODAL STATE ── */
-function resetModal() {
-  modalContent.classList.remove('mode-case','mode-case-as','mode-row');
-  modalContent.style.maxWidth = '';
-  modalImageSection.classList.remove('case-poster');
-  modalImageSection.style.display = '';
-  modalInfo.classList.remove('case-info','as-case-info');
-  modalInfo.style.width = '';
-  modalTitle.textContent = '';
-  modalSubtitle.textContent = '';
-  modalDesc.textContent = '';
-  modalDesc.style.display = '';
-  modalSingleView.style.display = 'flex';
-  modalMultiView.className = 'modal-multi';
-  modalImg.src = '';
-  showNav(false);
-  /* Remove injected poster SVGs */
-  Array.from(modalImageSection.querySelectorAll('svg')).forEach(s => s.remove());
+/* ── GLOBAL ARROWS VISIBILITY ── */
+function setGlobalArrows(on) {
+  gPrev.hidden = !on;
+  gNext.hidden = !on;
 }
 
-/* ── OPEN ARCHIVE/SPACE CASE MODAL ── */
-function openModalCaseArchive(proj) {
-  resetModal();
-  currentProject = proj;
-  modalContent.classList.add('mode-case-as');
-
-  /* Left: poster */
-  modalImageSection.classList.add('case-poster');
-  modalSingleView.style.display = 'none';
-  modalMultiView.className = 'modal-multi';
-  modalImageSection.insertAdjacentHTML('afterbegin', `
-    <svg width="212" viewBox="0 0 212 318" xmlns="http://www.w3.org/2000/svg" style="display:block;border-radius:1px;overflow:hidden;">
-      <rect width="212" height="318" fill="#0F0D0C"/>
-      <!-- grid -->
-      <line x1="0" y1="88" x2="212" y2="88" stroke="#1C1A18" stroke-width="0.5"/>
-      <line x1="0" y1="176" x2="212" y2="176" stroke="#1C1A18" stroke-width="0.5"/>
-      <line x1="70" y1="0" x2="70" y2="318" stroke="#1C1A18" stroke-width="0.5"/>
-      <line x1="140" y1="0" x2="140" y2="318" stroke="#1C1A18" stroke-width="0.5"/>
-      <!-- lime block -->
-      <rect x="0" y="88" width="212" height="88" fill="#C6E832"/>
-      <!-- title in lime block -->
-      <text x="12" y="130" font-family="Barlow,sans-serif" font-size="25" font-weight="900" fill="#0F0D0C" letter-spacing="-0.5">ARCHIVE</text>
-      <text x="12" y="156" font-family="Barlow,sans-serif" font-size="25" font-weight="900" fill="#0F0D0C" letter-spacing="-0.5">/ SPACE</text>
-      <!-- id on lime block -->
-      <text x="12" y="170" font-family="Barlow,sans-serif" font-size="5.5" fill="rgba(0,0,0,.45)" letter-spacing="1.2">AS-2026-IDENTITY</text>
-      <!-- top: classification numbers -->
-      <text x="12" y="24" font-family="Barlow,sans-serif" font-size="6" fill="#2E2A26" letter-spacing="2">CLASSIFICATION</text>
-      <text x="12" y="58" font-family="Barlow,sans-serif" font-size="36" font-weight="900" fill="#C6E832">01</text>
-      <text x="12" y="72" font-family="Barlow,sans-serif" font-size="6" fill="#3A3630" letter-spacing="0.8">ARCHITECTURE</text>
-      <text x="80" y="58" font-family="Barlow,sans-serif" font-size="36" font-weight="900" fill="#232018">02</text>
-      <text x="80" y="72" font-family="Barlow,sans-serif" font-size="6" fill="#2E2A26" letter-spacing="0.8">LANDSCAPE</text>
-      <text x="148" y="58" font-family="Barlow,sans-serif" font-size="36" font-weight="900" fill="#1E1C18">03</text>
-      <text x="148" y="72" font-family="Barlow,sans-serif" font-size="6" fill="#2A2620" letter-spacing="0.8">INTERIOR</text>
-      <!-- badges below lime -->
-      <rect x="12" y="194" width="34" height="13" rx="6.5" fill="#111"/>
-      <text x="29" y="203" font-family="Barlow,sans-serif" font-size="5.5" font-weight="700" fill="#fff" text-anchor="middle" letter-spacing="0.4">ARCH</text>
-      <rect x="52" y="194" width="34" height="13" rx="6.5" fill="#3d4a2e"/>
-      <text x="69" y="203" font-family="Barlow,sans-serif" font-size="5.5" font-weight="700" fill="#a8b89a" text-anchor="middle" letter-spacing="0.4">LAND</text>
-      <rect x="92" y="194" width="26" height="13" rx="6.5" fill="#1e3d8f"/>
-      <text x="105" y="203" font-family="Barlow,sans-serif" font-size="5.5" font-weight="700" fill="#b8ccf5" text-anchor="middle" letter-spacing="0.4">INT</text>
-      <rect x="124" y="194" width="30" height="13" rx="6.5" fill="#555"/>
-      <text x="139" y="203" font-family="Barlow,sans-serif" font-size="5.5" font-weight="700" fill="#ccc" text-anchor="middle" letter-spacing="0.4">URB</text>
-      <rect x="160" y="194" width="40" height="13" rx="6.5" fill="#b03060"/>
-      <text x="180" y="203" font-family="Barlow,sans-serif" font-size="4.5" font-weight="700" fill="#ffd6ea" text-anchor="middle" letter-spacing="0.3">PLAYGROUND</text>
-      <!-- id system examples -->
-      <text x="12" y="228" font-family="Courier New,monospace" font-size="5.5" fill="#2A2620">AS-2026-001 / ARCH / 01 / PLAN</text>
-      <text x="12" y="240" font-family="Courier New,monospace" font-size="5.5" fill="#222018">AS-2026-002 / LAND / 03 / ELEVATION</text>
-      <text x="12" y="252" font-family="Courier New,monospace" font-size="5.5" fill="#1E1C18">AS-2026-003 / INT  / 05 / SECTION</text>
-      <!-- divider -->
-      <rect x="12" y="263" width="188" height="0.5" fill="#C6E832" opacity=".4"/>
-      <!-- bottom -->
-      <text x="12" y="278" font-family="Barlow,sans-serif" font-size="6.5" fill="#2E2A26" letter-spacing="1.5">VISUAL IDENTITY</text>
-      <text x="12" y="292" font-family="Barlow,sans-serif" font-size="6" fill="#252220" letter-spacing="0.6">Architectural archive &amp; cultural institution</text>
-      <!-- bottom bar -->
-      <rect x="0" y="304" width="212" height="14" fill="#C6E832"/>
-      <text x="12" y="314" font-family="Barlow,sans-serif" font-size="6.5" font-weight="700" fill="#0F0D0C" letter-spacing="1.5">ART DIRECTION · 2026</text>
-    </svg>
-  `);
-
-  /* Right: rich info */
-  modalInfo.classList.add('as-case-info');
-  modalInfo.innerHTML = `
-    <span class="case-label">Visual identity · 2026</span>
-
-    <div style="font-size:22px;font-weight:900;letter-spacing:-.02em;color:#f5f5f5;line-height:1;margin-bottom:2px;">ARCHIVE</div>
-    <div style="font-size:22px;font-weight:900;letter-spacing:-.02em;color:#C6E832;line-height:1;margin-bottom:8px;">/ SPACE</div>
-    <div style="font-size:8px;color:#444;letter-spacing:.1em;text-transform:uppercase;margin-bottom:14px;">Architectural archive &amp; cultural institution</div>
-
-    <div>
-      <span class="case-tag">Art direction</span>
-      <span class="case-tag">Concept development</span>
-      <span class="case-tag">Visual system design</span>
-    </div>
-
-    <div class="case-rule full"></div>
-
-    <span class="case-label">01 · Challenge</span>
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:8px;">
-      <div style="border:1px solid rgba(255,255,255,.06);border-radius:2px;padding:9px;">
-        <div style="font-size:7px;color:#555;margin-bottom:4px;letter-spacing:.05em;">↗ avoid</div>
-        <div style="font-size:10px;font-weight:700;color:#888;margin-bottom:3px;line-height:1.3;">Museum of 2000s</div>
-        <div style="font-size:8px;color:#444;line-height:1.4;">Decorative, nostalgic, heavy</div>
-      </div>
-      <div style="border:1px solid rgba(255,255,255,.06);border-radius:2px;padding:9px;">
-        <div style="font-size:7px;color:#555;margin-bottom:4px;letter-spacing:.05em;">↗ avoid</div>
-        <div style="font-size:10px;font-weight:700;color:#888;margin-bottom:3px;line-height:1.3;">Art festival</div>
-        <div style="font-size:8px;color:#444;line-height:1.4;">Expressive, chaotic</div>
-      </div>
-      <div style="border:1px solid rgba(198,232,50,.28);border-radius:2px;padding:9px;background:rgba(198,232,50,.04);">
-        <div style="font-size:7px;color:#C6E832;margin-bottom:4px;letter-spacing:.05em;">✓ target</div>
-        <div style="font-size:10px;font-weight:700;color:#C6E832;margin-bottom:3px;line-height:1.3;">A system</div>
-        <div style="font-size:8px;color:#5a6a20;line-height:1.4;">Functional, precise, scalable</div>
-      </div>
-    </div>
-
-    <div class="case-rule full"></div>
-
-    <span class="case-label">02 · Concept</span>
-    <div style="background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.06);border-radius:2px;padding:12px;margin-top:8px;">
-      <div style="font-size:12px;font-weight:700;color:#e8e8e8;margin-bottom:10px;">Identity as cataloging system</div>
-      <div class="case-steps">
-        <div class="case-step"><span class="case-step-num">—</span><div class="case-step-text">Every object is a storage unit — assigned a position, identifier, and category</div></div>
-        <div class="case-step"><span class="case-step-num">—</span><div class="case-step-text">Everything has an ID — numbering is the primary communication tool</div></div>
-        <div class="case-step"><span class="case-step-num">—</span><div class="case-step-text">Visual = not decoration, but structure — typography navigates, grid orders</div></div>
-        <div class="case-step"><span class="case-step-num">—</span><div class="case-step-text">The identity is infrastructure, not expression</div></div>
-      </div>
-    </div>
-
-    <div class="case-rule full"></div>
-
-    <span class="case-label">03 · Classification system &nbsp;<span style="font-size:7px;padding:2px 7px;border:1px solid rgba(176,48,32,.4);border-radius:20px;color:#B03020;letter-spacing:.06em;text-transform:uppercase;display:inline;">Made in Figma</span></span>
-    <table style="width:100%;border-collapse:collapse;margin-top:10px;">
-      <thead>
-        <tr>
-          <th style="font-size:7px;text-transform:uppercase;letter-spacing:.1em;color:#333;text-align:left;padding:0 0 7px;font-weight:400;">Category</th>
-          <th style="font-size:7px;text-transform:uppercase;letter-spacing:.1em;color:#333;text-align:left;padding:0 0 7px;font-weight:400;">Code</th>
-          <th style="font-size:7px;text-transform:uppercase;letter-spacing:.1em;color:#333;text-align:right;padding:0 0 7px;font-weight:400;">Index</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td style="font-size:10px;padding:5px 0;border-top:1px solid rgba(255,255,255,.04);color:#888;">Architecture</td>
-          <td style="padding:5px 0;border-top:1px solid rgba(255,255,255,.04);"><span style="display:inline-flex;align-items:center;justify-content:center;padding:2px 9px;border-radius:20px;font-size:8px;font-weight:700;background:#111;color:#fff;letter-spacing:.05em;">ARCH</span></td>
-          <td style="font-size:10px;color:#333;border-top:1px solid rgba(255,255,255,.04);text-align:right;">01</td>
-        </tr>
-        <tr>
-          <td style="font-size:10px;padding:5px 0;border-top:1px solid rgba(255,255,255,.04);color:#888;">Landscape</td>
-          <td style="padding:5px 0;border-top:1px solid rgba(255,255,255,.04);"><span style="display:inline-flex;align-items:center;justify-content:center;padding:2px 9px;border-radius:20px;font-size:8px;font-weight:700;background:#3d4a2e;color:#a8b89a;letter-spacing:.05em;">LAND</span></td>
-          <td style="font-size:10px;color:#333;border-top:1px solid rgba(255,255,255,.04);text-align:right;">02</td>
-        </tr>
-        <tr>
-          <td style="font-size:10px;padding:5px 0;border-top:1px solid rgba(255,255,255,.04);color:#888;">Interior</td>
-          <td style="padding:5px 0;border-top:1px solid rgba(255,255,255,.04);"><span style="display:inline-flex;align-items:center;justify-content:center;padding:2px 9px;border-radius:20px;font-size:8px;font-weight:700;background:#1e3d8f;color:#b8ccf5;letter-spacing:.05em;">INT</span></td>
-          <td style="font-size:10px;color:#333;border-top:1px solid rgba(255,255,255,.04);text-align:right;">03</td>
-        </tr>
-        <tr>
-          <td style="font-size:10px;padding:5px 0;border-top:1px solid rgba(255,255,255,.04);color:#888;">Urbanism</td>
-          <td style="padding:5px 0;border-top:1px solid rgba(255,255,255,.04);"><span style="display:inline-flex;align-items:center;justify-content:center;padding:2px 9px;border-radius:20px;font-size:8px;font-weight:700;background:#555;color:#ccc;letter-spacing:.05em;">URB</span></td>
-          <td style="font-size:10px;color:#333;border-top:1px solid rgba(255,255,255,.04);text-align:right;">04</td>
-        </tr>
-        <tr>
-          <td style="font-size:10px;padding:5px 0;border-top:1px solid rgba(255,255,255,.04);color:#888;">Playground / Masterclass</td>
-          <td style="padding:5px 0;border-top:1px solid rgba(255,255,255,.04);"><span style="display:inline-flex;align-items:center;justify-content:center;padding:2px 7px;border-radius:20px;font-size:7px;font-weight:700;background:#b03060;color:#ffd6ea;letter-spacing:.04em;line-height:1.2;text-align:center;">PLAY<br>GROUND</span></td>
-          <td style="font-size:10px;color:#333;border-top:1px solid rgba(255,255,255,.04);text-align:right;">05</td>
-        </tr>
-        <tr>
-          <td style="font-size:10px;padding:5px 0;border-top:1px solid rgba(255,255,255,.04);color:#888;">Archive</td>
-          <td style="padding:5px 0;border-top:1px solid rgba(255,255,255,.04);"><span style="display:inline-flex;align-items:center;justify-content:center;padding:2px 9px;border-radius:20px;font-size:8px;font-weight:700;background:#2a2a2a;color:#C6E832;letter-spacing:.05em;">ARCHIVE</span></td>
-          <td style="font-size:10px;color:#333;border-top:1px solid rgba(255,255,255,.04);text-align:right;">06</td>
-        </tr>
-      </tbody>
-    </table>
-
-    <div class="case-rule full"></div>
-
-    <span class="case-label">04 · ID system</span>
-    <div style="font-family:'Courier New',monospace;font-size:9px;color:#555;line-height:2;margin-top:8px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.05);border-radius:2px;padding:10px 12px;">
-      <span style="color:#C6E832;">AS-2026-001</span><span style="color:#333;"> / </span>ARCH<span style="color:#333;"> / </span>01<span style="color:#333;"> / </span>PLAN<br>
-      <span style="color:#C6E832;">AS-2026-002</span><span style="color:#333;"> / </span>LAND<span style="color:#333;"> / </span>03<span style="color:#333;"> / </span>ELEVATION<br>
-      <span style="color:#C6E832;">AS-2026-003</span><span style="color:#333;"> / </span>INT &nbsp;<span style="color:#333;"> / </span>05<span style="color:#333;"> / </span>SECTION<br>
-      <span style="color:#2a2a2a;">AS-YYYY-XXX / CAT / IDX / TYPE</span>
-    </div>
-
-    <div class="case-rule full"></div>
-
-    <span class="case-label">05 · Applications</span>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px;">
-      <div style="border:1px solid rgba(255,255,255,.06);border-radius:2px;padding:10px;">
-        <div style="font-size:7px;color:#333;margin-bottom:4px;letter-spacing:.04em;">A</div>
-        <div style="font-size:10px;font-weight:700;color:#bbb;margin-bottom:4px;line-height:1.3;">Website interface</div>
-        <div style="font-size:9px;color:#555;line-height:1.5;">Database-style list. Category codes + numbers as primary navigation layer.</div>
-        <div style="margin-top:7px;font-size:7px;padding:2px 7px;border:1px solid rgba(255,255,255,.1);border-radius:20px;color:#444;display:inline-block;letter-spacing:.06em;">AI visualized</div>
-      </div>
-      <div style="border:1px solid rgba(255,255,255,.06);border-radius:2px;padding:10px;">
-        <div style="font-size:7px;color:#333;margin-bottom:4px;letter-spacing:.04em;">B</div>
-        <div style="font-size:10px;font-weight:700;color:#bbb;margin-bottom:4px;line-height:1.3;">Classification badges</div>
-        <div style="font-size:9px;color:#555;line-height:1.5;">Category pills, 3D cube icons, color-coded tags. The core visual unit.</div>
-        <div style="margin-top:7px;font-size:7px;padding:2px 7px;border:1px solid rgba(176,48,32,.4);border-radius:20px;color:#B03020;display:inline-block;letter-spacing:.06em;">Made in Figma</div>
-      </div>
-      <div style="border:1px solid rgba(255,255,255,.06);border-radius:2px;padding:10px;">
-        <div style="font-size:7px;color:#333;margin-bottom:4px;letter-spacing:.04em;">C</div>
-        <div style="font-size:10px;font-weight:700;color:#bbb;margin-bottom:4px;line-height:1.3;">Exhibition signage</div>
-        <div style="font-size:9px;color:#555;line-height:1.5;">Physical labeling. Wayfinding on arches and walls. Identity guides movement in space.</div>
-        <div style="margin-top:7px;font-size:7px;padding:2px 7px;border:1px solid rgba(255,255,255,.1);border-radius:20px;color:#444;display:inline-block;letter-spacing:.06em;">AI visualized</div>
-      </div>
-      <div style="border:1px solid rgba(255,255,255,.06);border-radius:2px;padding:10px;">
-        <div style="font-size:7px;color:#333;margin-bottom:4px;letter-spacing:.04em;">D</div>
-        <div style="font-size:10px;font-weight:700;color:#bbb;margin-bottom:4px;line-height:1.3;">Merchandise & print</div>
-        <div style="font-size:9px;color:#555;line-height:1.5;">Tote bags, notebooks, ID cards carrying category codes and numbers.</div>
-        <div style="margin-top:7px;font-size:7px;padding:2px 7px;border:1px solid rgba(255,255,255,.1);border-radius:20px;color:#444;display:inline-block;letter-spacing:.06em;">AI visualized</div>
-      </div>
-    </div>
-
-    <div class="case-rule full"></div>
-
-    <span class="case-label">06 · The Space — Playground & Classroom</span>
-    <div style="display:flex;flex-direction:column;gap:0;margin-top:8px;">
-      <div style="padding:10px 0;border-bottom:1px solid rgba(255,255,255,.05);">
-        <div style="font-size:7px;color:#C6E832;margin-bottom:4px;letter-spacing:.1em;text-transform:uppercase;">01 — Archive mode</div>
-        <div style="font-size:10px;font-weight:700;color:#aaa;margin-bottom:5px;">Physical storage as identity</div>
-        <div style="font-size:9px;color:#555;line-height:1.65;">Color-coded shelving units carry the full classification system into physical space. Every compartment is labeled, every shelf is indexed. Navigation becomes tactile — the visitor moves through the collection the way a cursor moves through a database.</div>
-      </div>
-      <div style="padding:10px 0;border-bottom:1px solid rgba(255,255,255,.05);">
-        <div style="font-size:7px;color:#C6E832;margin-bottom:4px;letter-spacing:.1em;text-transform:uppercase;">02 — Workshop mode</div>
-        <div style="font-size:10px;font-weight:700;color:#aaa;margin-bottom:5px;">Numbered workstations</div>
-        <div style="font-size:9px;color:#555;line-height:1.65;">Stations 001 / 002 / 003 distribute materials and tools across a systematic grid. Each workstation is an indexed unit in the catalog — structured, navigable, retrievable. The learning environment operates like the archive it studies.</div>
-      </div>
-      <div style="padding:10px 0;">
-        <div style="font-size:7px;color:#C6E832;margin-bottom:4px;letter-spacing:.1em;text-transform:uppercase;">03 — Stage mode</div>
-        <div style="font-size:10px;font-weight:700;color:#aaa;margin-bottom:5px;">Projection as architecture</div>
-        <div style="font-size:9px;color:#555;line-height:1.65;">An overhead projector casts floor plans and spatial layouts directly onto the floor — light defining the geometry of potential rooms. No walls, no material: only light and plan. Participants sit within these projected boundaries, inhabiting the layouts of buildings before they exist in matter. The masterclass becomes a theatrical act. The classification system stops being a label and becomes the space itself — architecture experienced as light, shadow, and plan.</div>
-      </div>
-    </div>
-
-    <div class="case-rule full"></div>
-
-    <span class="case-label">07 · Architect → Art Director</span>
-    <div style="border-left:1px solid rgba(198,232,50,.5);padding-left:10px;margin-top:8px;">
-      <p style="font-size:10px;line-height:1.75;color:#666;">This project didn't ask me to stop thinking like an architect — it asked me to apply that thinking to a different material. Classification systems, spatial grids, inventory logic, wayfinding: these are architectural problems. Translating them into a visual identity system felt like a natural extension rather than a departure.</p>
-      <p style="font-size:10px;line-height:1.75;color:#555;margin-top:7px;">The categories, color logic, and numbering system were designed in Figma. Exhibition and web visualizations were generated with AI to communicate spatial application — the system itself came first.</p>
-    </div>
-    <div style="margin-top:14px;font-size:9px;line-height:1.65;color:#3a3630;border-left:1px solid rgba(198,232,50,.2);padding-left:10px;">
-      The idea of systematization came from several sources: archival cards of museum collections, library classification, building plans, and drawings. Each object receives a unique identifier and a place in the system.
-    </div>
-  `;
-
-  showNav(false);
-  modal.classList.add('active');
-}
-
-/* ── OPEN CASE STUDY MODAL: ОСТАТОК ── */
-function openModalCaseOstatok(proj) {
-  resetModal();
-  currentProject = proj;
-  modalContent.classList.add('mode-case');
-
-  modalImageSection.classList.add('case-poster');
-  modalSingleView.style.display = 'none';
-  modalMultiView.className = 'modal-multi';
-  modalImageSection.insertAdjacentHTML('afterbegin', `
-    <svg width="212" viewBox="0 0 212 318" xmlns="http://www.w3.org/2000/svg" style="display:block;border-radius:2px;overflow:hidden;">
-      <rect width="212" height="318" fill="#0F0D0C"/>
-      <rect x="12" y="38" width="11" height="240" fill="#1E1A18" opacity=".9"/>
-      <rect x="27" y="24" width="8"  height="255" fill="#221E1B" opacity=".8"/>
-      <rect x="39" y="52" width="15" height="220" fill="#1A1714"/>
-      <rect x="58" y="18" width="10" height="262" fill="#252119" opacity=".9"/>
-      <rect x="72" y="36" width="7"  height="244" fill="#1A1714"/>
-      <rect x="82" y="12" width="20" height="270" fill="#2D2925" opacity=".85"/>
-      <rect x="106" y="28" width="9" height="252" fill="#231F1C"/>
-      <rect x="120" y="44" width="13" height="232" fill="#1E1A17"/>
-      <rect x="137" y="22" width="10" height="258" fill="#262220" opacity=".9"/>
-      <rect x="151" y="48" width="14" height="225" fill="#201D1A"/>
-      <rect x="170" y="32" width="9"  height="248" fill="#2A2622"/>
-      <rect x="184" y="18" width="15" height="264" fill="#1E1A18"/>
-      <rect x="0" y="124" width="212" height="1" fill="#B03020" opacity=".65"/>
-      <rect x="0" y="172" width="212" height="1" fill="#7A6F68" opacity=".3"/>
-      <rect x="0" y="48"  width="212" height="1" fill="#F0EBE3" opacity=".05"/>
-      <rect x="0" y="82"  width="212" height="1" fill="#F0EBE3" opacity=".04"/>
-      <rect x="0" y="200" width="212" height="1" fill="#F0EBE3" opacity=".05"/>
-      <rect x="0" y="244" width="212" height="1" fill="#B03020" opacity=".22"/>
-      <rect x="38"  y="148" width="50"  height="3" fill="#0F0D0C" opacity=".8"/>
-      <rect x="95"  y="148" width="40"  height="3" fill="#1E1A18" opacity=".6"/>
-      <rect x="0"   y="208" width="75"  height="2" fill="#0F0D0C" opacity=".6"/>
-      <rect x="80"  y="208" width="132" height="2" fill="#1E1A18" opacity=".5"/>
-      <rect x="12"  y="124" width="25" height="1" fill="#B03020"/>
-      <rect x="112" y="244" width="40" height="1" fill="#B03020"/>
-      <rect x="12" y="282" width="188" height="1" fill="#B03020" opacity=".7"/>
-      <text x="12"  y="296" font-family="Barlow,sans-serif" font-size="9" font-weight="700" fill="#F0EBE3" letter-spacing="2">ОСТАТОК</text>
-      <text x="12"  y="308" font-family="Barlow,sans-serif" font-size="7" fill="#5A5048" letter-spacing="3">RESIDUE · 2025</text>
-      <text x="12"  y="22"  font-family="Barlow,sans-serif" font-size="6" fill="#5A5048" letter-spacing="3">EXHIBITION CONCEPT</text>
-    </svg>
-  `);
-
-  modalInfo.classList.add('case-info');
-  modalInfo.innerHTML = `
-  <span class="case-label">Art direction — self-initiated · 2025</span>
-  <div style="font-size:22px;font-weight:900;letter-spacing:-.01em;color:#f5f5f5;line-height:1;margin-bottom:4px;">ОСТАТОК</div>
-  <div style="font-size:8px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#B03020;">RESIDUE</div>
-  <div class="case-rule"></div>
-  <span class="case-tag">Exhibition concept</span>
-  <span class="case-tag">Visual system</span>
-  <span class="case-tag">Art direction</span>
-  <div class="case-rule full"></div>
-  <span class="case-label">Brief (hypothetical)</span>
-  <p class="case-body">Independent curatorial group preparing a group exhibition on urban memory. The task — develop a visual identity that works across exhibition, editorial and digital formats, without competing with the artworks.</p>
-  <p class="case-body" style="margin-top:6px;"><strong>Challenge:</strong> avoid generic "contemporary art" aesthetics and build a system that behaves like an archive rather than branding.</p>
-  <div class="case-rule full"></div>
-  <span class="case-label">Concept</span>
-  <p class="case-body">The city is treated not as an image, but as a <strong>data surface</strong>.</p>
-  <p class="case-body" style="margin-top:6px;">Identity borrows from scanning artifacts: horizontal noise, compression errors, fragmented geometry.</p>
-  <p class="case-body" style="margin-top:6px;">→ the system records rather than decorates</p>
-  <div class="case-rule full"></div>
-  <span class="case-label">System rules</span>
-  <div class="case-steps">
-    <div class="case-step"><span class="case-step-num">01</span><div class="case-step-text"><strong>Color logic</strong>Black / white — base layer. Red — only appears as disruption, never decoration.</div></div>
-    <div class="case-step"><span class="case-step-num">02</span><div class="case-step-text"><strong>Typography</strong>Cyrillic and Latin are equal. No hierarchy based on language.</div></div>
-    <div class="case-step"><span class="case-step-num">03</span><div class="case-step-text"><strong>Composition</strong>Strict grid + controlled breaks. Visual "errors" are designed, not random.</div></div>
-    <div class="case-step"><span class="case-step-num">04</span><div class="case-step-text"><strong>Image behavior</strong>No decorative imagery. All visuals behave like scans or traces.</div></div>
-  </div>
-  <div class="case-rule full"></div>
-  <span class="case-label">Application logic</span>
-  <p class="case-body">The system scales depending on context:</p>
-  <p class="case-body" style="margin-top:6px;"><strong>Poster</strong> — maximum distortion, attention point<br><strong>Editorial</strong> — reduced noise, readability<br><strong>Digital</strong> — modular fragments of the system</p>
-  <div class="case-rule full"></div>
-  <span class="case-label">Role</span>
-  <p class="case-body">Art direction, concept development, visual system design.</p>
-  <p class="case-note">Self-initiated project. Built as a system, not a set of visuals.</p>
-  `;
-
-  showNav(false);
-  modal.classList.add('active');
-}
-
-/* ── ROUTE CASE MODALS ── */
-function openModalCase(proj) {
-  if (proj.id === 'archive-space') {
-    openModalCaseArchive(proj);
-    return;
-  }
-  if (proj.id === 'ostatok') {
-    openModalCaseOstatok(proj);
-    return;
-  }
-}
-
-/* ── OPEN MODAL (main entry) ── */
+/* ── OPEN MODAL ── */
 function openModal(proj, fileIdx) {
-  resetModal();
+  // Sync global index
+  if (proj.id === 'clo') {
+    const g = getCloGroup(fileIdx);
+    const fi = flatImages.findIndex(e => e.proj === proj && e.fileIdx === g.files[0]);
+    if (fi !== -1) globalIdx = fi;
+  } else {
+    const fi = flatImages.findIndex(e => e.proj === proj && e.fileIdx === fileIdx);
+    if (fi !== -1) globalIdx = fi;
+  }
+
   currentProject  = proj;
   currentImageIdx = fileIdx;
 
-  if (proj.type === 'case') {
-    openModalCase(proj);
-    return;
-  }
+  // Reset
+  modalContent.classList.remove('mode-row');
+  modalSingleView.style.display = 'flex';
+  modalMultiView.className = 'modal-multi';
 
   if (proj.id === 'Self-Portrait') {
     setMulti('collage');
     showNav(false);
-    buildMultiImgs(proj.files.map(f=>f.path));
+    buildMultiImgs(proj.files.map(f => f.path));
     setInfo(proj.name, proj.subtitle, proj.desc);
 
   } else if (proj.id === 'bti') {
     setMulti('row');
     showNav(false);
-    buildMultiImgs(proj.files.map(f=>f.path));
+    buildMultiImgs(proj.files.map(f => f.path));
     setInfo(proj.name, proj.subtitle, proj.desc);
 
   } else if (proj.id === 'clo') {
     const group = getCloGroup(fileIdx);
-    setInfo(proj.name, group.name||proj.subtitle, group.desc||proj.desc);
-    if (group.files.length===1) {
+    setInfo(proj.name, group.name || proj.subtitle, group.desc || proj.desc);
+    if (group.files.length === 1) {
       setSingle();
       modalImg.src = proj.files[fileIdx].path;
     } else {
       setMulti('group');
-      buildMultiImgs(group.files.map(i=>proj.files[i].path));
+      buildMultiImgs(group.files.map(i => proj.files[i].path));
     }
     showNav(true);
-    const gIdx = CLO_GROUPS.findIndex(g=>g.files.includes(fileIdx));
-    modalCounter.textContent = `${gIdx+1} / ${CLO_GROUPS.length}`;
 
   } else {
     setSingle();
     modalImg.src = proj.files[fileIdx].path;
     showNav(true);
-    modalCounter.textContent = `${fileIdx+1} / ${proj.files.length}`;
     setInfo(proj.name, proj.subtitle, proj.desc);
   }
 
+  setGlobalArrows(false);
   modal.classList.add('active');
+  modal.setAttribute('aria-hidden', 'false');
+}
+
+function closeModal() {
+  modal.classList.remove('active');
+  modal.setAttribute('aria-hidden', 'true');
+  setGlobalArrows(true);
 }
 
 function navSingle(dir) {
-  if (!currentProject||!currentProject.files.length) return;
-  currentImageIdx=(currentImageIdx+dir+currentProject.files.length)%currentProject.files.length;
-  modalImg.src=currentProject.files[currentImageIdx].path;
-  modalCounter.textContent=`${currentImageIdx+1} / ${currentProject.files.length}`;
+  if (!currentProject?.files.length) return;
+  currentImageIdx = (currentImageIdx + dir + currentProject.files.length) % currentProject.files.length;
+  modalImg.src = currentProject.files[currentImageIdx].path;
 }
 
 function navClo(dir) {
-  const gIdx=CLO_GROUPS.findIndex(g=>g.files.includes(currentImageIdx));
-  const nextIdx=(gIdx+dir+CLO_GROUPS.length)%CLO_GROUPS.length;
-  const nextGroup=CLO_GROUPS[nextIdx];
-  currentImageIdx=nextGroup.files[0];
-  openModal(currentProject,currentImageIdx);
+  const gIdx  = CLO_GROUPS.findIndex(g => g.files.includes(currentImageIdx));
+  const nIdx  = (gIdx + dir + CLO_GROUPS.length) % CLO_GROUPS.length;
+  currentImageIdx = CLO_GROUPS[nIdx].files[0];
+  openModal(currentProject, currentImageIdx);
 }
 
-modalClose.onclick = () => modal.classList.remove('active');
-modal.onclick      = e => { if (e.target===modal) modal.classList.remove('active'); };
-modalPrev.onclick  = () => currentProject?.id==='clo'?navClo(-1):navSingle(-1);
-modalNext.onclick  = () => currentProject?.id==='clo'?navClo(+1):navSingle(+1);
+/* ── GLOBAL IMAGE STEP ── */
+function globalStep(dir) {
+  if (!flatImages.length) return;
+  globalIdx = (globalIdx + dir + flatImages.length) % flatImages.length;
+  openModal(flatImages[globalIdx].proj, flatImages[globalIdx].fileIdx);
+}
+
+/* ── EVENT LISTENERS ── */
+modalClose.onclick = closeModal;
+modal.onclick = e => { if (e.target === modal) closeModal(); };
+modalPrev.onclick  = () => currentProject?.id === 'clo' ? navClo(-1)  : navSingle(-1);
+modalNext.onclick  = () => currentProject?.id === 'clo' ? navClo(+1)  : navSingle(+1);
+gPrev.onclick      = () => globalStep(-1);
+gNext.onclick      = () => globalStep(+1);
+
 document.addEventListener('keydown', e => {
-  if (!modal.classList.contains('active')) return;
-  if (e.key==='Escape') modal.classList.remove('active');
-  if (e.key==='ArrowLeft'  && !modalPrev.classList.contains('off'))
-    currentProject?.id==='clo'?navClo(-1):navSingle(-1);
-  if (e.key==='ArrowRight' && !modalNext.classList.contains('off'))
-    currentProject?.id==='clo'?navClo(+1):navSingle(+1);
+  const modalOpen = modal.classList.contains('active');
+  if (e.key === 'Escape' && modalOpen) { closeModal(); return; }
+  if (e.key === 'ArrowLeft')  { modalOpen ? (currentProject?.id==='clo'?navClo(-1):navSingle(-1)) : globalStep(-1); }
+  if (e.key === 'ArrowRight') { modalOpen ? (currentProject?.id==='clo'?navClo(+1):navSingle(+1)) : globalStep(+1); }
 });
 
-/* ── MINI POSTER: ARCHIVE/SPACE ── */
-const AS_MINI_POSTER_SVG = `
-<svg width="84" height="126" viewBox="0 0 84 126" xmlns="http://www.w3.org/2000/svg">
-  <rect width="84" height="126" fill="#0F0D0C"/>
-  <line x1="0" y1="42" x2="84" y2="42" stroke="#1A1A1A" stroke-width="0.5"/>
-  <line x1="0" y1="84" x2="84" y2="84" stroke="#1A1A1A" stroke-width="0.5"/>
-  <line x1="28" y1="0" x2="28" y2="126" stroke="#1A1A1A" stroke-width="0.5"/>
-  <line x1="56" y1="0" x2="56" y2="126" stroke="#1A1A1A" stroke-width="0.5"/>
-  <rect x="0" y="42" width="84" height="42" fill="#C6E832"/>
-  <text x="6" y="68" font-family="Barlow,sans-serif" font-size="11" font-weight="900" fill="#0F0D0C" letter-spacing="-0.3">ARCHIVE</text>
-  <text x="6" y="80" font-family="Barlow,sans-serif" font-size="8" font-weight="900" fill="rgba(0,0,0,.45)" letter-spacing="-0.2">/ SPACE</text>
-  <text x="6" y="22" font-family="Barlow,sans-serif" font-size="18" font-weight="900" fill="#C6E832">01</text>
-  <text x="6" y="32" font-family="Barlow,sans-serif" font-size="5" fill="#2E2A26" letter-spacing="0.8">ARCH</text>
-  <text x="36" y="22" font-family="Barlow,sans-serif" font-size="18" font-weight="900" fill="#1E1C18">02</text>
-  <text x="36" y="32" font-family="Barlow,sans-serif" font-size="5" fill="#242018" letter-spacing="0.8">LAND</text>
-  <rect x="6" y="94" width="22" height="11" rx="5.5" fill="#111"/>
-  <text x="17" y="102" font-family="Barlow,sans-serif" font-size="5" font-weight="700" fill="#fff" text-anchor="middle" letter-spacing="0.3">ARCH</text>
-  <rect x="32" y="94" width="22" height="11" rx="5.5" fill="#3d4a2e"/>
-  <text x="43" y="102" font-family="Barlow,sans-serif" font-size="5" font-weight="700" fill="#a8b89a" text-anchor="middle" letter-spacing="0.3">LAND</text>
-  <rect x="58" y="94" width="20" height="11" rx="5.5" fill="#1e3d8f"/>
-  <text x="68" y="102" font-family="Barlow,sans-serif" font-size="5" font-weight="700" fill="#b8ccf5" text-anchor="middle" letter-spacing="0.3">INT</text>
-  <text x="6" y="118" font-family="Barlow,sans-serif" font-size="5" fill="#242018" letter-spacing="0.8">AS-2026</text>
-  <rect x="0" y="121" width="84" height="5" fill="#C6E832"/>
-</svg>`;
+/* ── MIDDLE-CLICK DRAG ── */
+scrollContainer.addEventListener('mousedown', e => {
+  if (e.button !== 1) return;
+  e.preventDefault();
+  const startX = e.clientX + scrollContainer.scrollLeft;
+  const onMove = mv => { scrollContainer.scrollLeft = startX - mv.clientX; };
+  const onUp   = () => { document.removeEventListener('mousemove', onMove); document.removeEventListener('mouseup', onUp); };
+  document.addEventListener('mousemove', onMove);
+  document.addEventListener('mouseup', onUp);
+});
 
 /* ── BUILD SCROLL CONTAINER ── */
 function buildScrollContainer() {
   scrollContainer.innerHTML = '';
-  const PER_COL = 7;
-  const isMobile = window.innerWidth <= 768;
 
-  projects.forEach((proj, projIdx) => {
-    const group    = document.createElement('div');
-    group.className = 'project-group';
-    const colCount = proj.files.length > 0 ? Math.ceil(proj.files.length/PER_COL) : 1;
+  const isMobile   = window.innerWidth <= 768;
+  const COL_W      = isMobile ? Math.round(window.innerWidth / 2.5) : 100;
+  const PER_COL    = 7;
+  const WITHIN_G   = isMobile ? 4  : 8;
+  const BETWEEN_G  = isMobile ? 14 : 48;
+  const LEFT_PAD   = isMobile ? 10 : 24;
 
-    for (let col=0; col<colCount; col++) {
-      const column     = document.createElement('div');
+  let firstCol   = true;
+  let prevProjId = null;
+
+  projects.forEach(proj => {
+    const colCount = Math.max(1, Math.ceil(proj.files.length / PER_COL));
+
+    for (let col = 0; col < colCount; col++) {
+      const column = document.createElement('div');
       column.className = 'column';
       column.dataset.projId = proj.id;
-      if (col===0) column.classList.add('group-start');
+      column.style.width = COL_W + 'px';
 
-      if (proj.type==='case') {
-        column.classList.add('case-clickable');
-        if (proj.id === 'archive-space') column.classList.add('as-case');
-        column.onclick = () => openModalCase(proj);
-      }
+      // Horizontal margin
+      column.style.marginLeft = firstCol
+        ? LEFT_PAD + 'px'
+        : (proj.id === prevProjId ? WITHIN_G : BETWEEN_G) + 'px';
+      if (firstCol) firstCol = false;
+      prevProjId = proj.id;
 
-      if (col===0) {
+      // Header (first column of each project)
+      if (col === 0) {
         const hdr = document.createElement('div');
         hdr.className = 'column-header';
-        hdr.innerHTML = `
-          <div class="column-year">${proj.year}</div>
-          <div class="column-title">${proj.name}</div>
-          ${proj.subtitle ? `<div class="column-subtitle">${proj.subtitle}</div>` : ''}
-        `;
+        hdr.innerHTML =
+          `<div class="column-year">${proj.year}</div>` +
+          `<div class="column-title">${proj.name}</div>` +
+          (proj.subtitle ? `<div class="column-subtitle">${proj.subtitle}</div>` : '');
         column.appendChild(hdr);
-
-        if (proj.type==='case') {
-          const poster = document.createElement('div');
-          poster.className = 'case-mini-poster';
-          if (proj.id === 'archive-space') {
-            poster.classList.add('as-poster');
-            poster.innerHTML = AS_MINI_POSTER_SVG;
-          } else {
-            poster.innerHTML = MINI_POSTER_SVG;
-          }
-          column.appendChild(poster);
-          const hint = document.createElement('div');
-          hint.className = 'case-open-hint';
-          if (proj.id === 'archive-space') hint.classList.add('as-hint');
-          hint.textContent = '→ Open';
-          column.appendChild(hint);
-        }
       }
 
-      const start = col*PER_COL;
-      const end   = Math.min(start+PER_COL, proj.files.length);
-      for (let i=start; i<end; i++) {
+      // Images
+      const start = col * PER_COL;
+      const end   = Math.min(start + PER_COL, proj.files.length);
+      for (let i = start; i < end; i++) {
         const f    = proj.files[i];
         const item = document.createElement('div');
-        item.className = 'image-item';
+        item.className   = 'image-item';
         item.style.width  = f.width  + 'px';
         item.style.height = f.height + 'px';
+        item.style.marginTop = i === start ? '0' : '-18px';
+
         const img = document.createElement('img');
-        img.src = f.path;
-        img.alt = `${proj.name} ${i+1}`;
-        img.onerror = () => { img.style.opacity='0.3'; };
+        img.src     = f.path;
+        img.alt     = `${proj.name} ${i + 1}`;
+        img.loading = 'lazy';
+        img.onerror = () => { img.style.opacity = '0.3'; };
         item.appendChild(img);
-        item.onclick = () => openModal(proj, i);
+        item.addEventListener('click', () => openModal(proj, i));
         column.appendChild(item);
       }
 
-      group.appendChild(column);
-    }
-    scrollContainer.appendChild(group);
-  });
-
-  if (!isMobile) {
-    distributeColumns();
-  } else {
-    Array.from(scrollContainer.querySelectorAll('.project-group')).forEach(g => {
-      while (g.firstChild) scrollContainer.appendChild(g.firstChild);
-      g.remove();
-    });
-  }
-}
-
-/* ── DISTRIBUTE COLUMNS ── */
-function distributeColumns() {
-  const W = scrollContainer.clientWidth;
-  if (!W) { requestAnimationFrame(distributeColumns); return; }
-
-  const PADDING = 24;
-  const COL_W   = 100;
-
-  const groups = Array.from(scrollContainer.querySelectorAll('.project-group'));
-  const cols   = [];
-  groups.forEach(g => Array.from(g.querySelectorAll('.column')).forEach(c => cols.push(c)));
-
-  const N = cols.length;
-  if (N===0) return;
-
-  const WITHIN_GAP  = 8;
-  const BETWEEN_GAP = 48;
-
-  groups.forEach(g => {
-    while (g.firstChild) scrollContainer.appendChild(g.firstChild);
-    g.remove();
-  });
-
-  let x = PADDING;
-  cols.forEach((col, i) => {
-    col.style.position = 'absolute';
-    col.style.left     = Math.round(x) + 'px';
-    col.style.top      = '80px';
-    col.style.width    = COL_W + 'px';
-    col.style.zIndex   = String(i+1);
-    if (i < N-1) {
-      const sameProj = cols[i].dataset.projId === cols[i+1].dataset.projId;
-      x += COL_W + (sameProj ? WITHIN_GAP : BETWEEN_GAP);
+      scrollContainer.appendChild(column);
     }
   });
-}
 
-let lastMobile = window.innerWidth <= 768;
-window.addEventListener('resize', () => {
-  const nowMobile = window.innerWidth <= 768;
-  if (nowMobile !== lastMobile) {
-    lastMobile = nowMobile;
-    buildScrollContainer();
-  } else if (!nowMobile) {
-    distributeColumns();
-  }
-});
-
-/* ── BUILD TIMELINE ── */
-function buildTimeline() {
-  timelineContent.innerHTML = '';
-  const YEARS = [
-    {label:'2019',size:14},{label:'2020',size:14},{label:'2021',size:12},
-    {label:'2022',size:8},{label:'2023',size:22},{label:'2024',size:13},
-    {label:'2025',size:14},{label:'2026',size:8},{label:'FUTURE',size:9,future:true}
-  ];
-  YEARS.forEach(y => {
-    const m = document.createElement('div');
-    m.className = 'year-marker' + (y.future?' future':'');
-    const dot = document.createElement('div');
-    dot.className = 'year-dot';
-    dot.style.width = y.size+'px';
-    dot.style.height = y.size+'px';
-    const label = document.createElement('div');
-    label.className = 'year-label';
-    label.textContent = y.label;
-    m.appendChild(dot);
-    m.appendChild(label);
-    timelineContent.appendChild(m);
-  });
+  // Right-edge spacer so last column isn't flush against overflow boundary
+  const spacer = document.createElement('div');
+  spacer.style.cssText = 'flex-shrink:0;width:24px;min-width:24px';
+  scrollContainer.appendChild(spacer);
 }
 
 buildScrollContainer();
-buildTimeline();
+
+// Debounced rebuild on resize
+let resizeTimer;
+window.addEventListener('resize', () => {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(buildScrollContainer, 150);
+});
 </script>
 </body>
 </html>
