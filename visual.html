@@ -16,60 +16,28 @@
       background-size:cover;background-position:center;background-attachment:fixed;
     }
     body::before{content:'';position:fixed;inset:0;background:rgba(10,10,10,.68);z-index:-1}
-.brandline{padding:0 40px 8px;color:var(--dim);font-size:12px;letter-spacing:.28em;text-transform:uppercase;overflow:hidden}
-    .ticker{display:flex;white-space:nowrap;will-change:transform;animation:marquee 80s linear infinite}
-    .ticker span{padding-right:24px;flex-shrink:0}
-    @keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-    
-    /* ── CURSOR ── */
-#cur-ring{
-  position: fixed;
-  left: 0;
-  top: 0;
-  width: 30px;
-  height: 30px;
-  border: 1px solid rgba(210,35,35,.55);
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: 9998;
-  transform: translate3d(-50%, -50%, 0);
-  transition: width .2s, height .2s, border-color .2s;
-  will-change: transform;
-}
 
-#cur-ring.hover{
-  width: 46px;
-  height: 46px;
-  border-color: rgba(210,35,35,.9);
-}
-
-#cur-cross{
-  position: fixed;
-  left: 0;
-  top: 0;
-  pointer-events: none;
-  z-index: 9999;
-  transform: translate3d(-50%, -50%, 0);
-  will-change: transform;
-}
-    #cur-ring.hover{width:46px;height:46px;border-color:rgba(210,35,35,.9)}
-    #cur-cross{position:fixed;pointer-events:none;z-index:9999;transform:translate(-50%,-50%)}
-    #cur-cross::before,#cur-cross::after{content:'';position:absolute;background:rgba(210,35,35,.8)}
-    #cur-cross::before{width:12px;height:1px;top:0;left:-6px}
-    #cur-cross::after{width:1px;height:12px;left:0;top:-6px}
-    @media(hover:none),(pointer:coarse){*{cursor:auto !important}#cur-ring,#cur-cross{display:none}}
+    /* ── CURSOR: single circle, RAF-moved, no hover resize ── */
+    #cur{
+      position:fixed;left:0;top:0;
+      width:28px;height:28px;
+      border:1px solid rgba(210,35,35,.55);
+      border-radius:50%;
+      pointer-events:none;
+      z-index:9999;
+      will-change:transform;
+    }
+    @media(hover:none),(pointer:coarse){#cur{display:none !important}*{cursor:auto !important}}
 
     /* ── FIXED NAV BAR ── */
     .nav-fixed{
       position:fixed;top:0;left:0;right:0;height:42px;z-index:220;
       display:flex;align-items:center;justify-content:space-between;
       padding:0 36px;gap:20px;
-      background:transparent;
       backdrop-filter:blur(6px);
     }
     .back{font-size:12px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;text-decoration:none;color:#555;transition:color .2s;white-space:nowrap;flex-shrink:0}
     .back:hover{color:#f5f5f5}
-    /* Page links: same style as .back, always on one line */
     .page-links{display:flex;align-items:center;gap:22px;flex-shrink:0}
     .page-links a{font-size:12px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;text-decoration:none;color:#555;transition:color .2s;white-space:nowrap}
     .page-links a:hover{color:#f5f5f5}
@@ -79,7 +47,6 @@
     .ticker-text{display:flex;white-space:nowrap;animation:marquee 40s linear infinite;color:#0a0a0a;font-size:16px;font-weight:900;letter-spacing:-.03em;text-transform:uppercase;line-height:1}
     .ticker-text span{padding-right:12px;flex-shrink:0}
     @keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-
 
     /* ── SCROLL CONTAINER ── */
     .scroll-container{
@@ -95,7 +62,7 @@
     .column{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:20px 8px;gap:6px;flex-shrink:0}
     .column-header{text-align:center;margin-bottom:12px;z-index:10}
     .column-year{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#888}
-    .column-title{font-size:14px;font-weight:900;letter-spacing:-.01em;text-transform:uppercase;margin-top:4px;color:#000000}
+    .column-title{font-size:14px;font-weight:900;letter-spacing:-.01em;text-transform:uppercase;margin-top:4px;color:#000}
     .column-subtitle{font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;margin-top:3px;color:#777}
 
     /* ── IMAGE ITEMS ── */
@@ -124,8 +91,8 @@
     .modal-multi.mode-group img{flex:1 1 0;min-width:0;height:65vh;object-fit:contain;border:1px solid rgba(255,255,255,.05)}
     .modal-nav-btn{position:fixed;top:50%;transform:translateY(-50%);background:rgba(20,20,20,.6);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.15);color:#f5f5f5;width:44px;height:44px;border-radius:50%;font-size:22px;transition:.2s;z-index:510}
     .modal-nav-btn:hover{background:rgba(255,255,255,.18);border-color:rgba(255,255,255,.3)}
-    .modal-nav-btn.prev{left:14px}.modal-nav-btn.next{right:14px}
-    .modal-nav-btn.off{display:none}
+    .modal-nav-btn.prev{left:14px}
+    .modal-nav-btn.next{right:14px}
     .modal-info{width:300px;padding:32px 28px;display:flex;flex-direction:column;gap:16px;overflow-y:auto;border-left:1px solid rgba(255,255,255,.08);flex-shrink:0;background:rgba(14,14,14,.92)}
     .modal-info::-webkit-scrollbar{width:3px}
     .modal-info::-webkit-scrollbar-thumb{background:#333;border-radius:2px}
@@ -160,11 +127,10 @@
       .modal-multi.mode-collage{flex-wrap:wrap;overflow-x:hidden;justify-content:center}
       .modal-multi.mode-collage img{width:calc(50% - 4px);height:auto;max-height:none;object-fit:contain}
       .modal-image-section{position:relative}
-      .modal-nav-btn{top:auto;bottom:12px;transform:none;background:rgba(140,140,140,.25);border-color:rgba(180,180,180,.3);color:rgba(255,255,255,.7);width:36px;height:36px;font-size:16px}
-      .modal-nav-btn.prev{left:12px}.modal-nav-btn.next{right:12px}
+      .modal-nav-btn{top:auto;bottom:12px;transform:none;background:rgba(140,140,140,.25);border-color:rgba(180,180,180,.3);color:rgba(255,255,255,.7);width:38px;height:38px;font-size:18px}
+      .modal-nav-btn.prev{left:6px}
+      .modal-nav-btn.next{right:6px}
       .modal-info{flex:none;width:100%;height:auto;max-height:none;border-left:none;border-top:1px solid rgba(255,255,255,.1);padding:24px 20px 48px;overflow-y:visible}
-      .modal-nav-btn{width:38px;height:38px;font-size:18px}
-      .modal-nav-btn.prev{left:6px}.modal-nav-btn.next{right:6px}
       .nav-fixed{padding:0 14px;height:40px}
       .page-links{gap:14px;font-size:10px;letter-spacing:.1em}
       .ticker-bar{top:40px}
@@ -176,8 +142,7 @@
 </head>
 <body>
 
-<div id="cur-ring"></div>
-<div id="cur-cross"></div>
+<div id="cur"></div>
 
 <!-- Fixed nav -->
 <header class="nav-fixed">
@@ -193,6 +158,7 @@
 <div class="ticker-bar" aria-hidden="true">
   <span class="ticker-text">
     <span>A.VASILEUSKAYA. </span><span>A.VASILEUSKAYA. </span><span>A.VASILEUSKAYA. </span><span>A.VASILEUSKAYA. </span><span>A.VASILEUSKAYA. </span><span>A.VASILEUSKAYA. </span><span>A.VASILEUSKAYA. </span><span>A.VASILEUSKAYA. </span><span>A.VASILEUSKAYA. </span><span>A.VASILEUSKAYA. </span><span>A.VASILEUSKAYA. </span><span>A.VASILEUSKAYA. </span><span>A.VASILEUSKAYA. </span><span>A.VASILEUSKAYA. </span><span>A.VASILEUSKAYA. </span><span>A.VASILEUSKAYA. </span><span>A.VASILEUSKAYA. </span><span>A.VASILEUSKAYA. </span><span>A.VASILEUSKAYA. </span><span>A.VASILEUSKAYA. </span><span>A.VASILEUSKAYA. </span><span>A.VASILEUSKAYA. </span><span>A.VASILEUSKAYA. </span><span>A.VASILEUSKAYA. </span>
+  </span>
 </div>
 
 <div class="scroll-container" id="scrollContainer"></div>
@@ -200,7 +166,6 @@
 <!-- Modal -->
 <div class="modal" id="modal" aria-hidden="true">
   <button class="modal-close" id="modalClose" aria-label="Close">✕</button>
-  <!-- Arrows outside modal-content: fixed to viewport, unaffected by image height -->
   <button class="modal-nav-btn prev" id="modalPrev">‹</button>
   <button class="modal-nav-btn next" id="modalNext">›</button>
   <div class="modal-content" id="modalContent">
@@ -222,30 +187,41 @@
 
 <div class="ftl"><a href="about.html">About</a></div>
 <div class="ftr">
-  <a href="/cdn-cgi/l/email-protection#9df3fcebf4f1f8f3ddfff6b3efe8"><span class="__cf_email__" data-cfemail="0a646b7c63666f644a686124787f">[email&#160;protected]</span></a>
+  <a href="mailto:navilen@bk.ru">navilen@bk.ru</a>
   <span class="sep">—</span>
   <a href="https://instagram.com/molodostibolshenebudet/" target="_blank" rel="noopener">Instagram</a>
   <span class="sep">—</span>
   <a href="https://linkedin.com/in/worldwidemoment/" target="_blank" rel="noopener">LinkedIn</a>
 </div>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script>
+/* ── CURSOR — single circle, RAF loop, no hover events ── */
+const cur = document.getElementById('cur');
+if (window.matchMedia('(hover:hover) and (pointer:fine)').matches) {
+  let mx = 0, my = 0;
+  document.addEventListener('pointermove', e => { mx = e.clientX; my = e.clientY; }, { passive: true });
+  (function loop() {
+    cur.style.transform = `translate3d(${mx}px,${my}px,0) translate(-50%,-50%)`;
+    requestAnimationFrame(loop);
+  })();
+}
+
 /* ── CLO GROUPS ── */
 const CLO_GROUPS = [
-  { files:[0,1,2], name:'TEKKONKINKREET', desc:'Hand-painted garments inspired by the aesthetic.\nNo sketch, no transfer.\nThe painting grew from the fabric up.' },
-  { files:[3,4],   name:'1ST PLACE',       desc:'The very first experience of creation, simply due to the fact that the printing workshop refused to apply a print to the top of the T-shirt.' },
-  { files:[5,6],   name:'Bandito Crew · I',desc:'Another full-fledged merch case for the released Twenty One Pilots album.' },
-  { files:[7,8,9], name:'Vans OldSchool · II', desc:'Old things are not recyclable - they have a new life.' },
-  { files:[10,11], name:'NARUTO · III',    desc:'New nike t-shirt & itachi uchiha collab.\nRestraint in palette, density in application.' },
-  { files:[12],    name:'Local Bandito',   desc:'A standalone work — singular in approach and execution.\nThis one needed nothing added.' },
-  { files:[13,14,15], name:'Fairly local · IV', desc:'From creating art by hand,\nto recreating it on clothes and to selling it.' },
-  { files:[16,17], name:'Chlorine · V',    desc:'Late series. Restraint where earlier was excess.\nLess surface, more intention.' },
-  { files:[18,19], name:'DATA CL · VI',   desc:'Final works in the CLO series.\nWhat remains when the system is exhausted.' }
+  { files:[0,1,2],     name:'TEKKONKINKREET',   desc:'Hand-painted garments inspired by the aesthetic.\nNo sketch, no transfer.\nThe painting grew from the fabric up.' },
+  { files:[3,4],       name:'1ST PLACE',         desc:'The very first experience of creation, simply due to the fact that the printing workshop refused to apply a print to the top of the T-shirt.' },
+  { files:[5,6],       name:'Bandito Crew · I',  desc:'Another full-fledged merch case for the released Twenty One Pilots album.' },
+  { files:[7,8,9],     name:'Vans OldSchool · II',desc:'Old things are not recyclable - they have a new life.' },
+  { files:[10,11],     name:'NARUTO · III',       desc:'New nike t-shirt & itachi uchiha collab.\nRestraint in palette, density in application.' },
+  { files:[12],        name:'Local Bandito',      desc:'A standalone work — singular in approach and execution.\nThis one needed nothing added.' },
+  { files:[13,14,15],  name:'Fairly local · IV',  desc:'From creating art by hand,\nto recreating it on clothes and to selling it.' },
+  { files:[16,17],     name:'Chlorine · V',       desc:'Late series. Restraint where earlier was excess.\nLess surface, more intention.' },
+  { files:[18,19],     name:'DATA CL · VI',       desc:'Final works in the CLO series.\nWhat remains when the system is exhausted.' }
 ];
 
 function getCloGroup(idx) {
   for (const g of CLO_GROUPS) if (g.files.includes(idx)) return g;
-  return { files:[idx], name:null, desc:null };
+  return { files: [idx], name: null, desc: null };
 }
 
 /* ── PROJECTS ── */
@@ -255,44 +231,45 @@ const projects = [
     id:'pilots', year:'2018–2021', name:'PILOTS / HAND DRAWINGS',
     subtitle:'HAND DRAWINGS · 2018–2021',
     desc:'Early studies in line, texture and atmosphere — before digital tools took over. A way of thinking on paper.',
-    files: Array.from({length:14}, (_,i) => ({path:`images/assets/create/pilots/pilots${i+1}.webp`, width:R()(62+Math.random()*14), height:R()(46+Math.random()*16)}))
+    files: Array.from({length:14}, (_,i) => ({ path:`images/assets/create/pilots/pilots${i+1}.webp`, width:Math.round(62+Math.random()*14), height:Math.round(46+Math.random()*16) }))
   },
   {
     id:'Self-Portrait', year:'2024', name:'NONE OF THEM IS ME',
     subtitle:'SELF-PORTRAIT SERIES · 2024',
     desc:'Exploring the gap between how we see ourselves and how we appear. A study in identity through framing and gesture.\n\nNone of the versions is definitive.',
-    files: Array.from({length:6}, (_,i) => ({path:`images/assets/create/portrait/Portrait${i+1}.webp`, width:R()(64+Math.random()*12), height:R()(82+Math.random()*14)}))
+    files: Array.from({length:6}, (_,i) => ({ path:`images/assets/create/portrait/Portrait${i+1}.webp`, width:Math.round(64+Math.random()*12), height:Math.round(82+Math.random()*14) }))
   },
   {
     id:'scan', year:'2025–2026', name:'SCAN',
     subtitle:'GRAINS OF THE CITIES',
     desc:'Fragments of urban texture — scanned, layered, recomposed. A visual archive of places in transition.',
-    files: Array.from({length:10}, (_,i) => ({path:`images/assets/create/scan/Scan${i+1}.webp`, width:R()(66+Math.random()*14), height:R()(50+Math.random()*14)}))
+    files: Array.from({length:10}, (_,i) => ({ path:`images/assets/create/scan/Scan${i+1}.webp`, width:Math.round(66+Math.random()*14), height:Math.round(50+Math.random()*14) }))
   },
   {
     id:'clo', year:'2021–2023', name:'CLO',
     subtitle:'CUSTOM CLOTHING',
     desc:'Hand-painted garments as wearable architecture. Material, body and gesture — one surface.',
-    files: Array.from({length:20}, (_,i) => ({path:`images/assets/create/clo/cloth${i+1}.webp`, width:R()(60+Math.random()*18), height:R()(46+Math.random()*16)}))
+    files: Array.from({length:20}, (_,i) => ({ path:`images/assets/create/clo/cloth${i+1}.webp`, width:Math.round(60+Math.random()*18), height:Math.round(46+Math.random()*16) }))
   },
   {
     id:'bti', year:'2022', name:'BEFORE THE IMPACT',
     subtitle:'A diptych in four parts',
     desc:'Silent Horizon explores the moment when an ordinary landscape becomes the stage for an unexpected event.\n\nThe four-frame sequence captures a gradual shift in perception.',
-    files: Array.from({length:4}, (_,i) => ({path:`images/assets/create/bti/bti${i+1}.jpg`, width:R()(68+Math.random()*14), height:R()(50+Math.random()*14)}))
+    files: Array.from({length:4}, (_,i) => ({ path:`images/assets/create/bti/bti${i+1}.jpg`, width:Math.round(68+Math.random()*14), height:Math.round(50+Math.random()*14) }))
   },
   {
     id:'byhand', year:'2022–2026', name:'BY HAND',
     subtitle:'PIECES OF ART OF DIFFERENT TIME',
     desc:'A constellation of objects, drawings and experiments made over time. No single medium, one continuous curiosity.',
-    files: Array.from({length:10}, (_,i) => ({path:`images/assets/create/art/art${i+1}.webp`, width:R()(66+Math.random()*14), height:R()(50+Math.random()*14)}))
+    files: Array.from({length:10}, (_,i) => ({ path:`images/assets/create/art/art${i+1}.webp`, width:Math.round(66+Math.random()*14), height:Math.round(50+Math.random()*14) }))
   }
 ];
 
 /* ── FLAT IMAGE LIST for unified cross-project navigation ──
-   bti / Self-Portrait always show all images at once → one entry each.
+   Self-Portrait and bti show ALL images at once → one entry each.
    clo → one entry per group.
-   Everything else → one entry per image. */
+   Others → one entry per image.
+   Arrows ALWAYS navigate this flat list cross-project. */
 const flatImages = [];
 projects.forEach(proj => {
   if (proj.id === 'bti' || proj.id === 'Self-Portrait') {
@@ -306,41 +283,18 @@ projects.forEach(proj => {
 let globalIdx = 0;
 
 /* ── DOM REFS ── */
-const scrollContainer   = document.getElementById('scrollContainer');
-const modal             = document.getElementById('modal');
-const modalContent      = document.getElementById('modalContent');
-const modalSingleView   = document.getElementById('modalSingleView');
-const modalMultiView    = document.getElementById('modalMultiView');
-const modalImg          = document.getElementById('modalImg');
-const modalTitle        = document.getElementById('modalTitle');
-const modalSubtitle     = document.getElementById('modalSubtitle');
-const modalDesc         = document.getElementById('modalDesc');
-const modalClose        = document.getElementById('modalClose');
-const modalPrev         = document.getElementById('modalPrev');
-const modalNext         = document.getElementById('modalNext');
-
-let currentProject  = null;
-let currentImageIdx = 0;
-
-/* ── CUSTOM CURSOR ── */
-const curRing  = document.getElementById('cur-ring');
-const curCross = document.getElementById('cur-cross');
-if (window.matchMedia('(hover:hover)').matches) {
- let mouseX = 0, mouseY = 0;
-
-document.addEventListener('pointermove', e => {
-  mouseX = e.clientX;
-  mouseY = e.clientY;
-  curRing.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0) translate(-50%, -50%)`;
-  curCross.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0) translate(-50%, -50%)`;
-}, { passive: true });
-  document.addEventListener('mouseover', e => {
-    if (e.target.closest('a,button,.image-item')) curRing.classList.add('hover');
-  });
-  document.addEventListener('mouseout', e => {
-    if (e.target.closest('a,button,.image-item')) curRing.classList.remove('hover');
-  });
-}
+const scrollContainer = document.getElementById('scrollContainer');
+const modal           = document.getElementById('modal');
+const modalContent    = document.getElementById('modalContent');
+const modalSingleView = document.getElementById('modalSingleView');
+const modalMultiView  = document.getElementById('modalMultiView');
+const modalImg        = document.getElementById('modalImg');
+const modalTitle      = document.getElementById('modalTitle');
+const modalSubtitle   = document.getElementById('modalSubtitle');
+const modalDesc       = document.getElementById('modalDesc');
+const modalClose      = document.getElementById('modalClose');
+const modalPrev       = document.getElementById('modalPrev');
+const modalNext       = document.getElementById('modalNext');
 
 /* ── MODAL HELPERS ── */
 function setSingle() {
@@ -352,10 +306,6 @@ function setMulti(mode) {
   modalSingleView.style.display = 'none';
   modalMultiView.className = 'modal-multi show mode-' + mode;
   modalContent.classList.toggle('mode-row', mode === 'row');
-}
-function showNav(on) {
-  modalPrev.classList.toggle('off', !on);
-  modalNext.classList.toggle('off', !on);
 }
 function setInfo(title, subtitle, desc) {
   modalTitle.textContent    = title    || '';
@@ -374,35 +324,26 @@ function buildMultiImgs(paths) {
 
 /* ── OPEN MODAL ── */
 function openModal(proj, fileIdx) {
-  // Sync globalIdx so arrows continue from here
+  // Sync globalIdx
   const fi = flatImages.findIndex(e => {
     if (e.proj !== proj) return false;
-    if (proj.id === 'clo') {
-      const g = getCloGroup(fileIdx);
-      return e.fileIdx === g.files[0];
-    }
+    if (proj.id === 'clo') return e.fileIdx === getCloGroup(fileIdx).files[0];
     if (proj.id === 'bti' || proj.id === 'Self-Portrait') return true;
     return e.fileIdx === fileIdx;
   });
   if (fi !== -1) globalIdx = fi;
 
-  currentProject  = proj;
-  currentImageIdx = fileIdx;
-
-  // Reset
   modalContent.classList.remove('mode-row');
   modalSingleView.style.display = 'flex';
   modalMultiView.className = 'modal-multi';
 
   if (proj.id === 'Self-Portrait') {
     setMulti('collage');
-    showNav(false);
     buildMultiImgs(proj.files.map(f => f.path));
     setInfo(proj.name, proj.subtitle, proj.desc);
 
   } else if (proj.id === 'bti') {
     setMulti('row');
-    showNav(false);
     buildMultiImgs(proj.files.map(f => f.path));
     setInfo(proj.name, proj.subtitle, proj.desc);
 
@@ -416,25 +357,30 @@ function openModal(proj, fileIdx) {
       setMulti('group');
       buildMultiImgs(group.files.map(i => proj.files[i].path));
     }
-    showNav(true);
-
   } else {
     setSingle();
     modalImg.src = proj.files[fileIdx].path;
-    showNav(true);
     setInfo(proj.name, proj.subtitle, proj.desc);
   }
 
+  // Arrows ALWAYS shown — they navigate the flat list cross-project
+  modalPrev.style.display = '';
+  modalNext.style.display = '';
+
   modal.classList.add('active');
   modal.setAttribute('aria-hidden', 'false');
+
+  // Update URL hash for shareable link
+  history.replaceState(null, '', '#' + proj.id);
 }
 
 function closeModal() {
   modal.classList.remove('active');
   modal.setAttribute('aria-hidden', 'true');
+  history.replaceState(null, '', location.pathname);
 }
 
-/* ── UNIFIED NAVIGATION (cross-project) ── */
+/* ── UNIFIED GLOBAL NAVIGATION ── */
 function navGlobal(dir) {
   if (!flatImages.length) return;
   globalIdx = (globalIdx + dir + flatImages.length) % flatImages.length;
@@ -449,10 +395,20 @@ modalNext.onclick  = () => navGlobal(+1);
 
 document.addEventListener('keydown', e => {
   if (!modal.classList.contains('active')) return;
-  if (e.key === 'Escape')      closeModal();
-  if (e.key === 'ArrowLeft')   navGlobal(-1);
-  if (e.key === 'ArrowRight')  navGlobal(+1);
+  if (e.key === 'Escape')     closeModal();
+  if (e.key === 'ArrowLeft')  navGlobal(-1);
+  if (e.key === 'ArrowRight') navGlobal(+1);
 });
+
+/* ── HASH ROUTING — open project from URL ── */
+function openFromHash() {
+  const id = location.hash.slice(1);
+  if (!id) return;
+  const proj = projects.find(p => p.id === id);
+  if (proj) openModal(proj, 0);
+}
+openFromHash();
+window.addEventListener('hashchange', openFromHash);
 
 /* ── MIDDLE-CLICK DRAG ── */
 scrollContainer.addEventListener('mousedown', e => {
@@ -469,15 +425,20 @@ scrollContainer.addEventListener('mousedown', e => {
 function buildScrollContainer() {
   scrollContainer.innerHTML = '';
 
-  const isMobile   = window.innerWidth <= 768;
-  const COL_W      = isMobile ? Math.round(window.innerWidth / 2.5) : 100;
-  const PER_COL    = 7;
-  const WITHIN_G   = isMobile ? 4  : 8;
-  const BETWEEN_G  = isMobile ? 14 : 48;
-  const LEFT_PAD   = isMobile ? 10 : 24;
+  const isMobile  = window.innerWidth <= 768;
+  const PER_COL   = 7;
+  const WITHIN_G  = isMobile ? 4  : 8;
+  const BETWEEN_G = isMobile ? 14 : 48;
+  const LEFT_PAD  = isMobile ? 10 : 24;
 
-  let firstCol   = true;
-  let prevProjId = null;
+  // Mobile: ensure exactly 2.5 columns visible.
+  // Total visible = LEFT_PAD + 2*COL_W + 2*WITHIN_G + 0.5*COL_W = LEFT_PAD + 2.5*COL_W + 2*WITHIN_G
+  // → COL_W = (viewport - LEFT_PAD - 2*WITHIN_G) / 2.5
+  const COL_W = isMobile
+    ? Math.floor((window.innerWidth - LEFT_PAD - 2 * WITHIN_G) / 2.5)
+    : 100;
+
+  let firstCol = true, prevProjId = null, totalImgCount = 0;
 
   projects.forEach(proj => {
     const colCount = Math.max(1, Math.ceil(proj.files.length / PER_COL));
@@ -487,15 +448,13 @@ function buildScrollContainer() {
       column.className = 'column';
       column.dataset.projId = proj.id;
       column.style.width = COL_W + 'px';
-
-      // Horizontal margin
       column.style.marginLeft = firstCol
         ? LEFT_PAD + 'px'
         : (proj.id === prevProjId ? WITHIN_G : BETWEEN_G) + 'px';
       if (firstCol) firstCol = false;
       prevProjId = proj.id;
 
-      // Header (first column of each project)
+      // Header on first column of each project
       if (col === 0) {
         const hdr = document.createElement('div');
         hdr.className = 'column-header';
@@ -506,7 +465,6 @@ function buildScrollContainer() {
         column.appendChild(hdr);
       }
 
-      // Images
       const start = col * PER_COL;
       const end   = Math.min(start + PER_COL, proj.files.length);
       for (let i = start; i < end; i++) {
@@ -518,27 +476,32 @@ function buildScrollContainer() {
         item.style.marginTop = i === start ? '0' : '-18px';
 
         const img = document.createElement('img');
-        img.src     = f.path;
-        img.alt     = `${proj.name} ${i + 1}`;
-        img.loading = 'lazy';
+        img.src = f.path;
+        img.alt = `${proj.name} ${i + 1}`;
+        // First few images: eager + high priority; rest: lazy
+        if (totalImgCount < 6) {
+          img.loading = 'eager';
+          if (totalImgCount < 3) img.setAttribute('fetchpriority', 'high');
+        } else {
+          img.loading = 'lazy';
+        }
         img.onerror = () => { img.style.opacity = '0.3'; };
         item.appendChild(img);
         item.addEventListener('click', () => openModal(proj, i));
         column.appendChild(item);
+        totalImgCount++;
       }
-
       scrollContainer.appendChild(column);
     }
   });
 
-  // Right-edge spacer so last column isn't flush against overflow boundary
+  // Right spacer
   const spacer = document.createElement('div');
   spacer.style.cssText = 'flex-shrink:0;width:24px;min-width:24px';
   scrollContainer.appendChild(spacer);
 }
 buildScrollContainer();
 
-// Debounced rebuild on resize
 let resizeTimer;
 window.addEventListener('resize', () => {
   clearTimeout(resizeTimer);
