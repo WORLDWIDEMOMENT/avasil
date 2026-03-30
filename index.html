@@ -639,20 +639,46 @@ fetch('projects.json')
 
       // ── LOCAL RADIO ──
       // url: замените #channel-0 на реальный data-slug или id канала на странице localradio.html
-      {
-        title:       "Channel 01",
-        category:    "Local Radio",
-        description: "Made for you.",
-        image:       "",
-        url:         "localradio.html#channel-0"
-      },
-      {
-        title:       "Channel 02",
-        category:    "Local Radio",
-        description: "Made for you.",
-        image:       "",
-        url:         "localradio.html#channel-1"
-      }
+     {
+    title:       "Channel 01",
+    category:    "Local Radio",
+    description: "A warm basement that smells of old vinyl and cigarette smoke.",
+    image:       "",               ← оставьте пустым
+    url:         "localradio.html#channel-01",
+    spotifyUrl:  "https://open.spotify.com/playlist/0mg0X028fIt8EwH5yi3Czf"
+  }
+         {
+    title:       "Channel 02",
+    category:    "Local Radio",
+    description: "The sound of a city you can't quite remember but definitely visited in a dream.",
+    image:       "",               ← оставьте пустым
+    url:         "localradio.html#channel-02",
+    spotifyUrl:  "https://open.spotify.com/playlist/4YMNrlPjp3nTenV6Qkn4Tc"
+  }
+  {
+    title:       "Channel 03",
+    category:    "Local Radio",
+    description: "The air before a storm that never arrives.",
+    image:       "",               ← оставьте пустым
+    url:         "localradio.html#channel-03",
+    spotifyUrl:  "https://open.spotify.com/playlist/2BAdX7KOSo3hsDMlq37IBD"
+  }
+  {
+    title:       "Channel 04",
+    category:    "Local Radio",
+    description: "The morning after, stretched into a full day.",
+    image:       "",               ← оставьте пустым
+    url:         "localradio.html#channel-04",
+    spotifyUrl:  "https://open.spotify.com/playlist/77mIWmxJFdJGWar4EJdrjq"
+  }
+  {
+    title:       "Channel 05",
+    category:    "Local Radio",
+    description: "Feels like a warm scarf thrown over your city armor.",
+    image:       "",               ← оставьте пустым
+    url:         "localradio.html#channel-05",
+    spotifyUrl:  "https://open.spotify.com/playlist/1ajzqkENf7NBuPTVNyJPjQ"
+  }
     ];
   });
 
@@ -725,6 +751,26 @@ function showProject(p) {
   currentProject = p; // запоминаем — теперь клик по картинке = навигация
 
   popupTitle.textContent = p.title.toUpperCase();
+   if (p.spotifyUrl) {
+    fetch('https://open.spotify.com/oembed?url=' + encodeURIComponent(p.spotifyUrl))
+      .then(r => r.json())
+      .then(data => {
+        if (data.thumbnail_url) {
+          const img = new Image();
+          img.onload = () => {
+            popupImg.src = data.thumbnail_url;
+            popupImg.classList.add('loaded');
+            setTimeout(() => drumEl.classList.add('hidden'), 150);
+            imgArea.classList.add('resolved');
+          };
+          img.src = data.thumbnail_url;
+        } else {
+          drumEl.classList.add('hidden');
+          imgArea.classList.add('resolved');
+        }
+      })
+      .catch(() => { drumEl.classList.add('hidden'); imgArea.classList.add('resolved'); });
+  }
   popupCat.textContent   = p.category.toUpperCase();
   drumText.textContent   = p.title.toUpperCase();
 
