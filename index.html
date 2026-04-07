@@ -292,7 +292,40 @@ body {
   .zone { bottom: 110px; max-width: calc(50vw - 18px); }
   .sub { font-size: 9px; letter-spacing: .18em; }
   .bottom-bar { bottom: 12px; padding: 0 12px; }
+  /* ── TO DIRECT zone ── */
+#direct {
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  white-space: nowrap;
+  bottom: 120px; /* aligned with build/create baseline */
+  z-index: 11;   /* sits above create-layer (z:1) */
 }
+#direct .main-title {
+  /* noticeably smaller than TO BUILD / TO CREATE */
+  font-size: clamp(16px, 2.2vw, 32px);
+  letter-spacing: .14em;
+}
+/* sub link centered */
+#direct .sub { text-align: center; }
+ 
+@media (max-width: 900px) {
+  /* mobile: centered, floats above build/create row */
+  #direct {
+    bottom: 190px;    /* bumped up so it clears build/create */
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+    max-width: none;
+  }
+  #direct .main-title {
+    font-size: clamp(13px, 5vw, 20px);
+    letter-spacing: .08em;
+  }
+}
+@media (max-width: 560px) {
+  #direct { bottom: 175px; }
+} 
 </style>
 </head>
 <body>
@@ -362,6 +395,12 @@ body {
     <a href="architecture.html">AI Experiments</a>
   </div>
 </div>
+  <div class="zone ui-group" id="direct">
+  <div class="main-title"><a href="todirect.html">To Direct</a></div>
+  <div class="sub">
+    <a href="todirect.html">Cases</a>
+  </div>
+</div>
 
 <!-- ── TO CREATE ── -->
 <div class="zone ui-group" id="create">
@@ -418,32 +457,41 @@ const createZone  = document.getElementById('create');
 const buildLayer  = document.querySelector('.build-layer');
 const createLayer = document.querySelector('.create-layer');
 const grid        = document.querySelector('.grid');
-if (window.matchMedia('(hover: hover)').matches) {
-  buildZone.addEventListener('mouseenter', () => {
-    buildLayer.style.clipPath = 'circle(150% at 0% 100%)';
-    document.body.classList.add('build-active');
-    document.body.classList.remove('create-active');
-    createZone.classList.add('fade-out'); createZone.classList.remove('active');
-    grid.classList.add('active'); buildZone.classList.add('active');
-  });
-  buildZone.addEventListener('mouseleave', () => {
-    buildLayer.style.clipPath = 'circle(0px at 0% 100%)';
-    document.body.classList.remove('build-active');
-    createZone.classList.remove('fade-out');
-    grid.classList.remove('active'); buildZone.classList.remove('active');
-  });
-  createZone.addEventListener('mouseenter', () => {
-    createLayer.style.clipPath = 'circle(150% at 100% 100%)';
-    document.body.classList.add('create-active');
-    document.body.classList.remove('build-active');
-    buildZone.classList.add('fade-out'); buildZone.classList.remove('active');
-    createZone.classList.add('active');
-  });
-  createZone.addEventListener('mouseleave', () => {
-    createLayer.style.clipPath = 'circle(0px at 100% 100%)';
-    document.body.classList.remove('create-active');
-    buildZone.classList.remove('fade-out'); createZone.classList.remove('active');
-  });
+// add after: const directZone = document.getElementById('direct');
+const directZone = document.getElementById('direct');
+ 
+// ── BUILD hover ──
+buildZone.addEventListener('mouseenter', () => {
+  buildLayer.style.clipPath = 'circle(150% at 0% 100%)';
+  document.body.classList.add('build-active');
+  document.body.classList.remove('create-active');
+  createZone.classList.add('fade-out');  createZone.classList.remove('active');
+  directZone.classList.add('fade-out');  // ← new
+  grid.classList.add('active'); buildZone.classList.add('active');
+});
+buildZone.addEventListener('mouseleave', () => {
+  buildLayer.style.clipPath = 'circle(0px at 0% 100%)';
+  document.body.classList.remove('build-active');
+  createZone.classList.remove('fade-out');
+  directZone.classList.remove('fade-out'); // ← new
+  grid.classList.remove('active'); buildZone.classList.remove('active');
+});
+ 
+// ── CREATE hover ──
+createZone.addEventListener('mouseenter', () => {
+  createLayer.style.clipPath = 'circle(150% at 100% 100%)';
+  document.body.classList.add('create-active');
+  document.body.classList.remove('build-active');
+  buildZone.classList.add('fade-out');   buildZone.classList.remove('active');
+  directZone.classList.add('fade-out');  // ← new
+  createZone.classList.add('active');
+});
+createZone.addEventListener('mouseleave', () => {
+  createLayer.style.clipPath = 'circle(0px at 100% 100%)';
+  document.body.classList.remove('create-active');
+  buildZone.classList.remove('fade-out'); createZone.classList.remove('active');
+  directZone.classList.remove('fade-out'); // ← new
+});
 }
 
 // ══════════════════════════════════════
