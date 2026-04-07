@@ -70,7 +70,6 @@ body {
   height:100vh;
 }
 
-/* ❗ фиксируем половины */
 .half {
   flex:1;
   position:relative;
@@ -79,39 +78,37 @@ body {
   color:white;
 }
 
-/* ❗ контент теперь абсолютно фиксирован */
-.half-content {
+/* 🔥 BACKGROUND IMAGES */
+.half::before {
+  content:'';
   position:absolute;
-  bottom:80px;
-  left:80px;
-  z-index:2;
-
-  transition:transform .4s cubic-bezier(.77,0,.18,1);
+  inset:0;
+  background-size:cover;
+  background-position:center;
+  opacity:.35;
+  transition:transform .8s ease, opacity .6s;
 }
 
-/* hover теперь НЕ влияет на layout */
-.half:hover .half-content {
-  transform:translateY(-10px);
+.half-archive::before {
+  background-image:url('archive.jpg'); /* ← вставь свою */
+}
+.half-migrant::before {
+  background-image:url('migrant.jpg'); /* ← вставь свою */
 }
 
-/* overlay hover эффект */
+.half:hover::before {
+  transform:scale(1.05);
+  opacity:.55;
+}
+
+/* gradient overlay */
 .half::after {
   content:'';
   position:absolute;
   inset:0;
-  opacity:0;
-  transition:opacity .5s;
-  pointer-events:none;
+  background:linear-gradient(to top, rgba(0,0,0,.85), rgba(0,0,0,.2));
+  z-index:1;
 }
-
-.half-archive::after {
-  background:radial-gradient(circle at 30% 90%, rgba(170,251,0,.12), transparent 60%);
-}
-.half-migrant::after {
-  background:radial-gradient(circle at 70% 90%, rgba(255,100,120,.12), transparent 60%);
-}
-
-.half:hover::after { opacity:1; }
 
 /* divider */
 .divider {
@@ -124,29 +121,35 @@ body {
   z-index:5;
 }
 
-/* TEXT */
-.c-tag {
-  font-size:9px;
-  letter-spacing:.3em;
-  text-transform:uppercase;
-  margin-bottom:22px;
-  opacity:.5;
+/* ── CONTENT GRID (ключевая часть) ── */
+.half-content {
+  position:absolute;
+  bottom:80px;
+  left:80px;
+  z-index:2;
+
+  display:flex;
+  flex-direction:column;
 }
 
-.c-num {
-  font-size:10px;
-  letter-spacing:.28em;
-  opacity:.28;
-  margin-bottom:14px;
-}
+/* 🔥 фиксируем зоны */
+.c-tag { margin-bottom:20px; }
 
+.c-num { margin-bottom:10px; }
+
+/* ❗ ВАЖНО: одинаковая высота под заголовок */
 .c-title {
   font-size:clamp(38px,4.8vw,68px);
   font-weight:700;
   letter-spacing:.1em;
   text-transform:uppercase;
   line-height:1;
-  margin-bottom:18px;
+
+  min-height:140px; /* ← ключ к выравниванию */
+  display:flex;
+  align-items:flex-end;
+
+  margin-bottom:16px;
   transition:color .3s;
 }
 
@@ -157,14 +160,13 @@ body {
   font-size:10px;
   letter-spacing:.12em;
   text-transform:uppercase;
-  opacity:.4;
+  opacity:.45;
   line-height:1.7;
   max-width:280px;
+  margin-bottom:24px;
 }
 
 .c-open {
-  display:inline-block;
-  margin-top:32px;
   font-size:10px;
   letter-spacing:.28em;
   text-transform:uppercase;
@@ -176,6 +178,14 @@ body {
 .c-open:hover {
   opacity:1;
   border-bottom-color:currentColor;
+}
+
+/* hover motion */
+.half-content {
+  transition:transform .4s cubic-bezier(.77,0,.18,1);
+}
+.half:hover .half-content {
+  transform:translateY(-10px);
 }
 
 /* ── MOBILE ── */
@@ -197,6 +207,10 @@ body {
   .half-content {
     left:24px;
     bottom:40px;
+  }
+
+  .c-title {
+    min-height:auto;
   }
 
   .divider {
@@ -241,7 +255,7 @@ body {
 
   <a class="half half-migrant" href="migrant.html">
     <div class="half-content">
-      <div class="c-tag">Brand Identity · 2026</div>
+      <div class="c-tag">Brand Identity · 2024</div>
       <div class="c-num">02</div>
       <div class="c-title">Migrant</div>
       <div class="c-desc">
