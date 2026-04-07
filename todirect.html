@@ -134,7 +134,7 @@ body {
 .c-tag { margin-bottom:20px; }
 .c-num { margin-bottom:10px; }
 
-/* 🔥 ГЛАВНОЕ: baseline alignment */
+/* 🔥 TOP ALIGN */
 .c-title {
   font-size:clamp(38px,4.8vw,68px);
   font-weight:700;
@@ -142,9 +142,9 @@ body {
   text-transform:uppercase;
   line-height:1;
 
-  height:150px; /* ← фиксированная зона */
+  height:150px;
   display:flex;
-  align-items:flex-end; /* ← прижимаем вниз */
+  align-items:flex-start; /* ← ВЕРХ */
 
   margin-bottom:18px;
   transition:color .3s;
@@ -177,7 +177,7 @@ body {
   border-bottom-color:currentColor;
 }
 
-/* hover motion */
+/* hover */
 .half-content {
   transition:transform .4s cubic-bezier(.77,0,.18,1);
 }
@@ -189,21 +189,22 @@ body {
 @media (max-width:900px) {
 
   body {
-    overflow:auto;
-    height:auto;
+    overflow:hidden; /* ← убрали скролл */
+    height:100dvh;
   }
 
   .split {
     flex-direction:column;
+    height:100dvh;
   }
 
   .half {
-    height:50vh;
+    height:50dvh; /* ← ключ */
   }
 
   .half-content {
-    left:24px;
-    bottom:40px;
+    left:20px;
+    bottom:30px;
   }
 
   .c-title {
