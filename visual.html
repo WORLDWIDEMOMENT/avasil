@@ -17,7 +17,7 @@
     }
     body::before{content:'';position:fixed;inset:0;background:rgba(10,10,10,.68);z-index:-1}
 
-    /* ── CURSOR: single circle, RAF-moved, no hover resize ── */
+    /* ── CURSOR — direct pointermove, no RAF ── */
     #cur{
       position:fixed;left:0;top:0;
       width:28px;height:28px;
@@ -89,6 +89,24 @@
     .modal-multi.mode-collage img{width:calc(33.33% - 5px);height:auto;max-height:42vh;object-fit:contain;border:1px solid rgba(255,255,255,.05)}
     .modal-multi.mode-row img{flex:1 1 0;min-width:0;height:78vh;object-fit:contain;border:1px solid rgba(255,255,255,.05)}
     .modal-multi.mode-group img{flex:1 1 0;min-width:0;height:65vh;object-fit:contain;border:1px solid rgba(255,255,255,.05)}
+
+    /* ── BTI: tight layout — images set the height, no dead space ── */
+    .modal-content.mode-bti{max-width:99vw;max-height:none}
+    .modal-content.mode-bti .modal-image-section{justify-content:flex-start;align-items:stretch;height:auto}
+    .modal-multi.mode-bti{
+      display:flex;flex-direction:row;flex-wrap:nowrap;
+      height:auto;padding:0;gap:4px;
+      align-items:stretch;
+    }
+    .modal-multi.mode-bti img{
+      flex:1 1 0;min-width:0;
+      width:calc(25% - 4px);
+      height:auto;
+      object-fit:contain;
+      display:block;
+      border:1px solid rgba(255,255,255,.05);
+    }
+
     .modal-nav-btn{position:fixed;top:50%;transform:translateY(-50%);background:rgba(20,20,20,.6);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.15);color:#f5f5f5;width:44px;height:44px;border-radius:50%;font-size:22px;transition:.2s;z-index:510}
     .modal-nav-btn:hover{background:rgba(255,255,255,.18);border-color:rgba(255,255,255,.3)}
     .modal-nav-btn.prev{left:14px}
@@ -117,7 +135,7 @@
     @media(max-width:640px),(max-height:500px){
       .modal{padding:0;align-items:flex-start;overflow-y:auto}
       .modal-content{flex-direction:column;width:100%;max-width:100vw;height:auto;min-height:100vh;max-height:none;border-radius:0;border:none}
-      .modal-content.mode-row{max-width:100vw;max-height:none}
+      .modal-content.mode-row,.modal-content.mode-bti{max-width:100vw;max-height:none}
       .modal-image-section{flex:none;width:100%;height:auto;min-height:0}
       .modal-single{flex:none;width:100%;height:auto}
       .modal-single img{width:100%;height:auto;max-height:none;object-fit:contain}
@@ -126,6 +144,8 @@
       .modal-multi.mode-group img{height:65vw;width:auto;flex-shrink:0;object-fit:contain}
       .modal-multi.mode-collage{flex-wrap:wrap;overflow-x:hidden;justify-content:center}
       .modal-multi.mode-collage img{width:calc(50% - 4px);height:auto;max-height:none;object-fit:contain}
+      .modal-multi.mode-bti{padding:4px;gap:3px;overflow-x:auto}
+      .modal-multi.mode-bti img{height:50vw;width:auto;flex:none;flex-shrink:0}
       .modal-image-section{position:relative}
       .modal-nav-btn{top:auto;bottom:12px;transform:none;background:rgba(140,140,140,.25);border-color:rgba(180,180,180,.3);color:rgba(255,255,255,.7);width:38px;height:38px;font-size:18px}
       .modal-nav-btn.prev{left:6px}
@@ -149,6 +169,7 @@
   <a href="index.html" class="back">← Back</a>
   <nav class="page-links">
     <a href="architecture.html">To Build</a>
+    <a href="todirect.html">To Direct</a>
     <a href="video.html">Video</a>
     <a href="localradio.html">Local Radio</a>
   </nav>
@@ -195,15 +216,19 @@
 </div>
 
 <script>
-/* ── CURSOR — single circle, RAF loop, no hover events ── */
+/* ── CLOUDINARY HELPERS ── */
+const CLD = 'https://res.cloudinary.com/disa2fbgc/image/upload';
+/* thumb: compressed + resized for scroll grid */
+const t = id => `${CLD}/q_auto,f_auto,w_400/${id}`;
+/* full: quality-optimized only, no resize, for modal */
+const f = id => `${CLD}/q_auto,f_auto/${id}`;
+
+/* ── CURSOR — lightweight direct handler, no RAF ── */
 const cur = document.getElementById('cur');
 if (window.matchMedia('(hover:hover) and (pointer:fine)').matches) {
-  let mx = 0, my = 0;
-  document.addEventListener('pointermove', e => { mx = e.clientX; my = e.clientY; }, { passive: true });
-  (function loop() {
-    cur.style.transform = `translate3d(${mx}px,${my}px,0) translate(-50%,-50%)`;
-    requestAnimationFrame(loop);
-  })();
+  document.addEventListener('pointermove', e => {
+    cur.style.transform = `translate3d(${e.clientX - 14}px,${e.clientY - 14}px,0)`;
+  }, { passive: true });
 }
 
 /* ── CLO GROUPS ── */
@@ -224,52 +249,119 @@ function getCloGroup(idx) {
   return { files: [idx], name: null, desc: null };
 }
 
-/* ── PROJECTS ── */
-const R = () => Math.round;
+/* ── PROJECTS — Cloudinary URLs ── */
+/* Each file: { thumb, full, w, h } */
+/* w/h kept for column layout proportions */
 const projects = [
   {
     id:'pilots', year:'2018–2021', name:'PILOTS / HAND DRAWINGS',
     subtitle:'HAND DRAWINGS · 2018–2021',
     desc:'Early studies in line, texture and atmosphere — before digital tools took over. A way of thinking on paper.',
-    files: Array.from({length:14}, (_,i) => ({ path:`images/assets/create/pilots/pilots${i+1}.webp`, width:Math.round(62+Math.random()*14), height:Math.round(46+Math.random()*16) }))
+    files: [
+      {thumb:t('pilots1_remgec'),  full:f('pilots1_remgec'),  w:70,h:80},
+      {thumb:t('pilots2_rgwodc'),  full:f('pilots2_rgwodc'),  w:70,h:80},
+      {thumb:t('pilots3_f6g2iv'),  full:f('pilots3_f6g2iv'),  w:70,h:76},
+      {thumb:t('pilots4_lm8ejf'),  full:f('pilots4_lm8ejf'),  w:72,h:56},
+      {thumb:t('pilots5_x89zqf'),  full:f('pilots5_x89zqf'),  w:68,h:82},
+      {thumb:t('pilots6_ddhli1'),  full:f('pilots6_ddhli1'),  w:72,h:58},
+      {thumb:t('pilots7_cemzlm'),  full:f('pilots7_cemzlm'),  w:72,h:70},
+      {thumb:t('pilots8_g7a77p'),  full:f('pilots8_g7a77p'),  w:70,h:80},
+      {thumb:t('pilots10_sbznam'), full:f('pilots10_sbznam'), w:70,h:80},
+      {thumb:t('pilots11_bajoka'), full:f('pilots11_bajoka'), w:66,h:80},
+      {thumb:t('pilots12_pii89f'), full:f('pilots12_pii89f'), w:68,h:82},
+      {thumb:t('pilots13_avvkdp'), full:f('pilots13_avvkdp'), w:70,h:70},
+      {thumb:t('pilots14_agfrdk'), full:f('pilots14_agfrdk'), w:72,h:54},
+      {thumb:t('pilots15_ujglnb'), full:f('pilots15_ujglnb'), w:70,h:80},
+    ]
   },
   {
     id:'Self-Portrait', year:'2024', name:'NONE OF THEM IS ME',
     subtitle:'SELF-PORTRAIT SERIES · 2024',
     desc:'Exploring the gap between how we see ourselves and how we appear. A study in identity through framing and gesture.\n\nNone of the versions is definitive.',
-    files: Array.from({length:6}, (_,i) => ({ path:`images/assets/create/portrait/Portrait${i+1}.webp`, width:Math.round(64+Math.random()*12), height:Math.round(82+Math.random()*14) }))
+    files: [
+      {thumb:t('Portrait1_pr3lxb'), full:f('Portrait1_pr3lxb'), w:66,h:82},
+      {thumb:t('Portrait2_aymi9s'), full:f('Portrait2_aymi9s'), w:66,h:82},
+      {thumb:t('Portrait3_xxt5g0'), full:f('Portrait3_xxt5g0'), w:66,h:82},
+      {thumb:t('Portrait4_m0ombd'), full:f('Portrait4_m0ombd'), w:66,h:82},
+      {thumb:t('Portrait5_qyilop'), full:f('Portrait5_qyilop'), w:66,h:82},
+      {thumb:t('Portrait6_dsxw0a'), full:f('Portrait6_dsxw0a'), w:66,h:82},
+    ]
   },
   {
     id:'scan', year:'2025–2026', name:'SCAN',
     subtitle:'GRAINS OF THE CITIES',
     desc:'Fragments of urban texture — scanned, layered, recomposed. A visual archive of places in transition.',
-    files: Array.from({length:10}, (_,i) => ({ path:`images/assets/create/scan/Scan${i+1}.webp`, width:Math.round(66+Math.random()*14), height:Math.round(50+Math.random()*14) }))
+    files: [
+      {thumb:t('Scan1_alzrix'),              full:f('Scan1_alzrix'),              w:64,h:82},
+      {thumb:t('Scan2_ov6joi'),              full:f('Scan2_ov6joi'),              w:72,h:72},
+      {thumb:t('Scan3_1_11zon_cfwgfd'),      full:f('Scan3_1_11zon_cfwgfd'),      w:62,h:82},
+      {thumb:t('Scan4_2_11zon_fszmcx'),      full:f('Scan4_2_11zon_fszmcx'),      w:64,h:80},
+      {thumb:t('Scan5_4_11zon_w7xfh9'),      full:f('Scan5_4_11zon_w7xfh9'),      w:64,h:80},
+      {thumb:t('Scan6_a0lll8'),              full:f('Scan6_a0lll8'),              w:72,h:54},
+      {thumb:t('Scan7_amov8q'),              full:f('Scan7_amov8q'),              w:64,h:82},
+      {thumb:t('Scan8_5_11zon_fwdmsh'),      full:f('Scan8_5_11zon_fwdmsh'),      w:64,h:80},
+      {thumb:t('Scan9_3_11zon_w2eaeu'),      full:f('Scan9_3_11zon_w2eaeu'),      w:70,h:78},
+      {thumb:t('Scan10_odxc90'),             full:f('Scan10_odxc90'),             w:66,h:80},
+    ]
   },
   {
     id:'clo', year:'2021–2023', name:'CLO',
     subtitle:'CUSTOM CLOTHING',
     desc:'Hand-painted garments as wearable architecture. Material, body and gesture — one surface.',
-    files: Array.from({length:20}, (_,i) => ({ path:`images/assets/create/clo/cloth${i+1}.webp`, width:Math.round(60+Math.random()*18), height:Math.round(46+Math.random()*16) }))
+    files: [
+      {thumb:t('cloth1_dqwjob'),  full:f('cloth1_dqwjob'),  w:68,h:80},
+      {thumb:t('cloth2_ynjl6i'),  full:f('cloth2_ynjl6i'),  w:68,h:80},
+      {thumb:t('cloth3_rybnnz'),  full:f('cloth3_rybnnz'),  w:68,h:80},
+      {thumb:t('cloth4_qs61ri'),  full:f('cloth4_qs61ri'),  w:70,h:70},
+      {thumb:t('cloth5_i9m7nt'),  full:f('cloth5_i9m7nt'),  w:70,h:70},
+      {thumb:t('cloth6_lexpqe'),  full:f('cloth6_lexpqe'),  w:68,h:76},
+      {thumb:t('cloth7_ravliw'),  full:f('cloth7_ravliw'),  w:66,h:74},
+      {thumb:t('cloth8_xtjsil'),  full:f('cloth8_xtjsil'),  w:68,h:80},
+      {thumb:t('cloth9_oci7k5'),  full:f('cloth9_oci7k5'),  w:68,h:80},
+      {thumb:t('cloth10_caqajg'), full:f('cloth10_caqajg'), w:68,h:80},
+      {thumb:t('cloth11_yn2r1u'), full:f('cloth11_yn2r1u'), w:70,h:70},
+      {thumb:t('cloth12_vfbaiq'), full:f('cloth12_vfbaiq'), w:70,h:70},
+      {thumb:t('cloth13_lpy1uz'), full:f('cloth13_lpy1uz'), w:68,h:80},
+      {thumb:t('cloth14_xqdzax'), full:f('cloth14_xqdzax'), w:66,h:80},
+      {thumb:t('cloth15_ac0rsi'), full:f('cloth15_ac0rsi'), w:66,h:80},
+      {thumb:t('cloth16_ijvsip'), full:f('cloth16_ijvsip'), w:68,h:80},
+      {thumb:t('cloth17_vm8vzl'), full:f('cloth17_vm8vzl'), w:66,h:80},
+      {thumb:t('cloth18_xneivd'), full:f('cloth18_xneivd'), w:68,h:80},
+      {thumb:t('cloth19_nadud9'), full:f('cloth19_nadud9'), w:68,h:76},
+      {thumb:t('cloth20_e4pr7j'), full:f('cloth20_e4pr7j'), w:68,h:76},
+    ]
   },
   {
     id:'bti', year:'2022', name:'BEFORE THE IMPACT',
     subtitle:'A diptych in four parts',
     desc:'Silent Horizon explores the moment when an ordinary landscape becomes the stage for an unexpected event.\n\nThe four-frame sequence captures a gradual shift in perception.',
-    files: Array.from({length:4}, (_,i) => ({ path:`images/assets/create/bti/bti${i+1}.jpg`, width:Math.round(68+Math.random()*14), height:Math.round(50+Math.random()*14) }))
+    files: [
+      {thumb:t('bti1_kzcmzy'), full:f('bti1_kzcmzy'), w:70,h:74},
+      {thumb:t('bti2_ttcm4d'), full:f('bti2_ttcm4d'), w:70,h:74},
+      {thumb:t('bti3_o3hzls'), full:f('bti3_o3hzls'), w:70,h:74},
+      {thumb:t('bti4_j3dkvo'), full:f('bti4_j3dkvo'), w:70,h:74},
+    ]
   },
   {
     id:'byhand', year:'2022–2026', name:'BY HAND',
     subtitle:'PIECES OF ART OF DIFFERENT TIME',
     desc:'A constellation of objects, drawings and experiments made over time. No single medium, one continuous curiosity.',
-    files: Array.from({length:10}, (_,i) => ({ path:`images/assets/create/art/art${i+1}.webp`, width:Math.round(66+Math.random()*14), height:Math.round(50+Math.random()*14) }))
+    files: [
+      {thumb:t('art1_fmvcij'),  full:f('art1_fmvcij'),  w:68,h:80},
+      {thumb:t('art2_nqlniq'),  full:f('art2_nqlniq'),  w:66,h:80},
+      {thumb:t('art3_bgjchx'),  full:f('art3_bgjchx'),  w:72,h:54},
+      {thumb:t('art4_lmiuie'),  full:f('art4_lmiuie'),  w:72,h:56},
+      {thumb:t('art5_n4fzf1'),  full:f('art5_n4fzf1'),  w:68,h:80},
+      {thumb:t('art6_spsilh'),  full:f('art6_spsilh'),  w:72,h:50},
+      {thumb:t('art7_feiuft'),  full:f('art7_feiuft'),  w:66,h:80},
+      {thumb:t('art8_ndtuhx'),  full:f('art8_ndtuhx'),  w:68,h:80},
+      {thumb:t('art9_a3ai2c'),  full:f('art9_a3ai2c'),  w:72,h:52},
+      {thumb:t('art10_tvweyl'), full:f('art10_tvweyl'), w:68,h:80},
+    ]
   }
 ];
 
-/* ── FLAT IMAGE LIST for unified cross-project navigation ──
-   Self-Portrait and bti show ALL images at once → one entry each.
-   clo → one entry per group.
-   Others → one entry per image.
-   Arrows ALWAYS navigate this flat list cross-project. */
+/* ── FLAT IMAGE LIST for unified cross-project navigation ── */
 const flatImages = [];
 projects.forEach(proj => {
   if (proj.id === 'bti' || proj.id === 'Self-Portrait') {
@@ -277,7 +369,7 @@ projects.forEach(proj => {
   } else if (proj.id === 'clo') {
     CLO_GROUPS.forEach(g => flatImages.push({ proj, fileIdx: g.files[0] }));
   } else {
-    proj.files.forEach((f, i) => flatImages.push({ proj, fileIdx: i }));
+    proj.files.forEach((_, i) => flatImages.push({ proj, fileIdx: i }));
   }
 });
 let globalIdx = 0;
@@ -300,23 +392,25 @@ const modalNext       = document.getElementById('modalNext');
 function setSingle() {
   modalSingleView.style.display = 'flex';
   modalMultiView.className = 'modal-multi';
-  modalContent.classList.remove('mode-row');
+  modalContent.className = 'modal-content';
 }
 function setMulti(mode) {
   modalSingleView.style.display = 'none';
-  modalMultiView.className = 'modal-multi show mode-' + mode;
-  modalContent.classList.toggle('mode-row', mode === 'row');
+  modalMultiView.className = `modal-multi show mode-${mode}`;
+  modalContent.className = `modal-content mode-${mode === 'bti' ? 'bti' : (mode === 'row' ? 'row' : '')}`;
 }
 function setInfo(title, subtitle, desc) {
   modalTitle.textContent    = title    || '';
   modalSubtitle.textContent = subtitle || '';
   modalDesc.textContent     = desc     || '';
 }
-function buildMultiImgs(paths) {
+function buildMultiImgs(fullPaths) {
   modalMultiView.innerHTML = '';
-  paths.forEach(src => {
+  fullPaths.forEach(src => {
     const img = document.createElement('img');
-    img.src = src; img.alt = '';
+    img.src = src;
+    img.alt = '';
+    img.loading = 'lazy';
     img.onerror = () => { img.style.opacity = '0.2'; };
     modalMultiView.appendChild(img);
   });
@@ -324,7 +418,6 @@ function buildMultiImgs(paths) {
 
 /* ── OPEN MODAL ── */
 function openModal(proj, fileIdx) {
-  // Sync globalIdx
   const fi = flatImages.findIndex(e => {
     if (e.proj !== proj) return false;
     if (proj.id === 'clo') return e.fileIdx === getCloGroup(fileIdx).files[0];
@@ -333,18 +426,14 @@ function openModal(proj, fileIdx) {
   });
   if (fi !== -1) globalIdx = fi;
 
-  modalContent.classList.remove('mode-row');
-  modalSingleView.style.display = 'flex';
-  modalMultiView.className = 'modal-multi';
-
   if (proj.id === 'Self-Portrait') {
     setMulti('collage');
-    buildMultiImgs(proj.files.map(f => f.path));
+    buildMultiImgs(proj.files.map(file => file.full));
     setInfo(proj.name, proj.subtitle, proj.desc);
 
   } else if (proj.id === 'bti') {
-    setMulti('row');
-    buildMultiImgs(proj.files.map(f => f.path));
+    setMulti('bti');
+    buildMultiImgs(proj.files.map(file => file.full));
     setInfo(proj.name, proj.subtitle, proj.desc);
 
   } else if (proj.id === 'clo') {
@@ -352,25 +441,19 @@ function openModal(proj, fileIdx) {
     setInfo(proj.name, group.name || proj.subtitle, group.desc || proj.desc);
     if (group.files.length === 1) {
       setSingle();
-      modalImg.src = proj.files[fileIdx].path;
+      modalImg.src = proj.files[fileIdx].full;
     } else {
       setMulti('group');
-      buildMultiImgs(group.files.map(i => proj.files[i].path));
+      buildMultiImgs(group.files.map(i => proj.files[i].full));
     }
   } else {
     setSingle();
-    modalImg.src = proj.files[fileIdx].path;
+    modalImg.src = proj.files[fileIdx].full;
     setInfo(proj.name, proj.subtitle, proj.desc);
   }
 
-  // Arrows ALWAYS shown — they navigate the flat list cross-project
-  modalPrev.style.display = '';
-  modalNext.style.display = '';
-
   modal.classList.add('active');
   modal.setAttribute('aria-hidden', 'false');
-
-  // Update URL hash for shareable link
   history.replaceState(null, '', '#' + proj.id);
 }
 
@@ -380,7 +463,6 @@ function closeModal() {
   history.replaceState(null, '', location.pathname);
 }
 
-/* ── UNIFIED GLOBAL NAVIGATION ── */
 function navGlobal(dir) {
   if (!flatImages.length) return;
   globalIdx = (globalIdx + dir + flatImages.length) % flatImages.length;
@@ -400,7 +482,6 @@ document.addEventListener('keydown', e => {
   if (e.key === 'ArrowRight') navGlobal(+1);
 });
 
-/* ── HASH ROUTING — open project from URL ── */
 function openFromHash() {
   const id = location.hash.slice(1);
   if (!id) return;
@@ -431,9 +512,6 @@ function buildScrollContainer() {
   const BETWEEN_G = isMobile ? 14 : 48;
   const LEFT_PAD  = isMobile ? 10 : 24;
 
-  // Mobile: ensure exactly 2.5 columns visible.
-  // Total visible = LEFT_PAD + 2*COL_W + 2*WITHIN_G + 0.5*COL_W = LEFT_PAD + 2.5*COL_W + 2*WITHIN_G
-  // → COL_W = (viewport - LEFT_PAD - 2*WITHIN_G) / 2.5
   const COL_W = isMobile
     ? Math.floor((window.innerWidth - LEFT_PAD - 2 * WITHIN_G) / 2.5)
     : 100;
@@ -454,7 +532,6 @@ function buildScrollContainer() {
       if (firstCol) firstCol = false;
       prevProjId = proj.id;
 
-      // Header on first column of each project
       if (col === 0) {
         const hdr = document.createElement('div');
         hdr.className = 'column-header';
@@ -468,20 +545,22 @@ function buildScrollContainer() {
       const start = col * PER_COL;
       const end   = Math.min(start + PER_COL, proj.files.length);
       for (let i = start; i < end; i++) {
-        const f    = proj.files[i];
+        const file = proj.files[i];
         const item = document.createElement('div');
         item.className   = 'image-item';
-        item.style.width  = f.width  + 'px';
-        item.style.height = f.height + 'px';
+        item.style.width  = file.w + 'px';
+        item.style.height = file.h + 'px';
         item.style.marginTop = i === start ? '0' : '-18px';
 
         const img = document.createElement('img');
-        img.src = f.path;
+        img.src = file.thumb;
         img.alt = `${proj.name} ${i + 1}`;
-        // First few images: eager + high priority; rest: lazy
-        if (totalImgCount < 6) {
+        /* first 3: eager high-priority, next 3: eager, rest: lazy */
+        if (totalImgCount < 3) {
           img.loading = 'eager';
-          if (totalImgCount < 3) img.setAttribute('fetchpriority', 'high');
+          img.setAttribute('fetchpriority', 'high');
+        } else if (totalImgCount < 6) {
+          img.loading = 'eager';
         } else {
           img.loading = 'lazy';
         }
@@ -495,7 +574,6 @@ function buildScrollContainer() {
     }
   });
 
-  // Right spacer
   const spacer = document.createElement('div');
   spacer.style.cssText = 'flex-shrink:0;width:24px;min-width:24px';
   scrollContainer.appendChild(spacer);
