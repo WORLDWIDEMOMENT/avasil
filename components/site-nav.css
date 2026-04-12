@@ -172,57 +172,66 @@ body[data-page="visual"] .site-nav-marquee,
 body[data-page="about"] .site-nav-marquee { display: none; }
 
 /* ── Mobile ── */
-@media (max-width: 860px) {
-  .site-nav-create-menu{
-    top: calc(100% + 8px);
-    right: 0;
+@media (max-width:860px){
+  .site-nav{
+    padding:16px 20px;
   }
 
-  .site-nav-create.open .site-nav-create-menu{
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
-    pointer-events: auto;
-  }
-}
-{
-  
-  .site-nav { padding: 16px 20px; }
-
-  .site-nav-top {
-    flex-wrap: nowrap;
-    gap: 10px;
+  .site-nav-top{
+    flex-wrap:nowrap;
+    gap:10px;
   }
 
-  .site-nav-links {
-    flex-wrap: nowrap;
-    gap: 8px;
-    justify-content: flex-end;
-    min-width: 0;
-    overflow-x: auto;
+  .site-nav-links{
+    flex-wrap:nowrap;
+    gap:8px;
+    justify-content:flex-end;
+    min-width:0;
+    overflow-x:auto;
   }
 
   .site-nav-link,
-  .site-nav-create-btn { font-size: 9px; letter-spacing: .1em; }
-
-  .site-nav-bottom {
-    flex-wrap: nowrap;
-    justify-content: space-between;
-    gap: 12px;
+  .site-nav-create-btn{
+    font-size:9px;
+    letter-spacing:.1em;
   }
 
-  .site-nav-socials {
-    gap: 10px;
-    justify-content: flex-end;
+  .site-nav-bottom{
+    flex-wrap:nowrap;
+    justify-content:space-between;
+    gap:12px;
   }
 
-  .site-nav-marquee { top: 50px; }
-
-  .site-nav-marquee-track {
-    font-size: 9px;
-    letter-spacing: .18em;
+  .site-nav-socials{
+    gap:10px;
+    justify-content:flex-end;
   }
 
-  /* Touch: restore cursor on interactive elements */
-  .site-nav-create-btn { cursor: pointer; }
+  .site-nav-marquee{
+    top:50px;
+  }
+
+  .site-nav-marquee-track{
+    font-size:9px;
+    letter-spacing:.18em;
+  }
+
+  .site-nav-create-btn{
+    cursor:pointer;
+  }
+
+  .site-nav-create-menu{
+    position:absolute;
+    top:calc(100% + 8px);
+    right:0;
+    min-width:146px;
+    z-index:1000;
+  }
+
+  .site-nav-create.open .site-nav-create-menu{
+    opacity:1;
+    visibility:visible;
+    transform:translateY(0);
+    pointer-events:auto;
+  }
 }
