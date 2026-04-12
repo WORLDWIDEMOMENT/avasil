@@ -11,7 +11,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 28px 48px;
+  padding: 20px 48px;
   pointer-events: none;
 }
 
@@ -27,6 +27,7 @@
   pointer-events: auto;
 }
 
+/* ── KEY FIX: All nav items must align on the same baseline ── */
 .site-nav-link,
 .site-nav-create-btn {
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
@@ -38,19 +39,19 @@
   text-decoration: none;
   background: none;
   border: none;
+  padding: 0;
+  margin: 0;
+  line-height: 1;
+  vertical-align: middle;
+  display: inline-flex;
+  align-items: center;
   transition: color .2s ease, opacity .2s ease;
   white-space: nowrap;
-  line-height: 1;
 }
 
 .site-nav-back { letter-spacing: .18em; }
 .site-nav-link { pointer-events: auto; }
-.site-nav-create-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-}
+.site-nav-create-btn { cursor: pointer; }
 
 .site-nav-link:hover,
 .site-nav-create-btn:hover,
@@ -64,7 +65,14 @@
   pointer-events: none;
 }
 
-.site-nav-create { position: relative; pointer-events: auto; }
+/* ── To Create wrapper — must be flex to vertically align ── */
+.site-nav-create {
+  position: relative;
+  pointer-events: auto;
+  display: inline-flex;
+  align-items: center;
+}
+
 .site-nav-create-menu {
   position: absolute;
   top: calc(100% + 12px);
@@ -78,12 +86,14 @@
   visibility: hidden;
   transform: translateY(-6px);
   transition: opacity .2s ease, transform .2s ease, visibility .2s ease;
+  z-index: 10;
 }
 
 .site-nav-create-menu .site-nav-link {
   font-size: 10px;
   padding: 12px 16px;
   border-bottom: 1px solid rgba(255, 255, 255, .08);
+  display: block;
 }
 
 .site-nav-create-menu .site-nav-link:last-child { border-bottom: 0; }
@@ -102,8 +112,10 @@
   transform: translateY(0);
 }
 
+/* ── Icon links (footer) ── */
 .site-nav-icon-link {
   display: inline-flex;
+  align-items: center;
   color: var(--site-nav-fg);
   text-decoration: none;
   opacity: .35;
@@ -120,16 +132,17 @@
   color: var(--site-nav-fg);
 }
 
+/* ── Marquee ticker ── */
 .site-nav-marquee {
   position: fixed;
-  top: 62px;
+  top: 58px;
   left: 0;
   right: 0;
   z-index: 880;
   overflow: hidden;
-  border-top: 1px solid rgba(255, 255, 255, .08);
-  border-bottom: 1px solid rgba(255, 255, 255, .08);
-  background: rgba(6, 6, 6, .78);
+  border-top: 1px solid rgba(255, 255, 255, .07);
+  border-bottom: 1px solid rgba(255, 255, 255, .07);
+  background: rgba(6, 6, 6, .82);
   pointer-events: none;
 }
 
@@ -137,56 +150,65 @@
   display: flex;
   white-space: nowrap;
   animation: site-nav-marquee 34s linear infinite;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
   font-size: 10px;
   font-weight: 700;
-  letter-spacing: .22em;
+  letter-spacing: .24em;
   text-transform: uppercase;
-  color: rgba(238, 238, 238, .45);
-  padding: 5px 0;
+  color: rgba(238, 238, 238, .38);
+  padding: 5px 0 4px;
 }
 
-.site-nav-marquee-track span { padding-right: 22px; }
+.site-nav-marquee-track span { padding-right: 24px; }
 
 @keyframes site-nav-marquee {
   from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
+  to   { transform: translateX(-50%); }
 }
 
+/* Pages with their own ticker/nav don't show the site-nav marquee */
 body[data-page="architecture"] .site-nav-marquee,
 body[data-page="visual"] .site-nav-marquee,
-body[data-page="about"] .site-nav-marquee {
-  display: none;
-}
+body[data-page="about"] .site-nav-marquee { display: none; }
 
+/* ── Mobile ── */
 @media (max-width: 860px) {
-  .site-nav { padding: 18px 20px; }
+  .site-nav { padding: 16px 20px; }
+
   .site-nav-top {
     flex-wrap: nowrap;
-    gap: 12px;
+    gap: 10px;
   }
+
   .site-nav-links {
     flex-wrap: nowrap;
     gap: 8px;
     justify-content: flex-end;
     min-width: 0;
+    overflow-x: auto;
   }
+
   .site-nav-link,
   .site-nav-create-btn { font-size: 9px; letter-spacing: .1em; }
+
   .site-nav-bottom {
     flex-wrap: nowrap;
-    row-gap: 0;
     justify-content: space-between;
     gap: 12px;
   }
+
   .site-nav-socials {
-    gap: 8px;
+    gap: 10px;
     justify-content: flex-end;
   }
-  .site-nav-marquee {
-    top: 52px;
-  }
+
+  .site-nav-marquee { top: 50px; }
+
   .site-nav-marquee-track {
     font-size: 9px;
-    letter-spacing: .16em;
+    letter-spacing: .18em;
   }
+
+  /* Touch: restore cursor on interactive elements */
+  .site-nav-create-btn { cursor: pointer; }
 }
