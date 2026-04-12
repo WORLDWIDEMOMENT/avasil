@@ -3,24 +3,46 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AV — Vasileuskaya</title>
-   <!-- ── SEO & SOCIAL META ── -->
-  <meta name="description" content="Portfolio of Anastasiya Vasileuskaya — spatial design, brand identity, and visual systems. Projects across Europe, Russia, and Latin America">
-  <meta name="keywords" content="vasileuskaya, avasil, anastasiya vasileuskaya, architect, art director, spatial design, architecture portfolio, interior design, masterplan">
-  <meta name="author" content="Anastasiya Vasileuskaya">
-  <meta name="robots" content="index, follow">
-  <link rel="canonical" href="https://worldwidemoment.github.io/avasil/index.html">
+<title>Anastasiya Vasileuskaya — Architect & Art Director</title>
 
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://worldwidemoment.github.io/avasil/index.html">
-  <meta property="og:title" content="AV — A.VASILEUSKAYA">
-  <meta property="og:description" content="Portfolio of Anastasiya Vasileuskaya — spatial design, brand identity, and visual systems. Projects across Europe, Russia, and Latin America">
-  <meta property="og:image" content="https://res.cloudinary.com/disa2fbgc/image/upload/v1775828579/art5_n4fzf1.webp">
+<!-- ── SEO ── -->
+<meta name="description" content="Portfolio of Anastasiya Vasileuskaya — spatial design, brand identity, and visual systems. Projects across Europe, Russia, and Latin America.">
+<meta name="keywords" content="vasileuskaya, avasil, anastasiya vasileuskaya, architect, art director, spatial design, architecture portfolio, interior design, masterplan">
+<meta name="author" content="Anastasiya Vasileuskaya">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://worldwidemoment.github.io/avasil/">
 
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="AVASIL — A.VASILEUSKAYA">
-  <meta name="twitter:description" content="Architecture and spatial design by Anastasiya Vasileuskaya.">
-  <meta name="twitter:image" content="https://res.cloudinary.com/disa2fbgc/image/upload/v1775828579/art5_n4fzf1.webp">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://worldwidemoment.github.io/avasil/">
+<meta property="og:title" content="Anastasiya Vasileuskaya — Architect & Art Director">
+<meta property="og:description" content="Portfolio of Anastasiya Vasileuskaya — spatial design, brand identity, and visual systems. Projects across Europe, Russia, and Latin America.">
+<meta property="og:image" content="https://res.cloudinary.com/disa2fbgc/image/upload/w_1200,h_630,c_fill,q_auto,f_auto/miriady_atyicc.webp">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Anastasiya Vasileuskaya — Architect & Art Director">
+<meta name="twitter:description" content="Portfolio of Anastasiya Vasileuskaya — spatial design, brand identity, and visual systems.">
+<meta name="twitter:image" content="https://res.cloudinary.com/disa2fbgc/image/upload/w_1200,h_630,c_fill,q_auto,f_auto/miriady_atyicc.webp">
+
+<!-- ── FAVICON ── -->
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<link rel="manifest" href="site.webmanifest">
+
+<!-- ── JSON-LD ── -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Anastasiya Vasileuskaya",
+  "alternateName": ["avasil", "A.Vasileuskaya"],
+  "jobTitle": "Architect & Art Director",
+  "url": "https://worldwidemoment.github.io/avasil/",
+  "sameAs": [
+    "https://linkedin.com/in/worldwidemoment/",
+    "https://instagram.com/molodostibolshenebudet/"
+  ]
+}
+</script>
 
 <style>
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -71,8 +93,8 @@ body {
 /* ── LAYERS ── */
 .layer { position: fixed; inset: 0; transition: clip-path 1.2s cubic-bezier(.77, 0, .18, 1); }
 .build-layer  { background: white; z-index: 2; clip-path: circle(0px at 0% 100%); }
-.create-layer { background: url("images/main1.jpg") center/cover no-repeat; z-index: 1; clip-path: circle(0px at 100% 100%); }
-/* direct-layer: fill with images/direct.webp later */
+/* ── TO CREATE layer: uses main1.webp ── */
+.create-layer { background: url("images/main1.webp") center/cover no-repeat; z-index: 1; clip-path: circle(0px at 100% 100%); }
 .direct-layer { background: rgba(255,255,255,.04) url("https://res.cloudinary.com/disa2fbgc/image/upload/v1775592590/%D0%90%D0%B9%D0%B4%D0%B5%D0%BD%D1%82%D0%B8%D0%BA%D0%B0_%D0%90%D1%80%D1%85%D0%B8%D0%B2%D0%B0_upscaled_crung9.jpg") center/cover no-repeat; z-index: 1; clip-path: circle(0px at 50% 100%); }
 
 /* ── GRID ── */
@@ -109,6 +131,27 @@ body {
   to   { transform: translateX(-50%); }
 }
 .build-active .marquee-track { color: rgba(0,0,0,.15); }
+
+/* ── TAGLINE — appears under marquee, fades out after intro ── */
+#tagline-sub {
+  position: fixed;
+  top: 90px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 19;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .32em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.26);
+  pointer-events: none;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 1.2s ease;
+}
+#tagline-sub.visible { opacity: 1; }
+#tagline-sub.fade { opacity: 0; transition: opacity 2s ease; }
+.build-active #tagline-sub { color: rgba(0,0,0,.26); }
 
 /* ── ROULETTE TRIGGER ── */
 #roulette-btn {
@@ -265,11 +308,19 @@ body {
   font-size: 11px; font-weight: 700; letter-spacing: .2em; text-transform: uppercase;
   z-index: 20; transition: color .4s ease;
 }
-.bottom-bar a { color: inherit; text-decoration: none; opacity: .45; transition: opacity .25s; }
-.bottom-bar a:hover { opacity: 1; }
-.contact { display: flex; gap: 14px; align-items: center; }
-.divider { opacity: .2; }
+.bottom-bar > a { color: inherit; text-decoration: none; opacity: .45; transition: opacity .25s; }
+.bottom-bar > a:hover { opacity: 1; }
 .build-active .bottom-bar { color: black; }
+
+/* ── ICON LINKS (bottom right) ── */
+.bottom-icons { display: flex; align-items: center; gap: 20px; }
+.icon-link {
+  display: flex; align-items: center;
+  color: inherit; text-decoration: none;
+  opacity: .45; transition: opacity .25s;
+}
+.icon-link:hover { opacity: 1; }
+.icon-link svg { display: block; }
 
 /* ── MOBILE ── */
 @media (max-width: 900px) {
@@ -290,14 +341,7 @@ body {
   .zone { bottom: 100px; max-width: calc(50vw - 22px); }
   #build  { left: 16px; right: auto; }
   #create { right: 16px; left: auto; }
-  /* direct: centered, above build/create */
-  #direct {
-    bottom: 178px;
-    left: 50%;
-    right: auto;
-    transform: translateX(-50%);
-    max-width: none;
-  }
+  #direct { bottom: 178px; left: 50%; right: auto; transform: translateX(-50%); max-width: none; }
   #direct .main-title { font-size: clamp(14px, 5.5vw, 22px); }
   #direct .sub { margin-top: 8px; }
 
@@ -306,8 +350,8 @@ body {
   .zone.active .sub { opacity: .52; }
   #build .main-title a { pointer-events: none; }
   .bottom-bar { padding: 0 16px; bottom: 16px; font-size: 9px; align-items: flex-end; }
-  .contact { flex-direction: column; gap: 5px; align-items: flex-end; }
-  .divider { display: none; }
+  .bottom-icons { gap: 16px; }
+  #tagline-sub { font-size: 9px; letter-spacing: .22em; }
 }
 @media (max-width: 560px) {
   .main-title { font-size: clamp(22px, 6.5vw, 28px); letter-spacing: .05em; }
@@ -333,6 +377,9 @@ body {
 <div class="marquee-wrap ui-group">
   <div class="marquee-track">VASILEUSKAYA.&ensp;VASILEUSKAYA.&ensp;VASILEUSKAYA.&ensp;VASILEUSKAYA.&ensp;VASILEUSKAYA.&ensp;VASILEUSKAYA.&ensp;VASILEUSKAYA.&ensp;VASILEUSKAYA.&ensp;VASILEUSKAYA.&ensp;VASILEUSKAYA.&ensp;VASILEUSKAYA.&ensp;VASILEUSKAYA.&ensp;</div>
 </div>
+
+<!-- ── TAGLINE — appears briefly below marquee, then fades ── -->
+<div id="tagline-sub">Spatial design · Art Direction · Visual systems</div>
 
 <!-- ── ROULETTE TRIGGER ── -->
 <button id="roulette-btn" aria-label="Random experience">
@@ -407,12 +454,30 @@ body {
 <!-- ── BOTTOM BAR ── -->
 <div class="bottom-bar ui-group">
   <a href="about.html">About</a>
-  <div class="contact">
-    <a href="mailto:navilen@bk.ru">navilen@bk.ru</a>
-    <span class="divider">—</span>
-    <a href="https://www.instagram.com/molodostibolshenebudet/" target="_blank" rel="noopener">Instagram</a>
-    <span class="divider">—</span>
-    <a href="https://linkedin.com/in/worldwidemoment/" target="_blank" rel="noopener">LinkedIn</a>
+  <div class="bottom-icons">
+    <!-- Email -->
+    <a href="mailto:navilen@bk.ru" aria-label="Email" class="icon-link">
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="2" y="4" width="14" height="10" rx="1.5"/>
+        <polyline points="2,5 9,10.5 16,5"/>
+      </svg>
+    </a>
+    <!-- Instagram -->
+    <a href="https://www.instagram.com/molodostibolshenebudet/" target="_blank" rel="noopener" aria-label="Instagram" class="icon-link">
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round">
+        <rect x="2.5" y="2.5" width="13" height="13" rx="3.5"/>
+        <circle cx="9" cy="9" r="3.2"/>
+        <circle cx="12.8" cy="5.2" r=".9" fill="currentColor" stroke="none"/>
+      </svg>
+    </a>
+    <!-- LinkedIn -->
+    <a href="https://linkedin.com/in/worldwidemoment/" target="_blank" rel="noopener" aria-label="LinkedIn" class="icon-link">
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="currentColor">
+        <rect x="2.5" y="7" width="2.8" height="8.5" rx=".4"/>
+        <circle cx="3.9" cy="4.5" r="1.6"/>
+        <path d="M8 7h2.7v1.4C11.3 7.5 12.3 7 13.5 7 15.6 7 17 8.4 17 11v4.5h-2.8V11.4c0-1.3-.6-2-1.8-2-1.3 0-2.1.8-2.1 2.3V15.5H8V7z"/>
+      </svg>
+    </a>
   </div>
 </div>
 
@@ -424,7 +489,7 @@ if (window.matchMedia('(hover: hover)').matches) {
     cur.style.left = e.clientX + 'px';
     cur.style.top  = e.clientY + 'px';
   });
-  document.querySelectorAll('a, .main-title, #roulette-btn, .popup-close, .popup-spin-again').forEach(el => {
+  document.querySelectorAll('a, .main-title, #roulette-btn, .popup-close, .popup-spin-again, .icon-link').forEach(el => {
     el.addEventListener('mouseenter', () => cur.classList.add('big'));
     el.addEventListener('mouseleave', () => cur.classList.remove('big'));
   });
@@ -434,6 +499,8 @@ if (window.matchMedia('(hover: hover)').matches) {
 const veil = document.getElementById('intro-veil');
 const line = document.getElementById('intro-line');
 const rBtn = document.getElementById('roulette-btn');
+const taglineSub = document.getElementById('tagline-sub');
+
 setTimeout(() => veil.classList.add('darken'), 1800);
 setTimeout(() => line.classList.add('rise'), 2200);
 setTimeout(() => {
@@ -441,7 +508,12 @@ setTimeout(() => {
   line.classList.add('settle');
   document.querySelectorAll('.ui-group').forEach(el => el.classList.add('visible'));
   rBtn.classList.add('visible');
+  taglineSub.classList.add('visible');
 }, 2900);
+// Tagline fades out after 4.5s of being visible
+setTimeout(() => {
+  taglineSub.classList.add('fade');
+}, 7400);
 
 // ── BUILD / CREATE / DIRECT ──
 const buildZone   = document.getElementById('build');
@@ -503,152 +575,38 @@ if (window.matchMedia('(hover: hover)').matches) {
   });
 }
 
-// ══════════════════════════════════════
 // ── ROULETTE ──
-// ══════════════════════════════════════
-let spinGen       = 0;
-let rouletteOpen  = false;
-let spinTimer     = null;
-let currentProject = null;
+let spinGen = 0, rouletteOpen = false, spinTimer = null, currentProject = null;
 
 const projects = [
-
-  // ── TO DIRECT ──
-  { title:'Archive / Space', category:'To Direct',
-    description:'Architectural archive & cultural institution. Identity as classification infrastructure.',
-    image:'https://res.cloudinary.com/disa2fbgc/image/upload/v1775592594/Physical_Wayfinding_System_ehmkt3.jpg',
-    url:'archive.html' },
-  { title:'Migrant', category:'To Direct',
-    description:'Platform for creatives living between countries. Identity without citizenship.',
-    image:'https://res.cloudinary.com/disa2fbgc/image/upload/v1775582602/PHOTO_1_-_Three_People_on_Stairs_2_yqgk8s.png',
-    url:'migrant.html' },
-
-  // ── ARCHITECTURE — internal ──
-  { title:'1295 — Residential Complex', category:'Architecture',
-    description:'Two house types for different buyers. Lead architect role.',
-    image:'images/assets/build/1295/12951.webp',
-    url:'architecture.html#1295-residential-complex' },
-  { title:'Meaning of Fortification', category:'Architecture',
-    description:'Urban design project at ULisboa. Published in UPC magazine.',
-    image:'images/assets/build/fortification/fortification1.webp',
-    url:'architecture.html#meaning-of-fortification' },
-  { title:'House for a Young Couple', category:'Architecture',
-    description:'A compact courtyard house in Cascais exploring natural light.',
-    image:'images/assets/build/interior/interior1.webp',
-    url:'architecture.html#house-for-a-young-couple' },
-  { title:'Masterplan — Dominican Republic', category:'Architecture',
-    description:'Coastal masterplan La Perla, 32 000 m². Beachfront villas.',
-    image:'images/assets/build/vrd/vrd3.webp',
-    url:'architecture.html#masterplan-in-dominican-republic' },
-
-  // ── ARCHITECTURE — external ──
-  { title:'Myriads. Design Code', category:'Architecture',
-    description:'Design code of a residential district in Tyumen.',
-    image:'images/assets/build/als/miriady.webp',
-    url:'https://www.artlebedev.com/enko/miriady/',
-    isExternal:true, externalHost:'artlebedev.com' },
-  { title:'5ka — Future Retail Store', category:'Architecture',
-    description:'The future format of 5ka retail stores.',
-    image:'images/assets/build/als/5ka-store.webp',
-    url:'https://www.artlebedev.com/5ka/future-stores-interiors/',
-    isExternal:true, externalHost:'artlebedev.com' },
-  { title:'TVEL — Facades & Interiors', category:'Architecture',
-    description:'Industrial facility facades and interiors for Rosatom.',
-    image:'images/assets/build/als/tvel.webp',
-    url:'https://www.artlebedev.com/rosatom/tvel/',
-    isExternal:true, externalHost:'artlebedev.com' },
-  { title:'5ka — Future Stores Identity', category:'Architecture',
-    description:'Identity system for the next-generation 5ka store format.',
-    image:'images/assets/build/als/5ka-identity.webp',
-    url:'https://www.artlebedev.com/5ka/future-stores-identity/',
-    isExternal:true, externalHost:'artlebedev.com' },
-  { title:'Magnit Classroom', category:'Architecture',
-    description:'Interior design for a Magnit educational space.',
-    image:'images/assets/build/als/magnit-classroom.webp',
-    url:'https://www.artlebedev.com/magnit/classroom/',
-    isExternal:true, externalHost:'artlebedev.com' },
-  { title:'Magnit Retail Interiors', category:'Architecture',
-    description:'Interior design for Magnit retail stores.',
-    image:'images/assets/build/als/magnit-interiors.webp',
-    url:'https://www.artlebedev.com/magnit/interiors/',
-    isExternal:true, externalHost:'artlebedev.com' },
-
-  // ── VISUAL ──
-  { title:'PILOTS / Hand Drawings', category:'Visual',
-    description:'Early studies in line, texture and atmosphere.',
-    image:'images/assets/create/pilots/pilots1.webp',
-    url:'visual.html#pilots' },
-  { title:'None of them is me', category:'Visual',
-    description:'A Self-Portrait series exploring identity through framing.',
-    image:'images/assets/create/portrait/Portrait2.webp',
-    url:'visual.html#Self-Portrait' },
-  { title:'SCAN — Grains of the Cities', category:'Visual',
-    description:'Fragments of urban texture — scanned, layered, recomposed.',
-    image:'images/assets/create/scan/Scan4.webp',
-    url:'visual.html#scan' },
-  { title:'CLO — Custom Clothing', category:'Visual',
-    description:'Hand-painted garments as wearable architecture.',
-    image:'images/assets/create/clo/cloth2.webp',
-    url:'visual.html#clo' },
-  { title:'Before the Impact', category:'Visual',
-    description:'A four-frame sequence. A gradual shift in perception.',
-    image:'images/assets/create/bti/bti1.jpg',
-    url:'visual.html#bti' },
-  { title:'By Hand', category:'Visual',
-    description:'Objects, drawings and experiments made over time.',
-    image:'images/assets/create/art/art1.webp',
-    url:'visual.html#byhand' },
-
-  // ── VIDEO ──
-  { title:'BIRDS', category:'Video',
-    description:'From Paris with love.',
-    image:'https://vumbnail.com/1171844542.jpg',
-    url:'video.html#0' },
-  { title:'Rebirth Cycles', category:'Video',
-    description:'A meditation on caring for abandoned homes.',
-    image:'https://vumbnail.com/1172106551.jpg',
-    url:'video.html#1' },
-  { title:'Special Diary', category:'Video',
-    description:'This is how life used to feel.',
-    image:'https://vumbnail.com/1172281707.jpg',
-    url:'video.html#2' },
-  { title:'LVL', category:'Video',
-    description:'Short experimental stuff with friends.',
-    image:'https://vumbnail.com/1172106388.jpg',
-    url:'video.html#3' },
-  { title:'Short Walks Down Long Roads', category:'Video',
-    description:'Just a feeling.',
-    image:'https://vumbnail.com/1172128536.jpg',
-    url:'video.html#4' },
-  { title:'Youth Chapter', category:'Video',
-    description:'Was filmed with an ice cream in one hand.',
-    image:'https://vumbnail.com/1172128396.jpg',
-    url:'video.html#5' },
-
-  // ── LOCAL RADIO ──
-  { title:'Channel 01', category:'Local Radio',
-    description:'Garage bleeds into deep house, jungle into trip-hop.',
-    image:'', spotifyUrl:'https://open.spotify.com/playlist/0mg0X028fIt8EwH5yi3Czf',
-    url:'localradio.html#channel-01' },
-  { title:'Channel 02', category:'Local Radio',
-    description:'The sound of a city you visited in a dream.',
-    image:'', spotifyUrl:'https://open.spotify.com/playlist/4YMNrlPjp3nTenV6Qkn4Tc',
-    url:'localradio.html#channel-02' },
-  { title:'Channel 03', category:'Local Radio',
-    description:'The air before a storm that never arrives.',
-    image:'', spotifyUrl:'https://open.spotify.com/playlist/2BAdX7KOSo3hsDMlq37IBD',
-    url:'localradio.html#channel-03' },
-  { title:'Channel 04', category:'Local Radio',
-    description:'The morning after, stretched into a full day.',
-    image:'', spotifyUrl:'https://open.spotify.com/playlist/77mIWmxJFdJGWar4EJdrjq',
-    url:'localradio.html#channel-04' },
-  { title:'Channel 05', category:'Local Radio',
-    description:'Warm scarf over city armor. Urban with a quiet pulse.',
-    image:'', spotifyUrl:'https://open.spotify.com/playlist/1ajzqkENf7NBuPTVNyJPjQ',
-    url:'localradio.html#channel-05' }
+  { title:'Archive / Space', category:'To Direct', description:'Architectural archive & cultural institution. Identity as classification infrastructure.', image:'https://res.cloudinary.com/disa2fbgc/image/upload/v1775592594/Physical_Wayfinding_System_ehmkt3.jpg', url:'archive.html' },
+  { title:'Migrant', category:'To Direct', description:'Platform for creatives living between countries. Identity without citizenship.', image:'https://res.cloudinary.com/disa2fbgc/image/upload/v1775582602/PHOTO_1_-_Three_People_on_Stairs_2_yqgk8s.png', url:'migrant.html' },
+  { title:'1295 — Residential Complex', category:'Architecture', description:'Two house types for different buyers. Lead architect role.', image:'https://res.cloudinary.com/disa2fbgc/image/upload/q_auto,f_auto,w_600/12951_lvxm9b.webp', url:'architecture.html#1295-residential-complex' },
+  { title:'Meaning of Fortification', category:'Architecture', description:'Urban design project at ULisboa. Published in UPC magazine.', image:'https://res.cloudinary.com/disa2fbgc/image/upload/q_auto,f_auto,w_600/fortification1_hkwx3a.webp', url:'architecture.html#meaning-of-fortification' },
+  { title:'House for a Young Couple', category:'Architecture', description:'A compact courtyard house in Cascais exploring natural light.', image:'https://res.cloudinary.com/disa2fbgc/image/upload/q_auto,f_auto,w_600/interior1_pfqunx.webp', url:'architecture.html#house-for-a-young-couple' },
+  { title:'Masterplan — Dominican Republic', category:'Architecture', description:'Coastal masterplan La Perla, 32 000 m². Beachfront villas.', image:'https://res.cloudinary.com/disa2fbgc/image/upload/q_auto,f_auto,w_600/vrd3_zrbnfz.webp', url:'architecture.html#masterplan-in-dominican-republic' },
+  { title:'Myriads. Design Code', category:'Architecture', description:'Design code of a residential district in Tyumen.', image:'https://res.cloudinary.com/disa2fbgc/image/upload/q_auto,f_auto,w_600/miriady_atyicc.webp', url:'https://www.artlebedev.com/enko/miriady/', isExternal:true, externalHost:'artlebedev.com' },
+  { title:'5ka — Future Retail Store', category:'Architecture', description:'The future format of 5ka retail stores.', image:'https://res.cloudinary.com/disa2fbgc/image/upload/q_auto,f_auto,w_600/5ka-store_pchr0e.webp', url:'https://www.artlebedev.com/5ka/future-stores-interiors/', isExternal:true, externalHost:'artlebedev.com' },
+  { title:'TVEL — Facades & Interiors', category:'Architecture', description:'Industrial facility facades and interiors for Rosatom.', image:'https://res.cloudinary.com/disa2fbgc/image/upload/q_auto,f_auto,w_600/tvel_ef5btj.webp', url:'https://www.artlebedev.com/rosatom/tvel/', isExternal:true, externalHost:'artlebedev.com' },
+  { title:'PILOTS / Hand Drawings', category:'Visual', description:'Early studies in line, texture and atmosphere.', image:'https://res.cloudinary.com/disa2fbgc/image/upload/q_auto,f_auto,w_600/pilots1_remgec.webp', url:'visual.html#pilots' },
+  { title:'None of them is me', category:'Visual', description:'A Self-Portrait series exploring identity through framing.', image:'https://res.cloudinary.com/disa2fbgc/image/upload/q_auto,f_auto,w_600/Portrait2_aymi9s.webp', url:'visual.html#Self-Portrait' },
+  { title:'SCAN — Grains of the Cities', category:'Visual', description:'Fragments of urban texture — scanned, layered, recomposed.', image:'https://res.cloudinary.com/disa2fbgc/image/upload/q_auto,f_auto,w_600/Scan4_2_11zon_fszmcx.webp', url:'visual.html#scan' },
+  { title:'CLO — Custom Clothing', category:'Visual', description:'Hand-painted garments as wearable architecture.', image:'https://res.cloudinary.com/disa2fbgc/image/upload/q_auto,f_auto,w_600/cloth2_ynjl6i.webp', url:'visual.html#clo' },
+  { title:'Before the Impact', category:'Visual', description:'A four-frame sequence. A gradual shift in perception.', image:'https://res.cloudinary.com/disa2fbgc/image/upload/q_auto,f_auto,w_600/bti1_kzcmzy.jpg', url:'visual.html#bti' },
+  { title:'By Hand', category:'Visual', description:'Objects, drawings and experiments made over time.', image:'https://res.cloudinary.com/disa2fbgc/image/upload/q_auto,f_auto,w_600/art1_fmvcij.webp', url:'visual.html#byhand' },
+  { title:'BIRDS', category:'Video', description:'From Paris with love.', image:'https://vumbnail.com/1171844542.jpg', url:'video.html#0' },
+  { title:'Rebirth Cycles', category:'Video', description:'A meditation on caring for abandoned homes.', image:'https://vumbnail.com/1172106551.jpg', url:'video.html#1' },
+  { title:'Special Diary', category:'Video', description:'This is how life used to feel.', image:'https://vumbnail.com/1172281707.jpg', url:'video.html#2' },
+  { title:'LVL', category:'Video', description:'Short experimental stuff with friends.', image:'https://vumbnail.com/1172106388.jpg', url:'video.html#3' },
+  { title:'Short Walks Down Long Roads', category:'Video', description:'Just a feeling.', image:'https://vumbnail.com/1172128536.jpg', url:'video.html#4' },
+  { title:'Youth Chapter', category:'Video', description:'Was filmed with an ice cream in one hand.', image:'https://vumbnail.com/1172128396.jpg', url:'video.html#5' },
+  { title:'Channel 01', category:'Local Radio', description:'Garage bleeds into deep house, jungle into trip-hop.', image:'', spotifyUrl:'https://open.spotify.com/playlist/0mg0X028fIt8EwH5yi3Czf', url:'localradio.html#channel-01' },
+  { title:'Channel 02', category:'Local Radio', description:'The sound of a city you visited in a dream.', image:'', spotifyUrl:'https://open.spotify.com/playlist/4YMNrlPjp3nTenV6Qkn4Tc', url:'localradio.html#channel-02' },
+  { title:'Channel 03', category:'Local Radio', description:'The air before a storm that never arrives.', image:'', spotifyUrl:'https://open.spotify.com/playlist/2BAdX7KOSo3hsDMlq37IBD', url:'localradio.html#channel-03' },
+  { title:'Channel 04', category:'Local Radio', description:'The morning after, stretched into a full day.', image:'', spotifyUrl:'https://open.spotify.com/playlist/77mIWmxJFdJGWar4EJdrjq', url:'localradio.html#channel-04' },
+  { title:'Channel 05', category:'Local Radio', description:'Warm scarf over city armor. Urban with a quiet pulse.', image:'', spotifyUrl:'https://open.spotify.com/playlist/1ajzqkENf7NBuPTVNyJPjQ', url:'localradio.html#channel-05' }
 ];
 
-// ── DOM REFS ──
 const popup          = document.getElementById('roulette-popup');
 const drumEl         = document.getElementById('popup-drum');
 const drumText       = document.getElementById('drum-text');
@@ -662,17 +620,14 @@ const popupSpinAgain = document.getElementById('popup-spin-again');
 const imgArea        = document.getElementById('popup-image-area');
 const extBadge       = document.getElementById('popup-ext-badge');
 
-function navigateTo(p) {
-  if (p) window.open(p.url, '_blank', 'noopener noreferrer');
-}
+function navigateTo(p) { if (p) window.open(p.url, '_blank', 'noopener noreferrer'); }
 
 function openPopup() {
   if (!projects.length) return;
   clearTimeout(spinTimer);
   spinGen++;
-  rouletteOpen   = true;
+  rouletteOpen = true;
   currentProject = null;
-
   popup.classList.add('open');
   rBtn.classList.add('spinning');
   popupDesc.classList.remove('show');
@@ -681,22 +636,14 @@ function openPopup() {
   imgArea.classList.remove('resolved', 'ext-shown');
   popupImg.classList.remove('loaded');
   popupImg.src = '';
-
   const totalTicks = 24, fastPhase = 15;
-  const chosenIdx  = Math.floor(Math.random() * projects.length);
-  const intervals  = Array.from({ length: totalTicks }, (_, i) => {
+  const chosenIdx = Math.floor(Math.random() * projects.length);
+  const intervals = Array.from({ length: totalTicks }, (_, i) => {
     const t = i / totalTicks;
-    return t < fastPhase / totalTicks
-      ? 52
-      : Math.round(52 + Math.pow((t - fastPhase / totalTicks) / (1 - fastPhase / totalTicks), 2.2) * 500);
+    return t < fastPhase / totalTicks ? 52 : Math.round(52 + Math.pow((t - fastPhase / totalTicks) / (1 - fastPhase / totalTicks), 2.2) * 500);
   });
-
   (function runTick(i) {
-    if (i >= totalTicks) {
-      rBtn.classList.remove('spinning');
-      showProject(projects[chosenIdx]);
-      return;
-    }
+    if (i >= totalTicks) { rBtn.classList.remove('spinning'); showProject(projects[chosenIdx]); return; }
     const idx = (chosenIdx + totalTicks - i) % projects.length;
     drumText.textContent   = projects[idx].title.toUpperCase();
     popupTitle.textContent = projects[idx].title.toUpperCase();
@@ -707,24 +654,19 @@ function openPopup() {
 
 function showProject(p) {
   const gen = spinGen;
-  currentProject         = p;
+  currentProject = p;
   popupTitle.textContent = p.title.toUpperCase();
   popupCat.textContent   = p.category.toUpperCase();
   drumText.textContent   = p.title.toUpperCase();
   popupLink.href         = p.url;
   popupLink.textContent  = p.isExternal ? 'View ↗' : 'Open →';
-
   if (p.image) {
     const img = new Image();
     img.onload = () => {
       if (spinGen !== gen) return;
-      popupImg.src = p.image;
-      popupImg.classList.add('loaded');
+      popupImg.src = p.image; popupImg.classList.add('loaded');
       setTimeout(() => drumEl.classList.add('hidden'), 150);
-      if (p.isExternal) {
-        extBadge.textContent = p.externalHost || 'external';
-        imgArea.classList.add('ext-shown');
-      }
+      if (p.isExternal) { extBadge.textContent = p.externalHost || 'external'; imgArea.classList.add('ext-shown'); }
       imgArea.classList.add('resolved');
     };
     img.onerror = () => { if (spinGen !== gen) return; drumEl.classList.add('hidden'); imgArea.classList.add('resolved'); };
@@ -736,37 +678,19 @@ function showProject(p) {
         if (spinGen !== gen) return;
         if (data.thumbnail_url) {
           const si = new Image();
-          si.onload = () => {
-            if (spinGen !== gen) return;
-            popupImg.src = data.thumbnail_url;
-            popupImg.classList.add('loaded');
-            setTimeout(() => drumEl.classList.add('hidden'), 150);
-            imgArea.classList.add('resolved');
-          };
+          si.onload = () => { if (spinGen !== gen) return; popupImg.src = data.thumbnail_url; popupImg.classList.add('loaded'); setTimeout(() => drumEl.classList.add('hidden'), 150); imgArea.classList.add('resolved'); };
           si.onerror = () => { if (spinGen !== gen) return; drumEl.classList.add('hidden'); imgArea.classList.add('resolved'); };
           si.src = data.thumbnail_url;
         } else { drumEl.classList.add('hidden'); imgArea.classList.add('resolved'); }
       })
       .catch(() => { if (spinGen !== gen) return; drumEl.classList.add('hidden'); imgArea.classList.add('resolved'); });
-  } else {
-    drumEl.classList.add('hidden');
-    imgArea.classList.add('resolved');
-  }
-
-  setTimeout(() => {
-    if (spinGen !== gen) return;
-    popupDesc.textContent = p.description;
-    popupDesc.classList.add('show');
-    popupLink.classList.add('show');
-  }, 160);
+  } else { drumEl.classList.add('hidden'); imgArea.classList.add('resolved'); }
+  setTimeout(() => { if (spinGen !== gen) return; popupDesc.textContent = p.description; popupDesc.classList.add('show'); popupLink.classList.add('show'); }, 160);
 }
 
 function closePopup() {
-  rouletteOpen   = false;
-  currentProject = null;
-  popup.classList.remove('open');
-  rBtn.classList.remove('spinning');
-  clearTimeout(spinTimer);
+  rouletteOpen = false; currentProject = null;
+  popup.classList.remove('open'); rBtn.classList.remove('spinning'); clearTimeout(spinTimer);
 }
 
 rBtn.addEventListener('click',           e => { e.stopPropagation(); openPopup(); });
