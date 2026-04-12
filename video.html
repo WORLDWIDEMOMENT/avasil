@@ -3,259 +3,113 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Video — AV</title>
-  <!-- ── SEO & SOCIAL META ── -->
-  <meta name="description" content="Short films and video work — travel, atmosphere, and personal documentary. From Paris to Eastern Europe, shot and edited independently.">
-  <meta name="keywords" content="vasileuskaya, avasil, anastasiya vasileuskaya, architect, art director, spatial design, architecture portfolio, interior design, masterplan">
-  <meta name="author" content="Anastasiya Vasileuskaya">
-  <meta name="robots" content="video, follow">
-  <link rel="canonical" href="https://worldwidemoment.github.io/avasil/video.html">
+<title>Video — A.Vasileuskaya</title>
 
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://worldwidemoment.github.io/avasil/video.html">
-  <meta property="og:title" content="Video — Short Films · A.Vasileuskaya">
-  <meta property="og:description" content="Short films and video work — travel, atmosphere, and personal documentary. From Paris to Eastern Europe, shot and edited independently.">
-  <meta property="og:image" content="https://res.cloudinary.com/disa2fbgc/image/upload/v1775986799/videocrystal_aa6gwj.jpg">
+<!-- ── SEO ── -->
+<meta name="description" content="Short films and video work — travel, atmosphere, and personal documentary. From Paris to Eastern Europe, shot and edited independently.">
+<meta name="keywords" content="vasileuskaya, avasil, anastasiya vasileuskaya, video, short film, art director">
+<meta name="author" content="Anastasiya Vasileuskaya">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://worldwidemoment.github.io/avasil/video.html">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://worldwidemoment.github.io/avasil/video.html">
+<meta property="og:title" content="Video — Short Films · A.Vasileuskaya">
+<meta property="og:description" content="Short films and video work — travel, atmosphere, and personal documentary. From Paris to Eastern Europe, shot and edited independently.">
+<meta property="og:image" content="https://res.cloudinary.com/disa2fbgc/image/upload/w_1200,h_630,c_fill,q_auto,f_auto/videocrystal_aa6gwj.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Video — Short Films · A.Vasileuskaya">
+<meta name="twitter:description" content="Short films and video work — travel, atmosphere, and personal documentary.">
+<meta name="twitter:image" content="https://res.cloudinary.com/disa2fbgc/image/upload/w_1200,h_630,c_fill,q_auto,f_auto/videocrystal_aa6gwj.jpg">
 
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Video — Short Films · A.Vasileuskaya">
-  <meta name="twitter:description" content="Short films and video work — travel, atmosphere, and personal documentary.">
-  <meta name="twitter:image" content="https://res.cloudinary.com/disa2fbgc/image/upload/v1775986799/videocrystal_aa6gwj.jpg">
-<!-- Favicon -->
+<!-- ── FAVICON ── -->
 <link rel="icon" href="favicon.ico" sizes="any">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="icon" type="image/png" sizes="96x96" href="favicon-96x96.png">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
 <link rel="manifest" href="site.webmanifest">
+
+<!-- ── SITE NAV ── -->
+<link rel="stylesheet" href="components/site-nav.css">
+
+<!-- ── JSON-LD ── -->
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Person","name":"Anastasiya Vasileuskaya","url":"https://worldwidemoment.github.io/avasil/","sameAs":["https://linkedin.com/in/worldwidemoment/","https://instagram.com/molodostibolshenebudet/"]}
+</script>
+
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 ::selection{background:#2a2a2a;color:#eee}
+:root{--white:#eeeeee;--dim:rgba(238,238,238,.5);--line:rgba(238,238,238,.12);--blue:#4d6aff}
 
-:root{
-  --white:#eeeeee;
-  --dim:rgba(238,238,238,.5);
-  --line:rgba(238,238,238,.12);
-  --blue:#4d6aff;
-}
+html,body{height:100%;overflow:hidden;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;color:var(--white);cursor:none;background:#060606}
 
-html,body{
-  height:100%;overflow:hidden;
-  font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;
-  color:var(--white);cursor:none;background:#060606;
-}
-
-/* ── CURSOR — RAF loop, single element ── */
-#cur{
-  position:fixed;width:10px;height:10px;
-  background:white;border-radius:50%;
-  pointer-events:none;z-index:9999;
-  will-change:transform;
-  mix-blend-mode:difference;
-}
+/* ── CURSOR ── */
+#cur{position:fixed;width:10px;height:10px;background:white;border-radius:50%;pointer-events:none;z-index:9999;will-change:transform;mix-blend-mode:difference}
 #cur.big{width:50px;height:50px;transition:width .16s,height .16s}
 @media(hover:none){#cur{display:none}}
 
 /* ── BG CROSSFADE ── */
-.bg-a,.bg-b{
-  position:fixed;inset:0;z-index:0;
-  background-size:cover;background-position:center;background-repeat:no-repeat;
-  filter:blur(3px);transform:scale(1.03);
-  transition:opacity .9s ease;
-}
+.bg-a,.bg-b{position:fixed;inset:0;z-index:0;background-size:cover;background-position:center;background-repeat:no-repeat;filter:blur(3px);transform:scale(1.03);transition:opacity .9s ease}
 .bg-a{opacity:1}.bg-b{opacity:0}
 .bg-veil{position:fixed;inset:0;z-index:1;pointer-events:none;background:rgba(0,0,0,.55)}
-.grain{
-  position:fixed;inset:0;z-index:2;pointer-events:none;opacity:.05;
-  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  background-size:180px;
-}
+.grain{position:fixed;inset:0;z-index:2;pointer-events:none;opacity:.05;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:180px}
 
 /* ── PAGE GRID ── */
-.page{
-  position:fixed;inset:0;z-index:3;
-  display:grid;
-  grid-template-rows:auto 1fr auto auto;
-  overflow:hidden; /* prevent grid overflow hiding bottom-bar */
-}
+/* padding-top accounts for fixed site-nav (58px) + marquee (28px) = 86px */
+.page{position:fixed;inset:0;padding-top:86px;z-index:3;display:grid;grid-template-rows:1fr auto auto;overflow:hidden}
 .page *{pointer-events:auto}
 
-/* ── TOP BAR ── */
-.top-bar{
-  display:flex;justify-content:space-between;align-items:flex-start;
-  padding:28px 44px 0;gap:20px;
-}
-.back{
-  font-size:12px;font-weight:700;letter-spacing:.18em;
-  text-transform:uppercase;text-decoration:none;color:var(--dim);
-  transition:color .2s;flex-shrink:0;padding-top:2px;white-space:nowrap;
-}
-.back:hover{color:var(--white)}
-
-/* Top-right nav — same style as .back */
-.page-links{
-  display:flex;align-items:center;gap:22px;flex-shrink:0;
-}
-.page-links a{
-  font-size:12px;font-weight:700;letter-spacing:.18em;
-  text-transform:uppercase;text-decoration:none;color:var(--dim);
-  transition:color .2s;white-space:nowrap;
-}
-.page-links a:hover{color:var(--white)}
-
-/* ── STAGE ──
-   min-height:0 is CRITICAL: tells the grid 1fr row it can shrink below
-   content's natural height, preventing overflow that hides the footer. */
-.stage{
-  display:flex;align-items:center;justify-content:center;
-  padding:0 48px;
-  min-height:0; /* KEY FIX */
-  overflow:hidden;
-}
-.arrow{
-  flex-shrink:0;width:52px;height:52px;
-  border:1px solid var(--line);background:rgba(0,0,0,.35);
-  display:flex;align-items:center;justify-content:center;
-  cursor:none;transition:border-color .2s,background .2s;
-}
+/* ── STAGE ── */
+.stage{display:flex;align-items:center;justify-content:center;padding:0 48px;min-height:0;overflow:hidden}
+.arrow{flex-shrink:0;width:52px;height:52px;border:1px solid var(--line);background:rgba(0,0,0,.35);display:flex;align-items:center;justify-content:center;cursor:none;transition:border-color .2s,background .2s}
 .arrow:hover{border-color:rgba(238,238,238,.5);background:rgba(0,0,0,.65)}
 .arrow svg{width:20px;height:20px;fill:none;stroke:var(--white);stroke-width:1.5}
 
-.video-frame{
-  flex:1;max-width:880px;min-width:0;
-  display:flex;flex-direction:column;
-  min-height:0;
-}
-
-/* aspect-ratio replaces the padding-bottom 56.25% trick:
-   cleaner, no absolute positioning required for sizing,
-   and respects the stage's constrained height. */
-.video-ratio{
-  position:relative;width:100%;
-  aspect-ratio:16/9;
-  background:#000;
-  box-shadow:0 12px 80px rgba(0,0,0,.9),0 0 0 1px rgba(255,255,255,.06);
-  overflow:hidden;
-}
-.video-ratio iframe{
-  position:absolute;inset:0;width:100%;height:100%;border:none;
-}
-
-.video-info{
-  display:flex;justify-content:space-between;align-items:baseline;
-  padding:14px 2px 0;flex-shrink:0;gap:12px;
-}
-.video-title{
-  font-size:clamp(20px,2.4vw,32px);
-  font-weight:700;letter-spacing:.06em;text-transform:uppercase;
-  color:var(--white);line-height:1;
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-}
-.video-counter{
-  font-size:clamp(12px,1vw,15px);
-  font-weight:700;letter-spacing:.22em;
-  color:rgba(238,238,238,.55);flex-shrink:0;
-}
+.video-frame{flex:1;max-width:880px;min-width:0;display:flex;flex-direction:column;min-height:0}
+.video-ratio{position:relative;width:100%;aspect-ratio:16/9;background:#000;box-shadow:0 12px 80px rgba(0,0,0,.9),0 0 0 1px rgba(255,255,255,.06);overflow:hidden}
+.video-ratio iframe{position:absolute;inset:0;width:100%;height:100%;border:none}
+.video-info{display:flex;justify-content:space-between;align-items:baseline;padding:14px 2px 0;flex-shrink:0;gap:12px}
+.video-title{font-size:clamp(20px,2.4vw,32px);font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--white);line-height:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.video-counter{font-size:clamp(12px,1vw,15px);font-weight:700;letter-spacing:.22em;color:rgba(238,238,238,.55);flex-shrink:0}
 
 /* ── FILMSTRIP ── */
-.filmstrip-wrap{
-  padding:0 44px;
-  overflow:visible; /* tooltips escape upward */
-}
-.filmstrip{
-  display:flex;gap:10px;
-  overflow-x:auto;overflow-y:visible;
-  padding-bottom:6px;
-  /* tooltip space trick: reserve invisible area above for CSS tooltip */
-  padding-top:160px;margin-top:-160px;
-  scrollbar-width:none;
-}
+.filmstrip-wrap{padding:0 44px;overflow:visible}
+.filmstrip{display:flex;gap:10px;overflow-x:auto;overflow-y:visible;padding-bottom:6px;padding-top:160px;margin-top:-160px;scrollbar-width:none}
 .filmstrip::-webkit-scrollbar{display:none}
-
-.strip-item{
-  flex-shrink:0;width:130px;cursor:none;
-  opacity:.75;transition:opacity .2s,transform .2s;
-  position:relative;
-}
+.strip-item{flex-shrink:0;width:130px;cursor:none;opacity:.75;transition:opacity .2s,transform .2s;position:relative}
 .strip-item:hover{opacity:1;transform:translateY(-2px)}
 .strip-item.active{opacity:1}
-.strip-item.active::after{
-  content:'';position:absolute;bottom:-5px;left:0;right:0;
-  height:2px;background:var(--blue);
-}
-.strip-thumb{
-  width:130px;height:74px;object-fit:cover;display:block;
-}
-.strip-ph{
-  width:130px;height:74px;background:#1e1e1e;
-  display:flex;align-items:center;justify-content:center;
-  font-size:7px;letter-spacing:.15em;text-transform:uppercase;color:#444;
-}
-.strip-name{
-  font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
-  color:rgba(238,238,238,.8);margin-top:6px;
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-}
+.strip-item.active::after{content:'';position:absolute;bottom:-5px;left:0;right:0;height:2px;background:var(--blue)}
+.strip-thumb{width:130px;height:74px;object-fit:cover;display:block}
+.strip-ph{width:130px;height:74px;background:#1e1e1e;display:flex;align-items:center;justify-content:center;font-size:7px;letter-spacing:.15em;text-transform:uppercase;color:#444}
+.strip-name{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(238,238,238,.8);margin-top:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
 /* ── CINEMA TOOLTIP ── */
-.cinema-tooltip{
-  position:absolute;
-  bottom:calc(100% + 18px);left:0;
-  width:210px;
-  background:#0c0c0c;
-  border:1px solid rgba(238,238,238,.15);
-  padding:11px 13px 10px;
-  pointer-events:none;
-  opacity:0;transform:translateY(8px);
-  transition:opacity .2s ease,transform .2s ease;
-  z-index:100;
-  box-shadow:inset 0 0 0 3px #0c0c0c,inset 0 0 0 4px rgba(238,238,238,.08);
-}
-.cinema-tooltip::before,.cinema-tooltip::after{
-  content:'';position:absolute;left:0;right:0;height:7px;
-  background-image:repeating-linear-gradient(90deg,transparent 0,transparent 5px,rgba(238,238,238,.1) 5px,rgba(238,238,238,.1) 12px);
-}
-.cinema-tooltip::before{top:-8px}
-.cinema-tooltip::after{bottom:-8px}
-.tooltip-title{
-  display:block;font-size:8px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;
-  color:rgba(238,238,238,.28);margin-bottom:5px;
-}
-.tooltip-caption{
-  font-size:11px;font-style:italic;font-weight:400;
-  line-height:1.6;letter-spacing:.02em;color:rgba(238,238,238,.75);
-}
+.cinema-tooltip{position:absolute;bottom:calc(100% + 18px);left:0;width:210px;background:#0c0c0c;border:1px solid rgba(238,238,238,.15);padding:11px 13px 10px;pointer-events:none;opacity:0;transform:translateY(8px);transition:opacity .2s ease,transform .2s ease;z-index:100;box-shadow:inset 0 0 0 3px #0c0c0c,inset 0 0 0 4px rgba(238,238,238,.08)}
+.cinema-tooltip::before,.cinema-tooltip::after{content:'';position:absolute;left:0;right:0;height:7px;background-image:repeating-linear-gradient(90deg,transparent 0,transparent 5px,rgba(238,238,238,.1) 5px,rgba(238,238,238,.1) 12px)}
+.cinema-tooltip::before{top:-8px}.cinema-tooltip::after{bottom:-8px}
+.tooltip-title{display:block;font-size:8px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:rgba(238,238,238,.28);margin-bottom:5px}
+.tooltip-caption{font-size:11px;font-style:italic;font-weight:400;line-height:1.6;letter-spacing:.02em;color:rgba(238,238,238,.75)}
 .strip-item:hover .cinema-tooltip{opacity:1;transform:translateY(0)}
 
 /* ── BOTTOM BAR ── */
-.bottom-bar{
-  display:flex;justify-content:space-between;align-items:center;
-  padding:10px 44px 24px;
-  border-top:1px solid var(--line);
-  margin-top:8px;
-}
-.footer-left a{
-  font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
-  text-decoration:none;color:var(--white);opacity:.35;transition:opacity .2s;
-}
+.bottom-bar{display:flex;justify-content:space-between;align-items:center;padding:10px 44px 24px;border-top:1px solid var(--line);margin-top:8px}
+.footer-left a{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;color:var(--white);opacity:.35;transition:opacity .2s}
 .footer-left a:hover{opacity:1}
-.footer-links{
-  display:flex;gap:14px;align-items:center;
-  font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
-}
-.footer-links a{color:var(--white);text-decoration:none;opacity:.35;transition:opacity .2s}
-.footer-links a:hover{opacity:1}
-.footer-links .sep{opacity:.18}
+.footer-icons{display:flex;align-items:center;gap:18px}
+.footer-icon-link{display:inline-flex;align-items:center;color:var(--white);text-decoration:none;opacity:.35;transition:opacity .2s}
+.footer-icon-link:hover{opacity:1}
 
 /* ── MOBILE ── */
 @media(max-width:768px){
   html,body{overflow-y:auto;overflow-x:hidden;height:auto}
-  .page{display:flex;flex-direction:column;position:relative;height:auto;min-height:100svh;overflow-x:hidden}
+  .page{display:flex;flex-direction:column;position:relative;height:auto;min-height:100svh;overflow-x:hidden;padding-top:82px}
   .bg-a,.bg-b,.bg-veil,.grain{position:fixed}
-  .top-bar{padding:20px 20px 0;flex-direction:column;gap:12px}
-  .page-links{gap:16px}
-  .page-links a,.back{font-size:11px}
+
+  /* Push video down on mobile — was too high */
+  .stage{display:block;flex:1;padding:48px 20px 20px}
+
   .arrow{display:none !important}
-  .stage{display:block;flex:1;padding:24px 20px}
   .video-frame{width:100%;max-width:100%;margin:0 auto}
   .video-ratio{aspect-ratio:16/9}
   .video-info{height:auto;padding:10px 0 0;flex-wrap:wrap;gap:6px}
@@ -265,13 +119,14 @@ html,body{
   .strip-thumb,.strip-ph{width:90px;height:51px}
   .cinema-tooltip{width:140px}
   .bottom-bar{flex-direction:column;align-items:flex-start;padding:20px 20px 18px;gap:10px;margin-top:0}
-  .footer-links{flex-wrap:wrap;gap:10px;width:100%}
-  .footer-links a[href^="mailto"]{width:100%}
-  .footer-links .sep{display:none}
+  .footer-icons{flex-wrap:wrap;gap:12px}
 }
 </style>
 </head>
-<body>
+<body data-page="video">
+
+<!-- ── SITE NAV (replaces old top-bar) ── -->
+<div class="site-nav-mount"></div>
 
 <div id="cur"></div>
 <div class="bg-a" id="bgA"></div>
@@ -280,15 +135,6 @@ html,body{
 <div class="grain"></div>
 
 <div class="page">
-  <div class="top-bar">
-    <a href="index.html" class="back">← Back</a>
-    <nav class="page-links">
-      <a href="architecture.html">To Build</a>
-      <a href="todirect.html">To Direct</a>
-      <a href="visual.html">Visual</a>
-      <a href="localradio.html">Local Radio</a>
-    </nav>
-  </div>
 
   <div class="stage">
     <button class="arrow" id="btnPrev" aria-label="Previous">
@@ -296,9 +142,7 @@ html,body{
     </button>
     <div class="video-frame">
       <div class="video-ratio">
-        <iframe id="vimeoFrame" src=""
-          allow="fullscreen; picture-in-picture" allowfullscreen
-          loading="eager"></iframe>
+        <iframe id="vimeoFrame" src="" allow="fullscreen; picture-in-picture" allowfullscreen loading="eager"></iframe>
       </div>
       <div class="video-info">
         <div class="video-title" id="vTitle"></div>
@@ -316,129 +160,65 @@ html,body{
 
   <div class="bottom-bar">
     <div class="footer-left"><a href="about.html">About</a></div>
-    <div class="footer-links">
-      <a href="mailto:navilen@bk.ru">navilen@bk.ru</a>
-      <span class="sep">—</span>
-      <a href="https://www.instagram.com/molodostibolshenebudet/" target="_blank" rel="noopener">Instagram</a>
-      <span class="sep">—</span>
-      <a href="https://linkedin.com/in/worldwidemoment/" target="_blank" rel="noopener">LinkedIn</a>
+    <div class="footer-icons">
+      <a href="mailto:navilen@bk.ru" aria-label="Email" class="footer-icon-link">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="14" height="10" rx="1.5"/><polyline points="2,5 9,10.5 16,5"/></svg>
+      </a>
+      <a href="https://www.instagram.com/molodostibolshenebudet/" target="_blank" rel="noopener" aria-label="Instagram" class="footer-icon-link">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><rect x="2.5" y="2.5" width="13" height="13" rx="3.5"/><circle cx="9" cy="9" r="3.2"/><circle cx="12.8" cy="5.2" r=".9" fill="currentColor" stroke="none"/></svg>
+      </a>
+      <a href="https://linkedin.com/in/worldwidemoment/" target="_blank" rel="noopener" aria-label="LinkedIn" class="footer-icon-link">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="currentColor"><rect x="2.5" y="7" width="2.8" height="8.5" rx=".4"/><circle cx="3.9" cy="4.5" r="1.6"/><path d="M8 7h2.7v1.4C11.3 7.5 12.3 7 13.5 7 15.6 7 17 8.4 17 11v4.5h-2.8V11.4c0-1.3-.6-2-1.8-2-1.3 0-2.1.8-2.1 2.3V15.5H8V7z"/></svg>
+      </a>
     </div>
   </div>
+
 </div>
 
 <script>
-// ═══════════════════════════════════════════════════════
-//  ВИДЕО — редактируй только этот массив
-//
-//  id      — Vimeo ID из URL: vimeo.com/XXXXXXXXX
-//  title   — название
-//  caption — всплывает в cinema-tooltip при наведении
-//  bg      — фото фона (локальный файл images/video/...)
-//
-//  thumb   — обложка для filmstrip и рандомайзера.
-//            Используй https://vumbnail.com/{id}.jpg —
-//            это автоматически подтягивает обложку с Vimeo.
-//            Если видео приватное, vumbnail не сработает —
-//            тогда укажи путь к локальному файлу.
-// ═══════════════════════════════════════════════════════
 var VIDEOS = [
-  {
-    id:      '1171844542',
-    title:   'BIRDS',
-    caption: 'From Paris with love.',
-    bg:      'images/video/videobirds1.jpg',
-    thumb:   'https://vumbnail.com/1171844542.jpg'
-  },
-  {
-    id:      '1172106551',
-    title:   'Rebirth Cycles',
-    caption: 'A journey into the past. A meditation on caring for abandoned homes. The inevitability of cycles repeating.',
-    bg:      'images/video/videoRebirthCycles.jpg',
-    thumb:   'https://vumbnail.com/1172106551.jpg'
-  },
-  {
-    id:      '1172281707',
-    title:   'Special Diary',
-    caption: 'This is how life used to feel.',
-    bg:      'images/video/videocrystal1.jpg',
-    thumb:   'https://vumbnail.com/1172281707.jpg'
-  },
-  {
-    id:      '1172106388',
-    title:   'LVL',
-    caption: 'Short experimental stuff with friends.',
-    bg:      'images/video/videolvl.jpg',
-    thumb:   'https://vumbnail.com/1172106388.jpg'
-  },
-  {
-    id:      '1172128536',
-    title:   'Short Walks Down Long Roads',
-    caption: 'Just a feeling.',
-    bg:      'images/video/videoshort1.jpg',
-    thumb:   'https://vumbnail.com/1172128536.jpg'
-  },
-  {
-    id:      '1172128396',
-    title:   'Youth Chapter',
-    caption: 'Was filmed with an ice cream in one hand.',
-    bg:      'images/video/videoruslan.png',
-    thumb:   'https://vumbnail.com/1172128396.jpg'
-  }
+  { id:'1171844542', title:'BIRDS', caption:'From Paris with love.', bg:'images/video/videobirds1.jpg', thumb:'https://vumbnail.com/1171844542.jpg' },
+  { id:'1172106551', title:'Rebirth Cycles', caption:'A journey into the past. A meditation on caring for abandoned homes. The inevitability of cycles repeating.', bg:'images/video/videoRebirthCycles.jpg', thumb:'https://vumbnail.com/1172106551.jpg' },
+  { id:'1172281707', title:'Special Diary', caption:'This is how life used to feel.', bg:'images/video/videocrystal1.jpg', thumb:'https://vumbnail.com/1172281707.jpg' },
+  { id:'1172106388', title:'LVL', caption:'Short experimental stuff with friends.', bg:'images/video/videolvl.jpg', thumb:'https://vumbnail.com/1172106388.jpg' },
+  { id:'1172128536', title:'Short Walks Down Long Roads', caption:'Just a feeling.', bg:'images/video/videoshort1.jpg', thumb:'https://vumbnail.com/1172128536.jpg' },
+  { id:'1172128396', title:'Youth Chapter', caption:'Was filmed with an ice cream in one hand.', bg:'images/video/videoruslan.png', thumb:'https://vumbnail.com/1172128396.jpg' }
 ];
 
-var current     = 0;
-var frame       = document.getElementById('vimeoFrame');
-var bgA         = document.getElementById('bgA');
-var bgB         = document.getElementById('bgB');
+var current = 0;
+var frame = document.getElementById('vimeoFrame');
+var bgA = document.getElementById('bgA');
+var bgB = document.getElementById('bgB');
 var activeLayer = 'a';
-var titleEl     = document.getElementById('vTitle');
-var counterEl   = document.getElementById('vCounter');
-var strip       = document.getElementById('filmstrip');
+var titleEl = document.getElementById('vTitle');
+var counterEl = document.getElementById('vCounter');
+var strip = document.getElementById('filmstrip');
 
 function makePh(label) {
-  var d = document.createElement('div');
-  d.className = 'strip-ph';
-  d.textContent = label || 'video';
-  return d;
+  var d = document.createElement('div'); d.className = 'strip-ph'; d.textContent = label || 'video'; return d;
 }
 
-// Build filmstrip
 VIDEOS.forEach(function(v, i) {
   var item = document.createElement('div');
   item.className = 'strip-item' + (i === 0 ? ' active' : '');
-
   if (v.thumb) {
     var img = document.createElement('img');
-    img.className = 'strip-thumb';
-    img.src = v.thumb;
-    img.alt = v.title;
-    // First thumb: eager; rest: lazy
+    img.className = 'strip-thumb'; img.src = v.thumb; img.alt = v.title;
     img.loading = i === 0 ? 'eager' : 'lazy';
     img.onerror = function() { this.replaceWith(makePh(v.title)); };
     item.appendChild(img);
-  } else {
-    item.appendChild(makePh(v.title));
-  }
-
-  var nameEl = document.createElement('div');
-  nameEl.className = 'strip-name';
-  nameEl.textContent = v.title;
+  } else { item.appendChild(makePh(v.title)); }
+  var nameEl = document.createElement('div'); nameEl.className = 'strip-name'; nameEl.textContent = v.title;
   item.appendChild(nameEl);
-
   if (v.caption) {
-    var tip = document.createElement('div');
-    tip.className = 'cinema-tooltip';
-    tip.innerHTML =
-      '<span class="tooltip-title">' + v.title + '</span>' +
-      '<div class="tooltip-caption">' + v.caption + '</div>';
+    var tip = document.createElement('div'); tip.className = 'cinema-tooltip';
+    tip.innerHTML = '<span class="tooltip-title">' + v.title + '</span><div class="tooltip-caption">' + v.caption + '</div>';
     item.appendChild(tip);
   }
-
   item.addEventListener('click', (function(idx){ return function(){ goTo(idx); }; })(i));
   strip.appendChild(item);
 });
 
-// Crossfade background
 function setBg(url) {
   if (activeLayer === 'a') {
     bgB.style.backgroundImage = url ? "url('" + url + "')" : 'none';
@@ -452,65 +232,39 @@ function setBg(url) {
 function goTo(i, skipHash) {
   current = ((i % VIDEOS.length) + VIDEOS.length) % VIDEOS.length;
   var v = VIDEOS[current];
-
-  // Vimeo embed — dnt=1 respects privacy.
-  // Note: "Access blocked" errors with VPN are Vimeo's IP-based policy,
-  // not fixable in embed code.
-  frame.src = 'https://player.vimeo.com/video/' + v.id +
-    '?dnt=1&color=ffffff&title=0&byline=0&portrait=0';
-
+  frame.src = 'https://player.vimeo.com/video/' + v.id + '?dnt=1&color=ffffff&title=0&byline=0&portrait=0';
   setBg(v.bg);
-  titleEl.textContent   = v.title || '';
-  counterEl.textContent =
-    String(current + 1).padStart(2, '0') + ' / ' +
-    String(VIDEOS.length).padStart(2, '0');
-
-  document.querySelectorAll('.strip-item').forEach(function(el, idx) {
-    el.classList.toggle('active', idx === current);
-  });
-
+  titleEl.textContent = v.title || '';
+  counterEl.textContent = String(current + 1).padStart(2, '0') + ' / ' + String(VIDEOS.length).padStart(2, '0');
+  document.querySelectorAll('.strip-item').forEach(function(el, idx) { el.classList.toggle('active', idx === current); });
   var activeItem = strip.children[current];
-  if (activeItem) {
-    activeItem.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-  }
-
+  if (activeItem) activeItem.scrollIntoView({ behavior:'smooth', block:'nearest', inline:'center' });
   if (!skipHash) history.replaceState(null, '', '#' + current);
 }
 
-// Arrows
 document.getElementById('btnPrev').addEventListener('click', function(){ goTo(current - 1); });
 document.getElementById('btnNext').addEventListener('click', function(){ goTo(current + 1); });
-
-// Keyboard
 window.addEventListener('keydown', function(e) {
-  if (e.key === 'ArrowLeft')  goTo(current - 1);
+  if (e.key === 'ArrowLeft') goTo(current - 1);
   if (e.key === 'ArrowRight') goTo(current + 1);
 });
-
-// Init from hash
 (function() {
   var hash = parseInt(window.location.hash.replace('#', ''), 10);
-  var start = (!isNaN(hash) && hash >= 0 && hash < VIDEOS.length) ? hash : 0;
-  goTo(start, true);
+  goTo((!isNaN(hash) && hash >= 0 && hash < VIDEOS.length) ? hash : 0, true);
 }());
 
-// ── CURSOR — RAF loop, no mouseover events ──
+/* ── CURSOR ── */
 var cur = document.getElementById('cur');
 if (window.matchMedia('(hover:hover) and (pointer:fine)').matches) {
   var mx = 0, my = 0;
-  document.addEventListener('pointermove', function(e) {
-    mx = e.clientX; my = e.clientY;
-  }, { passive: true });
-  (function loop() {
-    cur.style.transform = 'translate3d(' + mx + 'px,' + my + 'px,0) translate(-50%,-50%)';
-    requestAnimationFrame(loop);
-  })();
-  // Hover grow only on interactive elements — cheaper than mouseover bubbling
+  document.addEventListener('pointermove', function(e) { mx = e.clientX; my = e.clientY; }, { passive:true });
+  (function loop() { cur.style.transform = 'translate3d(' + mx + 'px,' + my + 'px,0) translate(-50%,-50%)'; requestAnimationFrame(loop); })();
   document.querySelectorAll('a,button,.strip-item').forEach(function(el) {
     el.addEventListener('mouseenter', function(){ cur.classList.add('big'); });
     el.addEventListener('mouseleave', function(){ cur.classList.remove('big'); });
   });
 }
 </script>
+<script src="components/site-nav.js" defer></script>
 </body>
 </html>
