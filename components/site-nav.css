@@ -173,6 +173,20 @@ body[data-page="about"] .site-nav-marquee { display: none; }
 
 /* ── Mobile ── */
 @media (max-width: 860px) {
+  .site-nav-create-menu{
+    top: calc(100% + 8px);
+    right: 0;
+  }
+
+  .site-nav-create.open .site-nav-create-menu{
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+}
+{
+  
   .site-nav { padding: 16px 20px; }
 
   .site-nav-top {
