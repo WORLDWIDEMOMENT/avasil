@@ -15,8 +15,8 @@
   pointer-events: none;
 }
 
-.site-nav-top { top: 0; }
-.site-nav-bottom { bottom: 0; padding-top: 12px; }
+.site-nav-top  { top: 0; }
+.site-nav-bottom { bottom: 0; }
 
 .site-nav-links,
 .site-nav-socials,
@@ -27,7 +27,6 @@
   pointer-events: auto;
 }
 
-/* ── KEY FIX: All nav items must align on the same baseline ── */
 .site-nav-link,
 .site-nav-create-btn {
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
@@ -42,75 +41,64 @@
   padding: 0;
   margin: 0;
   line-height: 1;
-  vertical-align: middle;
   display: inline-flex;
   align-items: center;
-  transition: color .2s ease, opacity .2s ease;
+  transition: color .2s ease;
   white-space: nowrap;
+  cursor: pointer;
+  pointer-events: auto;
 }
 
 .site-nav-back { letter-spacing: .18em; }
-.site-nav-link { pointer-events: auto; }
-.site-nav-create-btn { cursor: pointer; }
 
 .site-nav-link:hover,
-.site-nav-create-btn:hover,
-.site-nav-link.is-current {
-  color: var(--site-nav-fg);
-  opacity: 1;
-}
+.site-nav-create-btn:hover { color: var(--site-nav-fg); }
 
 .site-nav-link.is-current {
+  color: var(--site-nav-fg);
   cursor: default;
   pointer-events: none;
 }
 
-/* ── To Create wrapper — must be flex to vertically align ── */
 .site-nav-create {
   position: relative;
-  pointer-events: auto;
   display: inline-flex;
   align-items: center;
+  pointer-events: auto;
 }
 
-.site-nav-create-menu{
-  position:absolute;
-  top:calc(100% + 12px);
-  right:0;
-  min-width:146px;
-  display:flex;
-  flex-direction:column;
-  background:rgba(6, 6, 6, .95);
-  border:1px solid rgba(255, 255, 255, .12);
-  opacity:0;
-  visibility:hidden;
-  transform:translateY(-6px);
-  transition:opacity .2s ease, transform .2s ease, visibility .2s ease;
-  z-index:1000;
-  pointer-events:none;
-}
-
-.site-nav-create.open .site-nav-create-menu{
-  opacity:1;
-  visibility:visible;
-  transform:translateY(0);
-  pointer-events:auto;
+.site-nav-create-menu {
+  position: absolute;
+  top: calc(100% + 12px);
+  right: 0;
+  min-width: 146px;
+  display: flex;
+  flex-direction: column;
+  background: rgba(6, 6, 6, .97);
+  border: 1px solid rgba(255, 255, 255, .14);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-6px);
+  transition: opacity .2s ease, transform .2s ease, visibility .2s ease;
+  z-index: 1000;
+  pointer-events: none;
 }
 
 .site-nav-create-menu .site-nav-link {
-  font-size: 10px;
   padding: 12px 16px;
+  font-size: 10px;
   border-bottom: 1px solid rgba(255, 255, 255, .08);
   display: block;
 }
 
 .site-nav-create-menu .site-nav-link:last-child { border-bottom: 0; }
 
-@media (hover:hover) {
+@media (hover: hover) {
   .site-nav-create:hover .site-nav-create-menu {
     opacity: 1;
     visibility: visible;
     transform: translateY(0);
+    pointer-events: auto;
   }
 }
 
@@ -118,9 +106,9 @@
   opacity: 1;
   visibility: visible;
   transform: translateY(0);
+  pointer-events: auto;
 }
 
-/* ── Icon links (footer) ── */
 .site-nav-icon-link {
   display: inline-flex;
   align-items: center;
@@ -131,16 +119,17 @@
   pointer-events: auto;
 }
 
-.site-nav-icon-link:hover,
-.footer-brand-link:hover { opacity: 1; }
+.site-nav-icon-link:hover { opacity: 1; }
 
 .footer-brand-link {
   opacity: .35;
-  letter-spacing: .14em;
   color: var(--site-nav-fg);
+  transition: opacity .2s ease;
 }
 
-/* ── Marquee ticker ── */
+.footer-brand-link:hover { opacity: 1; }
+
+/* ── MARQUEE — 24 spans guarantees loop on screens up to ~3000px ── */
 .site-nav-marquee {
   position: fixed;
   top: 58px;
@@ -157,7 +146,7 @@
 .site-nav-marquee-track {
   display: flex;
   white-space: nowrap;
-  animation: site-nav-marquee 28s linear infinite;
+  animation: site-nav-marquee 36s linear infinite;
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
   font-size: 10px;
   font-weight: 700;
@@ -167,51 +156,39 @@
   padding: 5px 0 4px;
 }
 
-.site-nav-marquee-track span { 
-  padding-right: 48px; 
-}
+.site-nav-marquee-track span { padding-right: 48px; }
 
 @keyframes site-nav-marquee {
   from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
+  to   { transform: translateX(-50%); }
 }
 
-/* Pages with their own ticker/nav don't show the site-nav marquee */
+/* Pages with their own footer — hide site-nav-bottom to avoid duplication */
+body[data-page="video"]      .site-nav-bottom,
+body[data-page="localradio"] .site-nav-bottom { display: none; }
+
+/* Pages with their own full-width ticker — hide component marquee */
 body[data-page="architecture"] .site-nav-marquee,
-body[data-page="visual"] .site-nav-marquee,
-body[data-page="about"] .site-nav-marquee { display: none; }
+body[data-page="visual"]       .site-nav-marquee,
+body[data-page="about"]        .site-nav-marquee { display: none; }
 
-/* ── Mobile ── */
-@media (max-width:860px){
-  .site-nav{
-    padding:16px 20px;
-    z-index:9999;
-  }
-
-  .site-nav-create{
-    position:relative;
-    z-index:10000;
-  }
-
-  .site-nav-create-menu{
-    position:absolute !important;
-    top:calc(100% + 8px) !important;
-    right:0 !important;
-    min-width:146px;
-    background:rgba(6,6,6,.98) !important;
-    border:1px solid rgba(255,255,255,.2) !important;
-    opacity:0;
-    visibility:hidden;
-    transform:translateY(-8px);
-    transition:opacity .2s ease, transform .2s ease, visibility .2s ease;
-    z-index:10001 !important;
-    pointer-events:none;
-  }
-
-  .site-nav-create.open .site-nav-create-menu{
-    opacity:1 !important;
-    visibility:visible !important;
-    transform:translateY(0) !important;
-    pointer-events:auto !important;
+/* ── MOBILE ── */
+@media (max-width: 860px) {
+  .site-nav { padding: 16px 20px; z-index: 9999; }
+  .site-nav-top { flex-wrap: nowrap; gap: 10px; }
+  .site-nav-links { flex-wrap: nowrap; gap: 8px; justify-content: flex-end; min-width: 0; overflow: visible; }
+  .site-nav-link, .site-nav-create-btn { font-size: 9px; letter-spacing: .1em; }
+  .site-nav-bottom { flex-wrap: nowrap; justify-content: space-between; gap: 12px; }
+  .site-nav-socials { gap: 10px; justify-content: flex-end; }
+  .site-nav-marquee { top: 50px; }
+  .site-nav-marquee-track { font-size: 9px; letter-spacing: .18em; }
+  .site-nav-create { position: relative; z-index: 10001; }
+  .site-nav-create-menu {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    z-index: 10002;
+    background: rgba(6, 6, 6, .99);
+    border: 1px solid rgba(255, 255, 255, .2);
   }
 }
