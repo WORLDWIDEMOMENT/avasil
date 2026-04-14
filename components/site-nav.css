@@ -50,6 +50,9 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  padding: 0;
+  margin: 0;
+  vertical-align: middle;
 }
 
 .site-nav-link:hover,
@@ -64,7 +67,12 @@
   pointer-events: none;
 }
 
-.site-nav-create { position: relative; pointer-events: auto; }
+.site-nav-create {
+  position: relative;
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+}
 .site-nav-create-menu {
   position: absolute;
   top: calc(100% + 12px);
