@@ -139,25 +139,16 @@
     .nav-create.open .nav-create-menu{opacity:1;visibility:visible;transform:translateY(0);pointer-events:auto}
     @media(max-width:620px){.nav-create-btn{font-size:9px;letter-spacing:.1em}}
   </style>
+  <link rel="stylesheet" href="components/site-nav.css">
+  <script src="components/site-nav.js" defer></script>
 </head>
-<body data-page="architecture">
+  <body data-page="architecture">
+<div class="site-nav-mount"></div>
+
   <div class="wrap">
     <div id="cursor" class="cursor"></div>
     <header class="topbar" id="topbar">
-      <div class="topbar-row">
-        <a class="back" href="index.html">← Back</a>
-        <nav class="navlinks" aria-label="Site navigation">
-          <a href="todirect.html">To Direct</a>
-          <div class="nav-create" id="navCreate">
-            <button class="nav-create-btn" aria-haspopup="true" aria-expanded="false">To Create</button>
-            <div class="nav-create-menu">
-              <a href="visual.html">Visual</a>
-              <a href="video.html">Video</a>
-              <a href="localradio.html">Local Radio</a>
-            </div>
-          </div>
-        </nav>
-      </div>
+      
       <div class="header-body" id="headerBody">
         <div class="brandline"><span class="ticker" id="ticker"><span>A.VASILEUSKAYA. </span><span>A.VASILEUSKAYA. </span><span>A.VASILEUSKAYA. </span><span>A.VASILEUSKAYA. </span><span>A.VASILEUSKAYA. </span><span>A.VASILEUSKAYA. </span><span>A.VASILEUSKAYA. </span><span>A.VASILEUSKAYA. </span><span>A.VASILEUSKAYA. </span><span>A.VASILEUSKAYA. </span><span>A.VASILEUSKAYA. </span><span>A.VASILEUSKAYA. </span><span>A.VASILEUSKAYA. </span><span>A.VASILEUSKAYA. </span><span>A.VASILEUSKAYA. </span><span>A.VASILEUSKAYA. </span><span>A.VASILEUSKAYA. </span><span>A.VASILEUSKAYA. </span><span>A.VASILEUSKAYA. </span><span>A.VASILEUSKAYA. </span><span>A.VASILEUSKAYA. </span><span>A.VASILEUSKAYA. </span><span>A.VASILEUSKAYA. </span><span>A.VASILEUSKAYA. </span></span></div>
         <h1 class="page-title">TO BUILD</h1>
@@ -203,18 +194,7 @@ The result combines our vision of modern style for the area, the client's desire
         <aside class="modal-info"><div><div class="modal-year" id="modalYear"></div><div class="modal-title" id="modalTitle"></div></div><p class="modal-desc" id="modalDesc"></p><div class="modal-specs" id="modalSpecs"></div><div id="modalExtra"></div></aside>
       </div>
     </section>
-    <footer class="site-footer">
-      <a class="foot-about" href="about.html">About</a>
-      <div class="foot-right">
-        <a href="https://www.artlebedev.ru/people/JFkWZ1/" target="_blank" rel="noopener">Artlebedev</a>
-        <span class="foot-sep">—</span>
-        <a href="mailto:navilen@bk.ru">navilen@bk.ru</a>
-        <span class="foot-sep">—</span>
-        <a href="https://www.instagram.com/molodostibolshenebudet/" target="_blank" rel="noopener">Instagram</a>
-        <span class="foot-sep">—</span>
-        <a href="https://linkedin.com/in/worldwidemoment/" target="_blank" rel="noopener">LinkedIn</a>
-      </div>
-    </footer>
+ 
   </div>
   <script>
     const cursor = document.getElementById('cursor');
