@@ -163,17 +163,22 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:repeating-li
   .broadcast-info{flex-wrap:wrap;gap:8px}
 }
 </style>
+  <link rel="stylesheet" href="components/site-nav.css">
+  <script src="components/site-nav.js" defer></script>
 </head>
 <body data-page="localradio">
-
-<!-- ── SITE NAV ── -->
-<div class="site-nav-mount"></div>
+<div class="site-nav-mount"></div> 
 
 <div id="cur"></div>
 <div class="noise"></div>
 
 <div class="page">
-
+<div class="broadcast-info">
+    <span class="live"><span class="live-dot"></span>On air</span>
+    <span id="clock">--:-- UTC</span>
+    <span>Curated by AV</span>
+  </div>
+  
   <div class="hero">
     <div class="hero-left">
       <div class="station-name">LOCAL RADIO</div>
@@ -192,7 +197,7 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:repeating-li
       <div class="drum-strip" id="drumStrip"></div>
       <div class="drum-center-line"></div>
     </div>
-    <button class="spin-btn" id="spinBtn">↻ Spin</button>
+      <button class="spin-btn" id="spinBtn" type="button">↻ Spin</button>
     <a class="spin-result" id="spinResult" href="#" target="_blank" rel="noopener">↗ Play</a>
   </div>
 
@@ -224,20 +229,6 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:repeating-li
     </a>
   </div>
 
-  <div class="footer">
-    <div class="footer-left"><a href="about.html">About</a></div>
-    <div class="footer-icons">
-      <a href="mailto:navilen@bk.ru" aria-label="Email" class="footer-icon-link">
-        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="14" height="10" rx="1.5"/><polyline points="2,5 9,10.5 16,5"/></svg>
-      </a>
-      <a href="https://www.instagram.com/molodostibolshenebudet/" target="_blank" rel="noopener" aria-label="Instagram" class="footer-icon-link">
-        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><rect x="2.5" y="2.5" width="13" height="13" rx="3.5"/><circle cx="9" cy="9" r="3.2"/><circle cx="12.8" cy="5.2" r=".9" fill="currentColor" stroke="none"/></svg>
-      </a>
-      <a href="https://linkedin.com/in/worldwidemoment/" target="_blank" rel="noopener" aria-label="LinkedIn" class="footer-icon-link">
-        <svg width="18" height="18" viewBox="0 0 18 18" fill="currentColor"><rect x="2.5" y="7" width="2.8" height="8.5" rx=".4"/><circle cx="3.9" cy="4.5" r="1.6"/><path d="M8 7h2.7v1.4C11.3 7.5 12.3 7 13.5 7 15.6 7 17 8.4 17 11v4.5h-2.8V11.4c0-1.3-.6-2-1.8-2-1.3 0-2.1.8-2.1 2.3V15.5H8V7z"/></svg>
-      </a>
-    </div>
-  </div>
 
 </div>
 
@@ -369,14 +360,17 @@ function spinDrum() {
   requestAnimationFrame(animate);
 }
 
-/* ── SPIN BUTTON: works on both desktop and mobile ── */
-var spinBtn = document.getElementById('spinBtn');
-spinBtn.addEventListener('click', spinDrum);
-/* touchend prevents the 300ms delay and ensures spin runs on mobile */
-spinBtn.addEventListener('touchend', function(e) {
-  e.preventDefault(); /* prevent ghost click */
-  spinDrum();
-}, { passive: false });
+var spinBtnEl = document.getElementById('spinBtn');
+if (spinBtnEl) {
+  spinBtnEl.addEventListener('click', function(e){
+    e.preventDefault();
+    spinDrum();
+  });
+  spinBtnEl.addEventListener('touchend', function(e){
+    e.preventDefault();
+    spinDrum();
+  }, { passive: false });
+}
 
 /* ── HASH ROUTING ── */
 function openFromHash() {
