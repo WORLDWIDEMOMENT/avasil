@@ -40,8 +40,9 @@ html,body{height:100%;overflow:hidden;font-family:'Helvetica Neue',Helvetica,Ari
 .bg-veil{position:fixed;inset:0;z-index:1;pointer-events:none;background:rgba(0,0,0,.55)}
 .grain{position:fixed;inset:0;z-index:2;pointer-events:none;opacity:.05;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:180px}
 
-/* top-nav 58px + marquee 28px = 86px */
-.page{position:fixed;inset:0;padding-top:86px;z-index:3;display:grid;grid-template-rows:1fr auto auto;overflow:hidden}
+/* top-nav 58px + marquee 28px = 86px
+   FIX 1: 1fr auto (2 rows) — was 1fr auto auto which made filmstrip stick to absolute bottom */
+.page{position:fixed;inset:0;padding-top:86px;z-index:3;display:grid;grid-template-rows:1fr auto;overflow:hidden}
 .page *{pointer-events:auto}
 
 .stage{display:flex;align-items:center;justify-content:center;padding:0 48px;min-height:0;overflow:hidden}
@@ -56,8 +57,11 @@ html,body{height:100%;overflow:hidden;font-family:'Helvetica Neue',Helvetica,Ari
 .video-title{font-size:clamp(20px,2.4vw,32px);font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--white);line-height:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .video-counter{font-size:clamp(12px,1vw,15px);font-weight:700;letter-spacing:.22em;color:rgba(238,238,238,.55);flex-shrink:0}
 
-.filmstrip-wrap{padding:0 44px 26px;overflow:visible}
-.filmstrip{display:flex;gap:10px;overflow-x:auto;overflow-y:visible;padding-bottom:6px;padding-top:20px;margin-top:-20px;scrollbar-width:none}
+/* FIX 2: padding-top:160px + margin-top:-160px create an invisible overflow zone
+   above the filmstrip thumbnails — this is the space tooltips appear into.
+   Without this, tooltips render but are clipped by overflow:visible parent. */
+.filmstrip-wrap{padding:0 44px 20px;overflow:visible}
+.filmstrip{display:flex;gap:10px;overflow-x:auto;overflow-y:visible;padding-bottom:6px;padding-top:160px;margin-top:-160px;scrollbar-width:none}
 .filmstrip::-webkit-scrollbar{display:none}
 .strip-item{flex-shrink:0;width:130px;cursor:none;opacity:.75;transition:opacity .2s,transform .2s;position:relative}
 .strip-item:hover{opacity:1;transform:translateY(-2px)}
@@ -81,7 +85,10 @@ html,body{height:100%;overflow:hidden;font-family:'Helvetica Neue',Helvetica,Ari
 .cinema-tooltip::after{bottom:-8px}
 .tooltip-title{display:block;font-size:8px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:rgba(238,238,238,.28);margin-bottom:5px}
 .tooltip-caption{font-size:11px;font-style:italic;font-weight:400;line-height:1.6;letter-spacing:.02em;color:rgba(238,238,238,.75)}
+/* Desktop: show on hover */
 .strip-item:hover .cinema-tooltip{opacity:1;transform:translateY(0)}
+/* Mobile: show on tap via .tap class added by JS */
+.strip-item.tap .cinema-tooltip{opacity:1;transform:translateY(0)}
 
 /* ── PAGE FOOTER (replaces site-nav-bottom, hidden via CSS data-page rule) ── */
 .bottom-bar{display:flex;justify-content:space-between;align-items:center;padding:10px 44px 24px;border-top:1px solid var(--line);margin-top:8px}
@@ -96,7 +103,6 @@ html,body{height:100%;overflow:hidden;font-family:'Helvetica Neue',Helvetica,Ari
   html,body{overflow-y:auto;overflow-x:hidden;height:auto}
   .page{display:flex;flex-direction:column;position:relative;height:auto;min-height:100svh;overflow-x:hidden;padding-top:82px}
   .bg-a,.bg-b,.bg-veil,.grain{position:fixed}
-  /* Push video down — was too high */
   .stage{display:block;flex:1;padding:40px 20px 16px}
   .arrow{display:none !important}
   .video-frame{width:100%;max-width:100%;margin:0 auto}
@@ -104,7 +110,8 @@ html,body{height:100%;overflow:hidden;font-family:'Helvetica Neue',Helvetica,Ari
   .video-info{height:auto;padding:10px 0 0;flex-wrap:wrap;gap:6px}
   .video-title{font-size:17px;white-space:normal;word-break:break-word}
   .filmstrip-wrap{padding:0 20px 18px}
-  .filmstrip{padding-top:10px;margin-top:0}
+  /* On mobile keep enough space above for tooltip (tooltips show on tap) */
+  .filmstrip{padding-top:120px;margin-top:-120px}
   .strip-item{width:90px}
   .strip-thumb,.strip-ph{width:90px;height:51px}
   .cinema-tooltip{width:140px}
@@ -185,6 +192,32 @@ VIDEOS.forEach(function(v,i){
   item.addEventListener('click',(function(idx){ return function(){ goTo(idx); }; })(i));
   strip.appendChild(item);
 });
+
+/* Mobile tap: show tooltip briefly, then play video */
+var tappedItem = null;
+strip.addEventListener('touchend', function(e) {
+  var item = e.target.closest('.strip-item');
+  if (!item) return;
+  if (item.classList.contains('tap')) {
+    /* Second tap: play the video, hide tooltip */
+    item.classList.remove('tap');
+    tappedItem = null;
+  } else {
+    /* First tap: show tooltip */
+    if (tappedItem) tappedItem.classList.remove('tap');
+    item.classList.add('tap');
+    tappedItem = item;
+    e.preventDefault(); /* don't fire click yet */
+  }
+}, { passive: false });
+
+/* Close tooltip when tapping outside filmstrip */
+document.addEventListener('touchstart', function(e) {
+  if (tappedItem && !strip.contains(e.target)) {
+    tappedItem.classList.remove('tap');
+    tappedItem = null;
+  }
+}, { passive: true });
 
 function setBg(url){
   if(activeL==='a'){ bgB.style.backgroundImage=url?"url('"+url+"')":'none'; bgB.style.opacity='1'; bgA.style.opacity='0'; activeL='b'; }
