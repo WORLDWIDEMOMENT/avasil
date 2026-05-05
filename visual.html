@@ -2,11 +2,10 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-   <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>AVASIL Portfolio | Visual Design</title>
   <!-- ── SEO & SOCIAL META ── -->
- <meta name="description" content="Visual design portfolio by AVASIL including identity systems, editorial aesthetics, digital imagery, and campaign-level art direction.">  <meta name="keywords" content="vasileuskaya, avasil, anastasiya vasileuskaya, architect, art director, spatial design, architecture portfolio, interior design, masterplan">
-  <meta name="author" content="Anastasiya Vasileuskaya">
+<meta name="description" content="Visual design portfolio by AVASIL including identity systems, editorial aesthetics, digital imagery, and campaign-level art direction.">  <meta name="author" content="Anastasiya Vasileuskaya">
   <meta name="robots" content="visual, follow">
   <link rel="canonical" href="https://worldwidemoment.github.io/avasil/visual.html">
 
@@ -39,7 +38,17 @@
       background-size:cover;background-position:center;background-attachment:fixed;
     }
     body::before{content:'';position:fixed;inset:0;background:rgba(10,10,10,.68);z-index:-1}
-
+.seo-assist{
+      position:absolute !important;
+      width:1px !important;
+      height:1px !important;
+      padding:0 !important;
+      margin:-1px !important;
+      overflow:hidden !important;
+      clip:rect(0,0,0,0) !important;
+      white-space:nowrap !important;
+      border:0 !important;
+    }
     /* ── CURSOR — direct pointermove, no RAF ── */
     #cur{
       position:fixed;left:0;top:0;
@@ -596,7 +605,7 @@ window.addEventListener('resize', () => {
   resizeTimer = setTimeout(buildScrollContainer, 150);
 });
 </script>
-  <section id="seo-links-block" aria-label="Portfolio navigation and context" style="max-width:980px;margin:40px auto;padding:0 20px;line-height:1.6;">
+  <section id="seo-links-block" class="seo-assist" aria-label="Portfolio navigation and context">
   <h1>AVASIL Portfolio: Architecture, Art Direction, and Visual Design</h1>
   <h2>Case studies, process documentation, and multidisciplinary creative practice</h2>
   <h3>Internal links across architecture, visual, video, archive, and about pages</h3>
