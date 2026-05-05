@@ -7,8 +7,7 @@
 <title>AVASIL Portfolio | Art Director & Architect</title>
 
 <!-- ── SEO ── -->
-<meta name="description" content="AVASIL portfolio of architecture, art direction, visual systems, and multidisciplinary projects with case studies across spatial design and creative direction."><meta name="keywords" content="vasileuskaya, avasil, anastasiya vasileuskaya, architect, art director, spatial design, architecture portfolio, interior design, masterplan">
-<meta name="author" content="Anastasiya Vasileuskaya">
+<meta name="description" content="AVASIL portfolio of architecture, art direction, visual systems, and multidisciplinary projects with case studies across spatial design and creative direction."><meta name="author" content="Anastasiya Vasileuskaya">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://worldwidemoment.github.io/avasil/">
 
@@ -51,7 +50,20 @@ body {
   overflow: hidden;
   cursor: none;
 }
-
+  
+/* SEO helper content: available for crawlers, hidden from visual layout */
+.seo-assist {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+  
 /* ── CURSOR ── */
 #cur {
   position: fixed; width: 10px; height: 10px;
@@ -697,7 +709,7 @@ imgArea.addEventListener('click',        e => { e.stopPropagation(); if (current
 document.addEventListener('click',       e => { if (rouletteOpen && !popup.contains(e.target) && e.target !== rBtn) closePopup(); });
 document.addEventListener('keydown',     e => { if (e.key === 'Escape' && rouletteOpen) closePopup(); });
 </script>
-  <section id="seo-links-block" aria-label="Portfolio navigation and context" style="max-width:980px;margin:40px auto;padding:0 20px;line-height:1.6;">
+  <section id="seo-links-block" class="seo-assist" aria-label="Portfolio navigation and context">
   <h1>AVASIL Portfolio: Architecture, Art Direction, and Visual Design</h1>
   <h2>Case studies, process documentation, and multidisciplinary creative practice</h2>
   <h3>Internal links across architecture, visual, video, archive, and about pages</h3>
