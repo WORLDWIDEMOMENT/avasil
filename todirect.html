@@ -29,11 +29,34 @@
 </script>
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-body{background:#080808;color:white;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;height:100vh;overflow:hidden;cursor:none}
-#cur{position:fixed;width:8px;height:8px;background:white;border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);mix-blend-mode:difference}
+html,body{width:100%;height:100%}
+body{
+  background:#080808;
+  color:white;
+  font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;
+  overflow:hidden;
+  cursor:none;
+}
+#cur{
+  position:fixed;
+  width:8px;
+  height:8px;
+  background:white;
+  border-radius:50%;
+  pointer-events:none;
+  z-index:9999;
+  transform:translate(-50%,-50%);
+  mix-blend-mode:difference;
+}
 #cur.big{width:50px;height:50px}
 @media(hover:none){#cur{display:none}}
-.split{display:flex;width:100vw;height:100vh}
+
+.split{
+  display:flex;
+  width:100vw;
+  height:100vh;
+  position:relative;
+}
 .half{
   flex:1;
   position:relative;
@@ -48,13 +71,34 @@ body{background:#080808;color:white;font-family:'Helvetica Neue',Helvetica,Arial
   background-size:cover;
   background-position:center;
   opacity:.35;
-  transition:transform .8s ease,opacity .6s;
+  transition:transform .8s ease,opacity .6s ease;
+  z-index:0;
 }
-.half-archive::before{background-image:url('https://res.cloudinary.com/disa2fbgc/image/upload/v1775592594/Physical_Wayfinding_System_ehmkt3.jpg')}
-.half-migrant::before{background-image:url('https://res.cloudinary.com/disa2fbgc/image/upload/v1776125087/PHOTO_5_-_Magazine_in_Motion_1_v4nmc2.jpg')}
+.half-archive::before{
+  background-image:url('https://res.cloudinary.com/disa2fbgc/image/upload/v1775592594/Physical_Wayfinding_System_ehmkt3.jpg');
+}
+.half-migrant::before{
+  background-image:url('https://res.cloudinary.com/disa2fbgc/image/upload/v1776125087/PHOTO_5_-_Magazine_in_Motion_1_v4nmc2.jpg');
+}
 .half:hover::before{transform:scale(1.05);opacity:.55}
-.half::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.6),rgba(0,0,0,.05));z-index:1}
-.divider{position:absolute;left:50%;top:10%;bottom:10%;width:1px;background:rgba(255,255,255,.08);z-index:5}
+.half::after{
+  content:'';
+  position:absolute;
+  inset:0;
+  background:linear-gradient(to top,rgba(0,0,0,.64),rgba(0,0,0,.04));
+  z-index:1;
+}
+
+.divider{
+  position:absolute;
+  left:50%;
+  top:10%;
+  bottom:10%;
+  width:1px;
+  background:rgba(255,255,255,.08);
+  z-index:5;
+  pointer-events:none;
+}
 
 .half-content{
   position:absolute;
@@ -64,12 +108,14 @@ body{background:#080808;color:white;font-family:'Helvetica Neue',Helvetica,Arial
   z-index:2;
   display:grid;
   grid-template-columns:1fr;
-  grid-template-rows:auto auto auto auto auto;
-  row-gap:10px;
+  grid-template-rows:auto auto auto 1fr auto;
+  align-items:end;
+  gap:0;
   max-width:340px;
-  align-content:end;
+  min-height:320px;
+  transition:transform .4s cubic-bezier(.77,0,.18,1);
 }
-.half:hover .half-content{transform:translateY(-10px); transition:transform .4s cubic-bezier(.77,0,.18,1)}
+.half:hover .half-content{transform:translateY(-10px)}
 
 .c-tag{
   font-size:9px;
@@ -77,7 +123,8 @@ body{background:#080808;color:white;font-family:'Helvetica Neue',Helvetica,Arial
   letter-spacing:.22em;
   text-transform:uppercase;
   color:rgba(255,255,255,.38);
-  line-height:1.4;
+  line-height:1.45;
+  margin-bottom:14px;
 }
 .c-num{
   font-size:11px;
@@ -85,6 +132,7 @@ body{background:#080808;color:white;font-family:'Helvetica Neue',Helvetica,Arial
   letter-spacing:.18em;
   color:rgba(255,255,255,.28);
   line-height:1;
+  margin-bottom:10px;
 }
 .c-title{
   font-size:clamp(38px,4.8vw,64px);
@@ -92,11 +140,12 @@ body{background:#080808;color:white;font-family:'Helvetica Neue',Helvetica,Arial
   letter-spacing:.06em;
   text-transform:uppercase;
   line-height:.92;
-  margin-top:2px;
-  transition:color .3s;
+  margin-bottom:18px;
+  transition:color .3s ease;
 }
 .half-archive:hover .c-title{color:#aafb00}
 .half-migrant:hover .c-title{color:#ff6b7a}
+
 .c-desc{
   font-size:11px;
   letter-spacing:.04em;
@@ -104,8 +153,10 @@ body{background:#080808;color:white;font-family:'Helvetica Neue',Helvetica,Arial
   color:rgba(255,255,255,.48);
   font-weight:400;
   max-width:320px;
+  align-self:start;
 }
 .half:hover .c-desc{color:rgba(255,255,255,.62)}
+
 .c-open{
   font-size:9px;
   font-weight:700;
@@ -116,18 +167,27 @@ body{background:#080808;color:white;font-family:'Helvetica Neue',Helvetica,Arial
   transition:.3s;
   display:inline-block;
   width:max-content;
+  margin-top:22px;
 }
-.half:hover .c-open{opacity:1;border-bottom-color:currentColor}
+.half:hover .c-open{
+  opacity:1;
+  border-bottom-color:currentColor;
+}
 
 @media(max-width:900px){
   body{overflow:hidden;height:100dvh}
-  .split{flex-direction:column;height:100dvh}
+  .split{
+    flex-direction:column;
+    height:100dvh;
+  }
   .half{height:50dvh}
   .half-content{
     left:20px;
     right:20px;
-    bottom:30px;
+    bottom:26px;
     max-width:calc(100% - 40px);
+    min-height:unset;
+    grid-template-rows:auto auto auto auto auto;
   }
   .c-title{font-size:clamp(32px,8vw,48px)}
   .divider{display:none}
@@ -142,7 +202,6 @@ body{background:#080808;color:white;font-family:'Helvetica Neue',Helvetica,Arial
 <div id="cur"></div>
 
 <div class="split">
-
   <a class="half half-archive" href="archive.html">
     <div class="half-content">
       <div class="c-tag">Visual Identity System · Self-Initiated · 2026</div>
@@ -164,7 +223,6 @@ body{background:#080808;color:white;font-family:'Helvetica Neue',Helvetica,Arial
       <div class="c-open">Open →</div>
     </div>
   </a>
-
 </div>
 
 <script>
@@ -173,6 +231,7 @@ if (window.matchMedia('(hover:hover)').matches) {
   document.addEventListener('mousemove', e => {
     cur.style.transform = `translate(${e.clientX}px,${e.clientY}px)`;
   }, { passive:true });
+
   document.querySelectorAll('a,.half').forEach(el => {
     el.addEventListener('mouseenter', () => cur.classList.add('big'));
     el.addEventListener('mouseleave', () => cur.classList.remove('big'));
