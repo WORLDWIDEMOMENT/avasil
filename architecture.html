@@ -232,7 +232,7 @@ The result combines our vision of modern style for the area, the client's desire
     /* ── TO CREATE DROPDOWN ── */
     (function(){var nc=document.getElementById('navCreate');if(!nc)return;var btn=nc.querySelector('.nav-create-btn');var toggle=function(){var o=nc.classList.toggle('open');btn.setAttribute('aria-expanded',String(o));};btn.addEventListener('click',function(e){e.preventDefault();e.stopPropagation();toggle();});btn.addEventListener('touchend',function(e){e.preventDefault();e.stopPropagation();toggle();},{passive:false});document.addEventListener('click',function(e){if(!nc.contains(e.target)){nc.classList.remove('open');btn.setAttribute('aria-expanded','false');}});})();
   </script>
-    <section id="seo-links-block" aria-label="Portfolio navigation and context" style="max-width:980px;margin:40px auto;padding:0 20px;line-height:1.6;">
+    <section id="seo-links-block" style="position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important;" aria-label="Portfolio navigation and context">
   <h1>AVASIL Portfolio: Architecture, Art Direction, and Visual Design</h1>
   <h2>Case studies, process documentation, and multidisciplinary creative practice</h2>
   <h3>Internal links across architecture, visual, video, archive, and about pages</h3>
