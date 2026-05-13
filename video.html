@@ -101,12 +101,14 @@ html,body{height:100%;overflow:hidden;font-family:'Helvetica Neue',Helvetica,Ari
 
 /* ── MOBILE ── */
 @media(max-width:768px){
- .filmstrip-wrap{overflow:visible !important;}
-  .filmstrip{padding-top:200px;margin-top:-220px;} /* +40px зазора */
-}
   html,body{overflow-y:auto;overflow-x:hidden;height:auto}
-  /* bottom nav hidden on video page, so just 20px breathing room at bottom */
-  .page{display:flex;flex-direction:column;position:relative;height:auto;min-height:100svh;overflow-x:hidden;padding-top:82px;padding-bottom:20px}
+  
+  .page{
+    display:flex;flex-direction:column;position:relative;
+    height:auto;min-height:100svh;overflow-x:hidden;
+    padding-top:82px;padding-bottom:20px;
+  }
+  
   .bg-a,.bg-b,.bg-veil,.grain{position:fixed}
   .stage{display:block;flex:1;padding:40px 20px 16px}
   .arrow{display:none !important}
@@ -114,8 +116,24 @@ html,body{height:100%;overflow:hidden;font-family:'Helvetica Neue',Helvetica,Ari
   .video-ratio{aspect-ratio:16/9}
   .video-info{height:auto;padding:10px 0 0;flex-wrap:wrap;gap:6px}
   .video-title{font-size:17px;white-space:normal;word-break:break-word}
-  .filmstrip-wrap{padding:0 20px 18px}
-    overflow:visible !important; 
+  
+  /* Tooltip fix: видимый зазор + padding-bottom для отступа от низа */
+  .filmstrip-wrap{
+    padding:0 20px 40px;  /* +22px снизу от предыдущих 18px */
+    overflow:visible !important;
+  }
+  .filmstrip{
+    padding-top:180px;    /* Tooltip высоко, но не слишком */
+    margin-top:-180px;    /* Равные значения = thumbs на месте */
+    padding-bottom:20px;  /* Отступ thumbs от низа wrap */
+  }
+  
+  .strip-item{width:90px}
+  .strip-thumb,.strip-ph{width:90px;height:51px}
+  .cinema-tooltip{width:140px}
+  
+  .bottom-bar{flex-direction:column;align-items:flex-start;padding:16px 20px 24px;gap:14px;margin-top:0}
+  .footer-icons{gap:16px}
 }
   /* On mobile keep enough space above for tooltip (tooltips show on tap) */
   .filmstrip{padding-top:120px;margin-top:-120px}
