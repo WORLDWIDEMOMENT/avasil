@@ -79,52 +79,18 @@ html,body{height:100%;overflow:hidden;font-family:'Helvetica Neue',Helvetica,Ari
 @keyframes fadeUp{from{opacity:0;transform:переtranslateY(14px)}to{opacity:1;transform:none}}
 /* ── MOBILE ── */
 @media (max-width:860px){
-  html,body{
-    overflow-y:auto;
-    height:auto;
-    cursor:auto;
+   html,body{
+    overflow-y:auto;height:auto;min-height:100%;cursor:auto;
+    background:#060606 url("images/about1.webp") center top/cover no-repeat;
   }
-
-  .overlay-left{
-    width:100%;
-    background:rgba(0,0,0,.62);
-  }
-
-  .overlay-right{
-    display:none;
-  }
-
+  .bg,.grain,.overlay-left,.overlay-right{display:none}
   .page{
-    position:relative;
-    min-height:100svh;
-    display:flex;
-    flex-direction:column;
-    padding:180px 24px 36px;
-    pointer-events:auto;
+    position:relative;min-height:100vh;display:flex;flex-direction:column;
+    padding:124px 24px 96px;pointer-events:auto;background:rgba(0,0,0,.62);
   }
-
-  .block-left{
-    position:relative;
-    bottom:auto;
-    left:auto;
-    width:100%;
-    padding:0;
-    margin-top:20px;
-    margin-bottom:32px;
-    animation-delay:.1s;
-  }
-
-  .block-right{
-    position:relative;
-    bottom:auto;
-    right:auto;
-    width:100%;
-    padding:24px 0 0;
-    border-top:1px solid rgba(238,238,238,.12);
-    margin-top:20px;
-    margin-bottom:36px;
-    animation-delay:.2s;
-  }
+  .block-left,.block-right{opacity:1;animation:none;transform:none}
+  .block-left{position:relative;bottom:auto;left:auto;width:100%;padding:0;margin-bottom:32px}
+  .block-right{position:relative;bottom:auto;right:auto;width:100%;padding:24px 0 0;border-top:1px solid rgba(238,238,238,.12);margin-bottom:36px}
 }
 
 @media (max-width:480px){
@@ -132,12 +98,10 @@ html,body{height:100%;overflow:hidden;font-family:'Helvetica Neue',Helvetica,Ari
     font-size:26px;
   }
 
-  .page{
-    padding:220px 20px 32px;
-  }
+  .page{padding:118px 20px 96px}
 }
 </style>
-  <link rel="stylesheet" href="components/site-nav.css">
+   <link rel="stylesheet" href="components/site-nav.css">
   <script src="components/site-nav.js" defer></script>
 </head>
 <body>
@@ -184,8 +148,7 @@ html,body{height:100%;overflow:hidden;font-family:'Helvetica Neue',Helvetica,Ari
         Shaped by exposure to <strong>Slavic, Mediterranean and Latin American contexts</strong> —
         each one leaving a different understanding of how people inhabit space and image.</p>
       <p class="closer">Everything connects. Nothing is separate.</p>
-      <p class="availability-note">Currently available for art direction, spatial branding, and creative strategy roles in European studios.</p>
-    </div>
+<p class="availability-note">Currently available for art direction, spatial branding, and creative strategy roles in European studios.</p>    </div>
   </div>
 
 
