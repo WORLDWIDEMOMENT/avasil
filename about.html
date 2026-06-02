@@ -25,7 +25,7 @@
 <link rel="icon" type="image/png" sizes="96x96" href="favicon-96x96.png">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
 <link rel="manifest" href="site.webmanifest">
-  
+
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -33,8 +33,9 @@
   "name": "Anastasiya Vasileuskaya",
   "alternateName": ["avasil", "A.Vasileuskaya"],
   "jobTitle": "Spatial Creative Director",
-  "description": "Multidisciplinary architect and creative professional. Architecture, spatial branding, editorial design, video, and photography.",
+  "description": "Spatial Creative Director specialising in brand environments, art direction, and spatial branding. Architecture, editorial design, video, and photography.",
   "url": "https://worldwidemoment.github.io/avasil/",
+  "email": "avasilmoment@gmail.com",
   "sameAs": [
     "https://linkedin.com/in/worldwidemoment/",
     "https://instagram.com/molodostibolshenebudet/"
@@ -75,11 +76,14 @@ html,body{height:100%;overflow:hidden;font-family:'Helvetica Neue',Helvetica,Ari
 .bio-text strong{color:var(--white);font-weight:600}
 .bio-text .closer{font-weight:600;color:var(--white)}
 .availability-note{color:rgba(238,238,238,.45);font-style:italic;font-size:12px}
+.contact-link{display:inline-block;margin-top:6px;font-size:12px;color:rgba(238,238,238,.55);text-decoration:none;border-bottom:1px solid rgba(238,238,238,.2);transition:color .2s,border-color .2s;pointer-events:auto}
+.contact-link:hover{color:rgba(238,238,238,.9);border-color:rgba(238,238,238,.6)}
 
-@keyframes fadeUp{from{opacity:0;transform:переtranslateY(14px)}to{opacity:1;transform:none}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
 /* ── MOBILE ── */
 @media (max-width:860px){
-   html,body{
+  html,body{
     overflow-y:auto;height:auto;min-height:100%;cursor:auto;
     background:#060606 url("images/about1.webp") center top/cover no-repeat;
   }
@@ -94,17 +98,13 @@ html,body{height:100%;overflow:hidden;font-family:'Helvetica Neue',Helvetica,Ari
 }
 
 @media (max-width:480px){
-  .manifesto{
-    font-size:26px;
-  }
-
+  .manifesto{font-size:26px}
   .page{padding:118px 20px 96px}
 }
 </style>
-   <link rel="stylesheet" href="components/site-nav.css">
+  <link rel="stylesheet" href="components/site-nav.css">
   <script src="components/site-nav.js" defer></script>
 </head>
-<body>
 <body data-page="about">
 <div class="site-nav-mount"></div>
 <div id="cur"></div>
@@ -148,9 +148,10 @@ html,body{height:100%;overflow:hidden;font-family:'Helvetica Neue',Helvetica,Ari
         Shaped by exposure to <strong>Slavic, Mediterranean and Latin American contexts</strong> —
         each one leaving a different understanding of how people inhabit space and image.</p>
       <p class="closer">Everything connects. Nothing is separate.</p>
-<p class="availability-note">Currently available for art direction, spatial branding, and creative strategy roles in European studios.</p>    </div>
+      <p class="availability-note">Currently available for art direction, spatial branding, and creative strategy roles in European studios.</p>
+      <a href="mailto:avasilmoment@gmail.com" class="contact-link">avasilmoment@gmail.com</a>
+    </div>
   </div>
-
 
 </div>
 
@@ -167,7 +168,8 @@ if (window.matchMedia('(hover:hover)').matches) {
   });
 }
 </script>
-  <section id="seo-links-block" style="position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important;" aria-label="Portfolio navigation and context">
+
+<section id="seo-links-block" style="position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important;" aria-label="Portfolio navigation and context">
   <h1>AVASIL Portfolio: Architecture, Art Direction, and Visual Design</h1>
   <h2>Case studies, process documentation, and multidisciplinary creative practice</h2>
   <h3>Internal links across architecture, visual, video, archive, and about pages</h3>
@@ -177,5 +179,6 @@ if (window.matchMedia('(hover:hover)').matches) {
     <a href="/avasil/index.html">Home</a> · <a href="/avasil/about.html">About</a> · <a href="/avasil/architecture.html">Architecture</a> · <a href="/avasil/projects.html">Projects</a> · <a href="/avasil/visual.html">Visual</a> · <a href="/avasil/video.html">Video</a> · <a href="/avasil/archive.html">Archive</a> · <a href="/avasil/localradio.html">Local Radio</a> · <a href="/avasil/migrant.html">Migrant</a> · <a href="/avasil/todirect.html">To Direct</a>
   </nav>
 </section>
+
 </body>
 </html>
